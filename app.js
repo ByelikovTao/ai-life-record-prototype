@@ -69,6 +69,8 @@
   function readRoute() {
     const hash=location.hash.slice(1) || 'home';
     const [name,id]=hash.split('/');
+    // 仅在进入空间路由时收起说明，同页重绘仍保留用户的展开选择。
+    if(name==='space'&&P.state.route!=='space')P.MemorySpace.enter();
     P.state.route=P.views[name]?name:'home';
     if (name==='story') P.state.storyId=id || 'first-order';
     if(name==='life'){const person=id || P.FamilyContext.current();if(id&&P.state.actor!=='father'&&id!==P.state.actor&&P.FamilyContext.invited(id)){if(P.state.chatTarget!==id){P.state.chatMessages=[];P.state.chatContext=null;}P.state.familyFocus[P.state.actor]=id;P.state.chatTarget=id;}if(P.state.archivePerson!==person){P.state.lifeTab='overview';P.state.videoFilter='all';P.state.biographyMode='read';P.state.archiveChapterId='';}P.state.archivePerson=person;}

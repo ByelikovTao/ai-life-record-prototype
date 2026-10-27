@@ -19,16 +19,29 @@
   function cameraReady(host=active?.host) {return Boolean(active&&active.host===host&&!(settings().mode==='tour'&&host.dataset.panoramaState==='error'));}
   /** 相机状态保存在原型内存，界面更新不会意外重置观察方向。 */
   function settings() {
-    if(!P.state.spaceCamera)P.state.spaceCamera={mode:'tour',tour:{yaw:.18,pitch:-.04,zoom:1},model:{yaw:-.43,pitch:.68,zoom:1},walk:{...STOPS.entry,zoom:1}};
+    if(!P.state.spaceCamera)P.state.spaceCamera={mode:'tour',dockCollapsed:true,tour:{yaw:.18,pitch:-.04,zoom:1},model:{yaw:-.43,pitch:.68,zoom:1},walk:{...STOPS.entry,zoom:1}};
     return P.state.spaceCamera;
   }
+  /** 每次从其他页面进入先看场景，同页字号和重试重绘不覆盖用户刚展开的状态。 */
+  function enter() {settings().dockCollapsed=true;}
   /** 物件名称和模型可展示；故事正文与来源入口按当前账号对关联记录的权限即时核对。 */
-  function storyDock() {
+  function storyContent() {
     const era=window.MemoryRoomModel.ERAS[P.state.year],detail=settings().mode==='tour'?era.detail:era.modelDetail,labels=familyLabels();
     if(!P.state.spaceStoryOpen)return `<div class="memory-welcome"><div><span class="memory-kicker">${P.state.year} · 同一个家的不同年代</span><h2>${era.title}</h2><p>${detail}</p></div>${b(i('play')+' '+e(labels.guide),'scene-guide','btn full')}<span class="memory-demo-note">AI 全景与三维模型示例 · 依据回忆复原</span></div>`;
     const id=ITEMS[P.state.hotspot]?P.state.hotspot:'desk',item=ITEMS[id],readable=P.visibleStories().some(story=>story.id===item.source);
     const source=readable?b(i('source')+' '+e(item.sourceLabel || '查看原始记录'),'listen','btn secondary compact',`data-id="${item.source}"`):P.link('申请查看相关故事','story/'+item.source,'btn secondary compact');
     return `<div class="scene-sheet"><div class="memory-sheet-heading"><div><p class="memory-kicker">${P.state.year} · ${P.state.guide?'跟随讲述':'物件里的故事'}</p><h2>${readable?item.title:item.label}</h2></div>${b(i('close'),'space-close-story','icon-button','aria-label="收起故事面板"')}</div><p>${readable?item.text:'关联故事暂未向当前账号开放。可以向记录本人申请查看。'}</p><div class="memory-story-actions">${source}${b('查看物件','space-focus','btn outline compact',`data-value="${id}" ${cameraReady()?'':'disabled'}`)}${P.state.guide?b('下一处 '+i('arrow'),'space-next','text-link'):''}</div>${b(i('chat')+' '+e(labels.ask),'ask-space','btn full',`data-id="${id}"`)}<span class="memory-demo-note">AI 全景与三维模型示例，不代表真实老宅扫描</span></div>`;
+  }
+  /** 说明可收成单行入口，为全景与模型留出画面，故事内容按原权限在展开时生成。 */
+  function storyDock() {
+    const collapsed=settings().dockCollapsed;
+    return `${b(`<span>${collapsed?'展开说明与故事':'收起说明，看完整场景'}</span>${i('down')}`,'space-toggle-dock','memory-dock-toggle',`aria-expanded="${!collapsed}" aria-controls="memory-story-content"`)}<div id="memory-story-content" ${collapsed?'hidden':''}>${collapsed?'':storyContent()}</div>`;
+  }
+  /** 面板变高或变矮时同步相机工具位置；只更新叠层，不重建或重置三维视角。 */
+  function updateDock(host=active?.host || document.querySelector('.memory-3d')) {
+    if(!host)return;
+    const dock=host.querySelector('#memory-story-dock');dock.innerHTML=storyDock();
+    host.style.setProperty('--memory-dock-height',dock.offsetHeight+'px');
   }
   /** 三维画面和可读的物件入口共存，保留非手势操作。 */
   function view() {
@@ -43,7 +56,6 @@
       <div class="memory-hotspots">${Object.entries(ITEMS).map(([id,item])=>b(`<span></span>${item.label}`,'hotspot','hotspot '+id,`data-value="${id}" aria-pressed="${P.state.hotspot===id}"`)).join('')}</div>
       <div class="memory-bottom-tools"><div class="memory-compass" aria-hidden="true"><span id="memory-compass-needle">↑</span><small>北</small></div><div class="memory-camera-tools">${b('−','space-zoom','memory-icon-button','data-value="1" aria-label="拉远视角"')}${b('+','space-zoom','memory-icon-button','data-value="-1" aria-label="拉近视角"')}${b('↑','space-step','memory-icon-button','aria-label="向前走一步"')}${b(i('home'),'space-reset','memory-icon-button','aria-label="回到入口视角"')}${b('物件','space-objects','memory-icon-button memory-objects','aria-label="选择有故事的物件"')}</div></div>
       <div id="memory-story-dock" class="memory-story-dock">${storyDock()}</div>
-      <div id="memory-status" class="memory-status" role="status">${MODE_NAMES[s.mode]} · 拖动转动视角</div>
       <div id="memory-asset-status" class="memory-asset-status" role="status"></div>
     </section>`;
   }
@@ -102,22 +114,20 @@
   function select(id) {
     const host=active?.host || document.querySelector('.memory-3d');
     if(!ITEMS[id] || !host)return;
-    P.state.hotspot=id;P.state.spaceStoryOpen=true;
-    host.querySelector('#memory-story-dock').innerHTML=storyDock();
+    P.state.hotspot=id;P.state.spaceStoryOpen=true;settings().dockCollapsed=false;
+    updateDock(host);
     host.querySelectorAll('.hotspot').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.value===id)));
     report();
   }
-  /** 模式、年代和可读故事在加载失败时也保持一致；相机控件只在 GPU 场景就绪后启用。 */
+  /** 模式、年代和控件状态在加载失败时保持一致；不叠加操作提示，错误由各自状态面板说明。 */
   function syncControls() {
     const host=active?.host || document.querySelector('.memory-3d');if(!host)return;
-    const s=settings(),panoramaFailed=s.mode==='tour'&&host.dataset.panoramaState==='error',ready=cameraReady(host);
+    const s=settings(),ready=cameraReady(host);
     host.querySelectorAll('[data-action="space-mode"]').forEach(el=>el.classList.toggle('active',el.dataset.value===s.mode));
     host.querySelectorAll('[data-action="scene-year"]').forEach(el=>el.classList.toggle('active',el.dataset.value===P.state.year));
     host.querySelectorAll(CAMERA_ACTIONS.map(action=>`[data-action="${action}"]`).join(',')).forEach(el=>{el.disabled=!ready;});
     host.querySelector('#memory-year').textContent=P.state.year;host.dataset.mode=s.mode;
     host.querySelector('[data-action="space-step"]').hidden=s.mode==='tour';
-    const detail=ready?(s.mode==='tour'?'固定点环顾，拖动查看四周':s.mode==='walk'?'拖动环顾，点击空地移动':'拖动旋转，双指缩放'):panoramaFailed?'全景未能载入，可以重试或切换观察方式':host.dataset.renderState==='error'?'空间暂未载入，仍可阅读物件故事':'空间加载中，可以先阅读物件故事';
-    host.querySelector('#memory-status').textContent=MODE_NAMES[s.mode]+' · '+detail;
     report();
   }
   /** 视角保持用于年代对照；若新增家具占据当前位置，仅重置三维漫游落脚点。 */
@@ -131,7 +141,7 @@
         Object.assign(p,STOPS.entry);if(active.settings.mode==='walk')P.toast('这一年代的家具位置有变化，已回到入口。');
       }
     }
-    const host=active?.host || document.querySelector('.memory-3d');if(host)host.querySelector('#memory-story-dock').innerHTML=storyDock();
+    const host=active?.host || document.querySelector('.memory-3d');if(host)updateDock(host);
     syncControls();
   }
   /** 进入物件附近的固定落脚点，避免把相机放进家具内部。 */
@@ -268,15 +278,16 @@
   /** 可视按钮与模型操作使用同一组相机状态。 */
   function handleAction(action,el) {
     if(!document.querySelector('.memory-3d'))return false;
-    if(action==='space-mode'){if(!MODE_NAMES[el.dataset.value])return true;settings().mode=el.dataset.value;document.querySelector('#memory-story-dock').innerHTML=storyDock();syncControls();if(active)updateCamera(active,true);return true;}
+    if(action==='space-toggle-dock'){settings().dockCollapsed=!settings().dockCollapsed;updateDock();report();return true;}
+    if(action==='space-mode'){if(!MODE_NAMES[el.dataset.value])return true;settings().mode=el.dataset.value;settings().dockCollapsed=true;updateDock();syncControls();if(active)updateCamera(active,true);return true;}
     if(action==='hotspot'){select(el.dataset.value);return true;}
     if(action==='space-focus'){focus(el.dataset.value);return true;}
-    if(action==='space-close-story'){P.state.spaceStoryOpen=false;P.state.guide=false;document.querySelector('#memory-story-dock').innerHTML=storyDock();report();return true;}
+    if(action==='space-close-story'){P.state.spaceStoryOpen=false;P.state.guide=false;settings().dockCollapsed=true;updateDock();report();return true;}
     if(action==='space-step'){step(.4);return true;}
     if(action==='space-zoom'){zoom(Number(el.dataset.value)*.12);return true;}
     if(action==='space-reset'){if(active){const s=active.settings;s.model={yaw:-.43,pitch:.68,zoom:1};s.walk={...STOPS.entry,zoom:1};s.tour={yaw:.18,pitch:-.04,zoom:1};syncControls();}return true;}
     if(action==='scene-year'){changeEra(el.dataset.value);return true;}
-    if(action==='scene-guide' || action==='space-next'){const order=['radio','photo','desk'];if(action==='scene-guide'&&P.state.guide){P.state.guide=false;document.querySelector('#memory-story-dock').innerHTML=storyDock();return true;}P.state.guide=true;const id=action==='space-next'?order[(order.indexOf(P.state.hotspot)+1)%order.length]:'radio';select(id);focus(id);return true;}
+    if(action==='scene-guide' || action==='space-next'){const order=['radio','photo','desk'];if(action==='scene-guide'&&P.state.guide){P.state.guide=false;updateDock();return true;}P.state.guide=true;const id=action==='space-next'?order[(order.indexOf(P.state.hotspot)+1)%order.length]:'radio';select(id);focus(id);return true;}
     if(action==='space-fullscreen'){toggleFullscreen(document.querySelector('.memory-3d'));return true;}
     if(action==='space-retry'){unmount();mount();return true;}
     if(action==='space-retry-tour'){if(active)active.tour.setEra(P.state.year);return true;}
@@ -285,6 +296,6 @@
     return false;
   }
   /** 物件来源由空间模块统一定义，追问消费者无需维护另一份故事映射。 */
-  P.MemorySpace={view,mount,unmount,handleAction,select,focus,items(){return ITEMS;}};
+  P.MemorySpace={view,enter,mount,unmount,handleAction,select,focus,items(){return ITEMS;}};
 }
 
