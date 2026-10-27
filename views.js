@@ -14,35 +14,58 @@
   }
   /** 首页影片直接进入其人物资料库中的可播放视频。 */
   function filmCard() {return P.PersonArchive.filmCard('father');}
-  /** 三种首页都保留人物资料库的显著入口。 */
-  function archiveEntry() {return P.PersonArchive.entryCard('father');}
-  /** 展示关联地点与场景复原标记。 */
+  /** 首页展示具体空间精选，记录未向当前账号分享时不推荐相关地点与物件。 */
   function spaceCard() {
-    return l(`<img src="assets/room.png" alt="老家的客厅，示意复原"><span><strong>进入老家的三维空间</strong><small>1986年 · 依据回忆复原</small><em>那张书桌，那台收音机，<br>还有窗外的树。</em></span>${i('arrow')}`,'space','memory-entry');
+    if(!archiveStories().some(story=>story.id==='old-home'))return '';
+    return `<section class="section" data-home-section="space"><h2 class="home-section-title">回忆里的家</h2>${l(`<img src="assets/room.png" alt="老家的客厅，示意复原"><span><strong>老家的客厅</strong><small>1986年 · 记忆复原示例</small><em>从窗边书桌，了解离家前后的经历。</em></span>${i('arrow')}`,'space','memory-entry')}</section>`;
   }
-  /** 家人的提问可直接打开带上下文的数字人对话。 */
-  function familyQuestion() {
-    return `<div class="section"><div class="section-heading"><h2>家人的提问</h2>${l('看看家人 '+i('arrow'),'family')}</div>${b(`${a('xia')}<span>爸爸，第一次创业时，你最担心什么？</span>${i('arrow')}`,'ask-order','question-row')}<p class="caption">陈知夏的预置提问示例，点击体验围绕记录交流。</p></div>`;
+  /** 影片是具体内容精选，只保留封面播放入口，不复制档案分类或未开放的影片提示。 */
+  function filmSection() {
+    return P.PersonArchive.videos('father','film').length?`<section class="section hero-film" data-home-section="film"><h2 class="home-section-title">人生影片精选</h2>${filmCard()}</section>`:'';
   }
-  /** 最近故事按记录时间排列，与按事件年份排列的人生时间线分别表达。 */
-  function recentStories() {
-    const recent=archiveStories().sort((a,b)=>String(b.recorded).localeCompare(String(a.recorded),'zh-CN',{numeric:true})).slice(0,2);
-    return `<div class="section"><div class="section-heading"><h2>最近故事</h2>${b('全部 '+i('arrow'),'archive-events','text-link','data-person="father"')}</div>${recent.length?recent.map(timelineEntry).join(''):'<div class="empty"><p>暂时没有向你开放的故事。可以先留下自己的记录。</p></div>'}</div>`;
+  /** 推荐问题与真实收件箱分开，问题只关联当前可查看的事件，自由聊天显式结束旧话题。 */
+  function chatPrompt() {
+    if(!P.ContentChat.available('father'))return '';
+    const stories=archiveStories(),topic=stories.find(story=>story.id==='first-order') || stories[0];
+    const prompt=topic?b(i('chat')+' '+e(topic.id==='first-order'?'第一次创业时，你最担心什么？':'讲讲《'+topic.title+'》这段经历。'),topic.id==='first-order'?'ask-order':'home-ask-story','question-row',`data-id="${topic.id}"`):'';
+    return `<section class="section home-chat-prompt" data-home-section="chat"><h2 class="home-section-title">和数字人聊聊</h2><p class="caption">${topic?'推荐话题，依据已向你分享的记录。':'可以先聊聊近况，资料未覆盖的往事需要本人补充。'}</p>${prompt}${b('聊聊近况 '+i('arrow'),'home-chat','text-link')}</section>`;
   }
-  /** 三种首页保持同一视觉系统，只比较内容组织方式。 */
+  /** 真实待办与问题状态只汇总一次；已回复为累计状态，不声称存在未读通知。 */
+  function homeInbox() {
+    const pending=P.pendingCount(),counts=P.QuestionInbox.homeCounts();if(!pending && !counts.total)return '';
+    const labels=[counts.pending?'待我回答 '+counts.pending:'',counts.waiting?'等待本人回复 '+counts.waiting:'',counts.answered?'我的提问已回复 '+counts.answered:'',counts.replied?'我已回答 '+counts.replied:''].filter(Boolean);
+    return `<section class="section home-inbox" data-home-section="updates"><h2 class="home-section-title">我的待办与回复</h2>${pending?`<div class="home-inbox-row"><p>${pending} 条补充与查看申请待我核对</p>${b('核对内容','pending','text-link')}</div>`:''}${counts.total?`<div class="home-inbox-row"><p>${e(labels.join(' · '))}</p>${l('查看问题与回复','questions')}</div>`:''}</section>`;
+  }
+  /** 新材料与回答纠正有各自的处理入口，不混进旧补充弹层造成有数字却找不到任务。 */
+  function featureInbox() {
+    const materials=P.MaterialLibrary.pendingCount(),answers=P.AnswerFeedback.pendingCount();
+    if(!materials&&!answers)return '';
+    return `<section class="section home-inbox"><h2 class="home-section-title">新的核对事项</h2>${materials?l(`${materials} 份资料等待你核对`,'materials','text-link full'):''}${answers?l(`${answers} 条回答纠正等待你处理`,'corrections','text-link full'):''}</section>`;
+  }
+  /** 图谱以当前成员数量提示家庭连接，点击复用既有关系树；管理仍可从我的进入。 */
+  function homeFamilyCard() {
+    return `<section class="home-family-card" data-home-section="family">${b(`<span class="home-family-symbol">${i('tree')}</span><span class="home-family-copy"><strong>家庭图谱</strong><small>看看我们一家人，和彼此的连接</small><em>${P.state.members.length} 位家人 · 从关系树认识彼此</em></span>${i('arrow')}`,'home-family-tree','home-family-link')}</section>`;
+  }
+  /** 首页只预览两条人生事件，“全部”进入档案中的传记事件视图，不再泛称独立故事栏目。 */
+  function eventPreview(byYear=false) {
+    const stories=archiveStories();
+    if(!byYear)stories.sort((left,right)=>String(right.recorded).localeCompare(String(left.recorded),'zh-CN',{numeric:true}));
+    const items=stories.slice(0,2);
+    return `<section class="section" data-home-section="events"><div class="section-heading"><h2>${byYear?'人生事件预览':'最近人生事件'}</h2>${b('查看全部事件 '+i('arrow'),'archive-events','text-link','data-person="father"')}</div><p class="caption">${byYear?'按事件发生年份排列。':'按记录更新时间排列。'} · 陈远山的人生记录</p>${items.length?items.map(timelineEntry).join(''):'<p class="caption">暂无向你开放的人生事件，可以先记录自己的生活。</p>'}</section>`;
+  }
+  /** 三种布局使用相同内容模块与五项导航归属，仅调整内容推荐的先后。 */
   function home() {
     const s=P.state;
-    const pendingCount=P.pendingCount();
-    const pending=pendingCount?`<div class="notice row">${i('mail')}<span class="grow">${pendingCount} 条补充与申请等待你确认</span>${b('查看','pending','text-link')}</div>`:'';
-    const questions=P.QuestionInbox?.summary() || '';
-    if (s.variant==='B') return `<div class="page home-family">${pending}${questions}<p class="eyebrow">一家人的故事，还在继续</p><h1 class="page-title">今天，也想听你说。</h1><p class="page-subtitle">从家人的一个问题，开始一段新的回忆。</p><div class="family-orbit">${a('father','large')}<span class="orbit-line"></span>${a('mother')}<span class="orbit-line"></span>${a('xia')}</div>${archiveEntry()}${familyQuestion()}<div class="section"><div class="section-heading"><h2>一起看过的时光</h2>${l('人生档案','life')}</div>${filmCard()}</div>${recentStories()}<div class="section">${spaceCard()}</div>${recordPrompt()}</div>`;
-    if (s.variant==='C') return `<div class="page home-timeline">${pending}${questions}<p class="eyebrow">陈远山 · 人生片段</p><h1 class="page-title">把一生，<br>慢慢讲给家人。</h1><div class="year-feature"><span>1963</span><i></i><span>2026</span></div>${archiveEntry()}${recentStories()}<div class="section"><div class="section-heading"><h2>一部影片，回看走过的路</h2></div>${filmCard()}</div>${familyQuestion()}<div class="section">${spaceCard()}</div>${recordPrompt()}</div>`;
-    return `<div class="page home-story">${pending}${questions}<h1 class="page-title">把日子，留成故事。</h1><p class="home-tagline">让爱与时光，都有迹可循。</p><div class="hero-film">${filmCard()}</div>${archiveEntry()}${recentStories()}${familyQuestion()}<div class="section"><div class="section-heading"><h2>走进回忆中的家</h2></div>${spaceCard()}</div>${recordPrompt()}</div>`;
+    const heading=`<header class="home-intro"><p class="eyebrow">陈远山的人生记录</p><h1 class="page-title">${s.actor==='father'?'把今天，也留成故事。':'今天，再了解家人一点。'}</h1><p class="home-tagline">当前账号：${e(P.PEOPLE[s.actor].name)} · 看一段，问一句，记下一刻。</p></header>`;
+    const blocks={film:filmSection(),events:eventPreview(s.variant==='C'),chat:chatPrompt(),space:spaceCard(),record:recordPrompt()};
+    const order=s.variant==='B'?['chat','events','film','space','record']:s.variant==='C'?['events','film','chat','space','record']:['film','events','chat','space','record'];
+    const className=s.variant==='B'?'home-family':s.variant==='C'?'home-timeline':'home-story';
+    return `<div class="page ${className}">${heading}${homeInbox()}${featureInbox()}${homeFamilyCard()}${order.map(id=>blocks[id]).join('')}</div>`;
   }
   /** 记录提示以具体行动为入口，不把首页变成功能九宫格。 */
   function recordPrompt() {
     const hasDraft=Boolean(P.state.draftSaved || P.state.record.text.trim());
-    return `<div class="record-prompt"><div>${i('mic')}<p>${hasDraft?'继续写上次的回忆？':'今天，想留下一件什么事？'}<small>${hasDraft?'尚未提交的文字仍保留在当前账号。':'一句话，也值得被记住。'}</small></p></div>${l((hasDraft?'继续记录 ':'记录一刻 ')+i('plus'),'record','text-link')}</div>`;
+    return `<section class="record-prompt" data-home-section="record"><div>${i('edit')}<p>${hasDraft?'继续你的草稿':'为自己记录一刻'}<small>${e(P.PEOPLE[P.state.actor].name)} · 保存到我的记录${hasDraft?'，草稿仅自己可见。':'。'}</small></p></div>${l((hasDraft?'继续草稿 ':'记录一刻 ')+i('plus'),'record','text-link')}</section>`;
   }
   /** 时间线条目通过事件组织媒体，私密内容仅在获授权时进入列表。 */
   function timelineEntry(story) {
@@ -72,11 +95,11 @@
   /** 来源按钮固定到各条回答；资料或实际引用的故事撤回后不继续展示历史正文。 */
   function messageView(msg) {
     if (msg.type==='user') return `<div class="message user"><p>${e(msg.text)}</p></div>`;
-    if(!P.ContentChat.messageReadable(msg))return '<div class="message assistant"><p>这条回答引用的资料暂未向你开放。</p></div>';
+    if(!P.ContentChat.messageReadable(msg)||(msg.type==='corrected'&&!P.AnswerFeedback.readable(msg)))return '<div class="message assistant"><p>这条回答引用的资料暂未向你开放。</p></div>';
     const kind=msg.type==='inference'?'AI 推演':msg.type==='unknown'?'记录尚未覆盖':msg.sourceLabel || '据本人记录整理';
     const source=msg.contentSource?P.ContentChat.sourceButton(msg.contentSource,'回看这条回答的原内容'):'';
     const original=msg.type==='memory' && msg.source?b('查看原始记录 '+i('arrow'),'source','text-link',`data-id="${msg.source}"`):'';
-    return `<div class="message assistant ${msg.type==='inference'?'inference':''}"><span class="message-label">${i(msg.type==='inference'?'spark':'source')}${e(kind)}</span><p>${e(msg.text)}</p>${msg.type==='inference'?'<small>结合已有经历生成，不代表本人此刻的真实想法。</small>':''}<div class="content-chat-links">${source}${original}</div>${msg.type==='unknown'?b('把这个问题留给本人','leave-question','text-link',`data-question="${e(msg.question || '')}" data-story-id="${e(msg.storyId || '')}" ${msg.contentSource?'data-content-context="'+e(JSON.stringify(msg.contentSource))+'"':''}`):''}</div>`;
+    return `<div class="message assistant ${msg.type==='inference'?'inference':''}"><span class="message-label">${i(msg.type==='inference'?'spark':'source')}${e(kind)}</span><p>${e(msg.text)}</p>${msg.type==='inference'?'<small>结合已有经历生成，不代表本人此刻的真实想法。</small>':''}<div class="content-chat-links">${source}${original}</div>${P.AnswerFeedback.tools(msg)}${msg.type==='unknown'?b('把这个问题留给本人','leave-question','text-link',`data-question="${e(msg.question || '')}" data-story-id="${e(msg.storyId || '')}" ${msg.contentSource?'data-content-context="'+e(JSON.stringify(msg.contentSource))+'"':''}`):''}</div>`;
   }
   /** 三维人物、无声动作与文字问答由数字人体验页统一呈现。 */
   function chat() { return P.DigitalHuman.view(); }

@@ -185,8 +185,13 @@
       {start:6,end:12,text:'影像留住重逢，也留住生活的片刻。'}
     ]
   };
+  /** 地点作为探索视角，只关联原事件；是否能进入空间单独标记，不把事件页冒充漫游。 */
+  const places=[
+    {id:'old-house',subject:'father',title:'老家',description:'从窗边书桌与家书，了解离家前后的生活。',storyIds:['old-home'],hasSpace:true},
+    {id:'first-office',subject:'father',title:'第一间办公室',description:'从第一笔订单，了解创业起点的经历。空间漫游暂未开放。',storyIds:['first-order'],hasSpace:false}
+  ];
   window.App.ARCHIVE_DATA={
     notice:'人物与传记为虚构原型资料；视频由示例图片编排，参考肖像来自用户提供图片，不代表真实客户影片或本人实拍。',
-    people,assets,captions
+    people,assets,captions,places
   };
 }

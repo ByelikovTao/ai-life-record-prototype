@@ -1,0 +1,49 @@
+/* 纪念书延续暖白纸张与墨绿封面，流程工具始终放在手机画板之外。 */
+.keepsake-entry{display:grid;gap:16px;padding:22px;margin:20px 0;background:var(--soft);border:1px solid #CBD8CA;border-radius:16px}
+.keepsake-entry h3{font:600 calc(23px * var(--unit))/1.5 SimSun,serif;margin:6px 0}
+.keepsake-entry p:not(.eyebrow){font-size:calc(14px * var(--unit));color:var(--secondary)}
+.keepsake-page h2{font-size:calc(19px * var(--unit))}
+.keepsake-page label:not(.book-source):not(.book-consent){display:grid;gap:8px}
+.keepsake-page input:not([type="checkbox"]),.keepsake-page textarea{width:100%;min-width:0;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.keepsake-page textarea{min-height:100px;resize:vertical}
+.book-fieldset{min-width:0;padding:0;border:0;margin:10px 0}
+.book-fieldset legend{font-weight:600;margin-bottom:9px}
+.book-source{display:flex;align-items:flex-start;gap:12px;padding:15px 0;border-bottom:1px solid var(--line);cursor:pointer;min-width:0}
+.book-source input,.book-consent input{flex:0 0 auto;width:20px;height:20px;accent-color:var(--green);margin:5px 0}
+.book-source span{min-width:0}
+.book-source strong,.book-source small,.book-source em{display:block;overflow-wrap:anywhere}
+.book-source strong{font-size:calc(15px * var(--unit))}
+.book-source small,.book-source em{font-size:calc(12px * var(--unit));color:var(--secondary);font-style:normal;margin-top:3px}
+.book-source.unavailable{opacity:.65;cursor:default}
+.book-consent{display:flex;align-items:flex-start;gap:10px;font-size:calc(13px * var(--unit))}
+.book-mini{display:flex;gap:15px;align-items:center;min-width:0}
+.book-mini>.icon{width:45px;height:65px;padding:10px;background:var(--green);color:var(--surface);border-radius:3px 9px 9px 3px}
+.book-cover{min-height:350px;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:35px 24px;border-radius:3px 15px 15px 3px;background:var(--green);color:var(--surface);box-shadow:inset 8px 0 #163B30,8px 8px 0 #DEDACE;text-align:center;overflow-wrap:anywhere}
+.book-cover span{font:11px/1.5 Georgia,serif;letter-spacing:3px;color:#D3D5BC}
+.book-cover h1{font:600 calc(30px * var(--unit))/1.7 SimSun,serif}
+.book-cover p,.book-cover small{font-size:calc(14px * var(--unit));color:#E4E9DD}
+.book-page{padding:24px 20px;background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow-wrap:anywhere}
+.book-page h2{font-family:SimSun,serif;margin:12px 0 18px}
+.book-page>p:not(.eyebrow){font-size:calc(15px * var(--unit));line-height:2;margin:12px 0;text-align:justify}
+.book-page img{width:100%;height:auto;border-radius:4px}
+.book-page small{display:block;margin-top:20px;padding-top:12px;border-top:1px solid var(--line);font-size:calc(11px * var(--unit));color:var(--subtle)}
+.book-progress{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:0;font-size:calc(12px * var(--unit));color:var(--secondary);text-align:center}
+.book-progress li{min-width:0;overflow-wrap:anywhere}
+.book-progress span{display:block;width:28px;height:28px;line-height:28px;margin:0 auto 7px;border-radius:50%;background:var(--muted)}
+.book-progress .active{color:var(--green);font-weight:600}
+.book-progress .active span,.book-progress .complete span{background:var(--green);color:var(--surface)}
+.book-source-summary{display:flex;align-items:flex-start;gap:9px;margin:10px 0;font-size:calc(14px * var(--unit));overflow-wrap:anywhere}
+.book-source-summary .icon{width:18px;margin-top:3px}
+.book-fees{margin:16px 0}
+.book-fees>div{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--line);font-size:calc(14px * var(--unit))}
+.book-fees dt{min-width:0}
+.book-fees dd{margin:0;flex-shrink:0;text-align:right}
+.book-fees small{display:block;font-size:calc(11px * var(--unit));color:var(--secondary);margin-top:5px}
+.book-rules{padding-left:20px;font-size:calc(13px * var(--unit));color:var(--secondary)}
+.book-rules li{margin:10px 0}
+#book-demo-controls{position:fixed;right:20px;bottom:20px;width:220px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 5px 20px #243A2222;font-size:12px;z-index:50}
+#book-demo-controls[hidden]{display:none}
+#book-demo-controls p{margin:8px 0 12px}
+#book-demo-controls .btn{font-size:12px}
+@media(max-width:900px){#book-demo-controls{right:8px;bottom:112px;width:145px;padding:10px}}
+@media(max-width:600px){#book-demo-controls{right:8px;bottom:96px;width:155px;padding:10px}#book-demo-controls>strong{font-size:11px}#book-demo-controls>p{display:none}.keepsake-page .book-progress{font-size:calc(11px * var(--unit))}}

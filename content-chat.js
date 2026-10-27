@@ -11,7 +11,7 @@
     if(value.kind!=='asset' || typeof value.assetId!=='string')return null;
     const ref={kind:'asset',assetId:value.assetId};
     if(Number.isFinite(value.position))ref.position=Math.max(0,value.position);
-    if(P.state.members.includes(value.origin?.person) && ['overview','video','photo','work','biography'].includes(value.origin.tab)){ref.origin={person:value.origin.person,tab:value.origin.tab};if(typeof value.origin.storyId==='string')ref.origin.storyId=value.origin.storyId;if(value.origin.tab==='video'&&['all','film','self','family'].includes(value.origin.videoFilter))ref.origin.videoFilter=value.origin.videoFilter;}
+    if(P.state.members.includes(value.origin?.person) && ['overview','video','photo','work','biography','place'].includes(value.origin.tab)){ref.origin={person:value.origin.person,tab:value.origin.tab};if(typeof value.origin.storyId==='string')ref.origin.storyId=value.origin.storyId;if(value.origin.tab==='video'&&['all','film','self','family'].includes(value.origin.videoFilter))ref.origin.videoFilter=value.origin.videoFilter;}
     return ref;
   }
   /** 资料只有一个事实来源，相关故事另行授权，不用媒体的权限替代故事的权限。 */

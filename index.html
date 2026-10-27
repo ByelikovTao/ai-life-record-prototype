@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="digital-human.css">
   <link rel="stylesheet" href="person-archive.css">
   <link rel="stylesheet" href="content-chat.css">
+  <link rel="stylesheet" href="family-features.css">
+  <link rel="stylesheet" href="keepsake-books.css">
 </head>
 <body>
   <!-- 静态原型：业务资料只在内存中变化；数字人为无声形象演示，不连接真实 AI 或支付。 -->
@@ -22,7 +24,7 @@
       <p class="studio-intro">把日子，<br><em>留成故事。</em></p>
       <p class="studio-caption">一份会继续生长的人生记录。<br>看见过去，也聊聊今天。</p>
       <nav id="studio-nav" class="studio-nav" aria-label="页面快捷入口"></nav>
-      <div class="studio-bottom"><span class="studio-dot"></span>可点击演示 · V1.12<br>示例人物与素材 · 刷新还原</div>
+      <div class="studio-bottom"><span class="studio-dot"></span>可点击演示 · V1.19<br>示例人物与素材 · 刷新还原</div>
     </aside>
     <main class="stage">
       <div class="review-toolbar" aria-label="原型预览设置">
@@ -31,6 +33,8 @@
         <label>宽度 <select id="width-select"><option value="390">390</option><option value="360">360</option><option value="430">430</option></select></label>
         <button id="font-toggle" type="button" aria-pressed="false">大字号</button>
         <button id="reset-demo" type="button">重置演示</button>
+        <!-- 报告属于评审工具，在新页阅读，保留原型中未提交的内存内容。 -->
+
       </div>
       <div class="phone" id="phone">
         <div class="statusbar" aria-hidden="true"><b>9:41</b><div><span class="signal">▂▄▆</span><span class="wifi">◔</span><span class="battery"></span></div></div>
@@ -50,8 +54,10 @@
       <details><summary>查看当前演示状态</summary><pre id="state-preview"></pre></details>
       <div class="state-examples"><label for="scenario-select">查看边界状态</label><select id="scenario-select"><option value="normal">正常内容</option><option value="private">未获授权的故事</option><option value="empty">空收藏</option><option value="quota">语音额度用尽</option><option value="failure">下一次整理失败</option></select><p>用于评审交互反馈，属于原型工具。</p></div>
       <a class="overview-link" href="overview.html">查看三屏总览 ↗</a>
+
     </aside>
   </div>
+  <aside id="book-demo-controls" aria-label="纪念书流程演示" hidden></aside>
   <dialog id="modal" class="modal"><div id="modal-content"></div></dialog>
   <script src="data.js" defer></script>
   <script src="archive-data.js" defer></script>
@@ -61,10 +67,13 @@
   <script src="family-tree.js" defer></script>
   <script src="family-views.js" defer></script>
   <script src="vendor/three.global.js" defer></script>
-  <script src="avatar-model-data.js" defer></script>
-  <script src="avatar-model.js" defer></script>
   <script src="digital-human.js" defer></script>
   <script src="questions.js" defer></script>
+  <script src="material-library.js" defer></script>
+  <script src="answer-feedback.js" defer></script>
+  <script src="relationship-chapters.js" defer></script>
+  <script src="keepsake-books.js" defer></script>
+  <script src="keepsake-book-views.js" defer></script>
   <script src="room-image-data.js" defer></script>
   <script src="room-model-data.js" defer></script>
   <script src="room-surface-data.js" defer></script>

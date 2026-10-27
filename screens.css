@@ -1,6 +1,26 @@
 /* 人生与数字人页面：围绕内容排版，保持统一的媒体与操作层级。 */
 .home-tagline{font-size:calc(14px * var(--unit));color:var(--subtle);margin-bottom:19px;letter-spacing:1px}
-.hero-film{margin-top:4px}
+/* 首页以具体内容和真实待办分区，长状态和两倍字号允许自然换行。 */
+.home-section-title{font-size:calc(16px * var(--unit));line-height:1.7;margin-bottom:12px}
+.home-intro .page-title{font-size:calc(26px * var(--unit))}
+.home-chat-prompt>.caption{margin-bottom:10px}
+.home-chat-prompt>.text-link{margin-top:10px}
+.home-inbox{padding:16px;background:var(--soft);border-radius:14px}
+.home-inbox-row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between}
+.home-inbox-row+.home-inbox-row{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.home-inbox-row p{flex:1 1 160px;font-size:calc(13px * var(--unit));line-height:1.8;overflow-wrap:anywhere}
+.home-inbox-row button{flex-shrink:0}
+[data-home-section="events"]>.caption{margin-bottom:14px}
+[data-home-section="events"] .section-heading{flex-wrap:wrap;align-items:baseline}
+/* 家庭图谱是首页的内容入口，长说明与两倍字号自然换行。 */
+.home-family-card{margin:18px 0 6px}
+.home-family-link{display:flex;align-items:center;gap:12px;width:100%;padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--soft);text-align:left;color:var(--green)}
+.home-family-symbol{display:flex;align-items:center;justify-content:center;flex:0 0 40px;height:40px;border-radius:50%;background:var(--surface)}
+.home-family-copy{flex:1;min-width:0;overflow-wrap:anywhere}
+.home-family-copy strong{display:block;font:600 calc(17px * var(--unit))/1.6 SimSun,serif}
+.home-family-copy small,.home-family-copy em{display:block;font-size:calc(12px * var(--unit));line-height:1.7;color:var(--secondary);font-style:normal}
+.home-family-copy em{margin-top:3px;color:var(--copper)}
+.home-family-link>.icon{width:16px;flex-shrink:0}
 .film-cover{display:block;width:100%;aspect-ratio:16/9;position:relative;padding:0;background:#D8D8CE;overflow:hidden;border-radius:13px;text-align:left}
 .film-cover>img{display:block;width:100%;height:100%;object-fit:cover}
 .film-shade{position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#142B2155)}
@@ -9,11 +29,8 @@
 .film-caption{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px}
 .film-caption h2{font-size:calc(19px * var(--unit));font-weight:600;margin-bottom:4px}
 .film-caption .caption{font-size:calc(13px * var(--unit))}
-.mini-play{height:40px;width:40px;background:var(--green);color:white;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-.mini-play .icon{width:17px;height:17px;fill:currentColor}
-.question-row{width:100%;padding:12px;background:#EEEDE5;border-radius:13px;display:flex;align-items:center;gap:10px;text-align:left;font-size:calc(14px * var(--unit));line-height:1.7}
-.question-row>span:not(.avatar){flex:1;min-width:0}
-.question-row>.icon{width:15px;height:15px;color:var(--secondary)}
+.question-row{width:100%;padding:12px;background:#EEEDE5;border-radius:13px;display:flex;align-items:center;gap:10px;text-align:left;font-size:calc(14px * var(--unit));line-height:1.7;overflow-wrap:anywhere}
+.question-row>.icon{width:15px;height:15px;color:var(--secondary);flex-shrink:0}
 .memory-entry{display:flex;width:100%;align-items:center;gap:13px;background:none;padding:0;text-align:left}
 .memory-entry>img{width:112px;height:100px;object-fit:cover;border-radius:12px;flex-shrink:0}
 .memory-entry>span{flex:1;min-width:0}
@@ -27,13 +44,9 @@
 .record-prompt p{font-size:calc(15px * var(--unit))}
 .record-prompt p small{display:block;font-size:calc(13px * var(--unit));color:var(--subtle);margin-top:3px}
 .record-prompt>.text-link{font-size:calc(14px * var(--unit));margin-top:8px}
-.family-orbit{display:flex;align-items:center;justify-content:center;margin:25px 0;padding:18px;background:var(--soft);border-radius:60px}
-.orbit-line{width:28px;height:1px;background:#A7BAA4;margin:0 5px}
 .home-family .question-row{background:var(--surface);border:1px solid var(--line)}
 .home-family .eyebrow,.home-timeline .eyebrow{margin:4px 0 10px;font-size:calc(13px * var(--unit));letter-spacing:1px}
 .home-family .page-title{font-size:calc(27px * var(--unit))}
-.year-feature{display:flex;gap:12px;align-items:center;color:var(--copper);font:20px/1.5 Georgia,serif;margin:22px 0}
-.year-feature i{height:1px;background:#BBA88F;flex:1}
 .home-timeline .timeline-entry{grid-template-columns:1fr}
 .home-timeline .timeline-year{font-size:22px;margin-bottom:0}
 .home-timeline .timeline-button>img{height:150px}

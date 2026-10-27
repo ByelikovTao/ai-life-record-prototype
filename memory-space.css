@@ -4,7 +4,7 @@
 .space-mode .app-header{position:absolute;top:38px;left:10px;right:10px;z-index:8;padding:0;pointer-events:none}
 .space-mode .app-header .icon-button{pointer-events:auto;background:#FFFEFAD9;color:var(--green);border:1px solid #D4D9CB}
 .space-mode .app-content{overflow:hidden;flex:1}
-.space-mode .bottom-nav{display:none}
+/* 普通空间页保留底部主导航；主动全屏仍由既有空间内容负责沉浸展示。 */
 .memory-3d{height:100%;width:100%;position:relative;overflow:hidden;background:#ece8dd;color:var(--ink);isolation:isolate}
 .memory-3d:before{content:"";position:absolute;inset:0 0 auto;height:260px;background:linear-gradient(#F6F3ECF0 10%,#F6F3ECCC 60%,transparent);z-index:1;pointer-events:none}
 .memory-viewport{position:absolute;inset:0;width:100%;height:100%;z-index:0}

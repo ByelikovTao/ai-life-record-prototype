@@ -23,7 +23,8 @@
   }
   /** 文字回答统一更新会话与无声动作，不让资料追问另外维护第二套消息流。 */
   function completeReply(reply) {
-    P.state.chatMessages.push(reply);P.render();P.DigitalHuman?.respond(reply.text);
+    // 仅在本人已确认、资料仍获授权且问题相同的情况下使用修订答复。
+    reply=P.AnswerFeedback.apply(reply);P.state.chatMessages.push(reply);P.render();P.DigitalHuman?.respond(reply.text);
     setTimeout(()=>{const history=document.querySelector('.avatar-conversation');if(history)history.scrollTop=history.scrollHeight;},20);
   }
   /** 当前媒体或章节优先作为话题；显式新记录和故事入口仍可切换到对应故事。 */
@@ -273,6 +274,8 @@
   /** 统一派发按钮动作；新增动作应保持与其界面文案一致。 */
   function act(action,el) {
     const s=P.state;
+    if(P.KeepsakeBooks.handleAction(action,el))return;
+    if(P.MaterialLibrary.handleAction(action,el)||P.AnswerFeedback.handleAction(action,el)||P.RelationshipChapters.handleAction(action,el))return;
     if(P.ContentChat.handleAction(action,el))return;
     if(P.PersonArchive?.handleAction(action,el))return;
     if(P.MemorySpace?.handleAction(action,el))return;
@@ -286,6 +289,8 @@
     if (action==='invite-person-change') return fillInvitePerson();
     if (action==='edit-invite') return invite('',el.dataset.id);
     if (action==='revoke-invite') {const item=s.invitations.find(entry=>entry.id===el.dataset.id && entry.status==='pending');if(s.actor==='father' && item){item.status='revoked';P.render();P.toast('邀请已撤回，不会新增账号或成员。');}return;}
+    // 首页图谱直接打开现有关系树，不另存成员或改变资料授权。
+    if (action==='home-family-tree') {s.familyTab='关系树';return P.navigate('family');}
     if (action==='family-tab') {s.familyTab=el.dataset.value;return P.render();}
     if (action==='tree-zoom') {s.treeZoom=Math.min(1.5,Math.max(.75,(s.treeZoom || 1)+Number(el.dataset.value)*.15));return P.render();}
     if (action==='tree-center') {s.treeZoom=1;P.render();const tree=document.querySelector('.family-tree');if(tree)tree.scrollLeft=0;return;}
@@ -309,7 +314,9 @@
     if (action==='approve-access' || action==='deny-access') return decideAccess(el.dataset.id,action==='approve-access');
     if (action==='toggle-font') return P.toggleFont();
     if (action==='clear-chat-context') {s.chatContext=null;return P.render();}
-    if (action==='family-picker') return P.modal('陈家的回忆',`<div class="family-selector"><button data-action="close-modal">${i('family')}<span>陈家的回忆<small>当前家庭 · ${s.members.length} 位家人</small></span>${i('check')}</button></div><p class="caption section">当前原型演示一个家庭；每段资料仍按本人确认的范围展示。</p>`);
+    // 首页自由聊天结束旧资料话题；跨人物时清空旧对话，输入草稿仍由数字人模块按账号保存。
+    if (action==='home-chat') {if(s.chatTarget!=='father')s.chatMessages=[];s.chatTarget='father';s.chatContext=null;return P.navigate('chat');}
+    if (action==='home-ask-story') {const item=P.visibleStories().find(story=>story.id===el.dataset.id && story.subject==='father');if(item)return openQuestion(`讲讲《${item.title}》这段经历。`,item.id);return P.toast('这段经历暂未向你开放。');}
     if (action==='choose-person') return P.modal('选择交流的人物',`<div class="family-selector"><button data-action="close-modal">${a('father')}<span>爸爸的数字人<small>陈远山 · 已获授权</small></span>${i('check')}</button><button data-action="unavailable-person">${a('mother')}<span>妈妈 · 林慧<small>尚未建立或开放数字人</small></span>${i('lock')}</button></div>`);
     if (action==='unavailable-person') return P.toast('这位家人尚未建立或向你开放数字人服务。');
     if (action==='close-modal') return P.closeModal();
@@ -318,6 +325,8 @@
   function submit(event) {
     event.preventDefault();
     const form=event.target;
+    if(P.KeepsakeBooks.submit(form))return;
+    if(P.MaterialLibrary.submit(form,event)||P.AnswerFeedback.submit(form,event)||P.RelationshipChapters.submit(form,event))return;
     if(P.QuestionInbox?.submit(form))return;
     if (form.id==='chat-form') {const text=String(new FormData(form).get('message') || '');if(text.trim()){P.DigitalHuman.clearDraft();return sendMessage(text);}return;}
     if (form.id==='record-form') return saveRecord(event);

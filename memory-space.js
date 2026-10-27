@@ -32,9 +32,9 @@
   /** 三维画面和可读的物件入口共存，保留非手势操作。 */
   function view() {
     const s=settings();
-    return `<section class="memory-scene memory-3d" data-mode="${s.mode}" data-render-state="loading" aria-label="老家的三维记忆空间">
+    return `<section class="memory-scene memory-3d" data-mode="${s.mode}" data-render-state="loading" aria-label="回忆里的家，老家的三维场景">
       <div id="memory-viewport" class="memory-viewport"><p class="memory-loading">正在打开这间有故事的老屋…</p></div>
-      <div class="memory-top"><div class="scene-title"><h1>老家的客厅</h1><p><span id="memory-year">${P.state.year}</span> · 记忆复原示例</p></div>
+      <div class="memory-top"><div class="scene-title"><h1>回忆里的家</h1><p>老家的客厅 · <span id="memory-year">${P.state.year}</span> · 记忆复原示例</p></div>
         <div class="memory-mode-picker" aria-label="空间观察方式">${Object.entries(MODE_NAMES).map(([id,label])=>b(label,'space-mode',s.mode===id?'active':'',`data-value="${id}"`)).join('')}</div>
         <div class="memory-toolbar"><div class="era-picker" aria-label="年代示意">${['1986','2000','现在'].map(y=>b(y,'scene-year',P.state.year===y?'active':'',`data-value="${y}"`)).join('')}</div>${b('⤢','space-fullscreen','memory-icon-button','aria-label="全屏查看三维空间" title="全屏查看"')}</div></div>
       <div class="memory-hotspots">${Object.entries(ITEMS).map(([id,item])=>b(`<span></span>${item.label}`,'hotspot','hotspot '+id,`data-value="${id}" aria-pressed="${P.state.hotspot===id}"`)).join('')}</div>

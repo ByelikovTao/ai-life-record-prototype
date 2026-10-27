@@ -19,10 +19,14 @@
   }
   /** 当前账号只能看到自己提出或需要自己回答的问题。 */
   function entries() {return P.state.questions.filter(item=>item.from===P.state.actor || item.owner===P.state.actor);}
-  /** 首页显示可进入的真实问题列表，不用一次提示代替后续处理。 */
-  function summary() {
-    const items=entries(),pending=items.filter(item=>item.owner===P.state.actor && item.status==='pending').length;
-    return `<div class="section"><div class="section-heading"><h2>${pending?`${pending} 个问题等你回答`:'留给家人的问题'}</h2>${l('查看问题 '+P.icon('arrow'),'questions')}</div><p class="caption">${items.length?`已留存 ${items.length} 个问题，回复后可在这里再次查看。`:'没有讲完的经历，可以留给本人慢慢补充。'}</p></div>`;
+  /** 首页数字只统计当前账号的真实问题，互斥分组，不把示例话题或累计回复冒充未读。 */
+  function homeCounts() {
+    const actor=P.state.actor,items=entries(),counts={total:items.length,pending:0,waiting:0,answered:0,replied:0};
+    for(const item of items){
+      if(item.status==='pending'){if(item.owner===actor)counts.pending++;else counts.waiting++;}
+      else if(item.status==='answered'){if(item.from===actor)counts.answered++;else counts.replied++;}
+    }
+    return counts;
   }
   /** 原问题固定当时的媒体、章节或故事引用，私聊不会自动进入共同档案。 */
   function leave(text,storyId='',contentContext=null) {
@@ -71,5 +75,5 @@
     if(!answer || answer.length>ANSWER_LIMIT){P.toast(`请填写 1—${ANSWER_LIMIT} 字的回答。`);return true;}
     item.answer=answer;item.status='answered';delete drafts().answers[item.id];P.render();P.toast('本人回复已保存，提问家人可以查看。');return true;
   }
-  P.QuestionInbox={summary,view,leave,handleAction,submit,captureDrafts};P.views.questions=view;
+  P.QuestionInbox={homeCounts,view,leave,handleAction,submit,captureDrafts};P.views.questions=view;
 }
