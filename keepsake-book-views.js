@@ -30,7 +30,7 @@
   /** 报价明确拆分服务，示例金额不会被包装成已生效的正式套餐。 */
   function fees(book) {
     const rows=[['editing','编辑与排版','确认报价后开始'],['sample','一册实物样书','本人定稿后支付'],['printing','小批量印制与寄送','样书确认后支付']];
-    return `<section class="card section"><h2>分阶段确认费用</h2><p class="caption">演示报价，实际服务范围与价格待确认。示例交付共 3 册，含样书。</p><dl class="book-fees">${rows.map(([key,label,note])=>`<div><dt>${label}<small>${note}</small></dt><dd>¥${K.FEES[key]}<small>${book.paid[key]?'演示已支付':'待支付'}</small></dd></div>`).join('')}</dl><p class="caption">已付演示金额 ¥${K.paidTotal(book)}。不重复收取既有档案整理费用。</p></section>`;
+    return `<section class="card section"><h2>分阶段确认费用</h2><p class="caption">演示报价，实际服务范围与价格待确认。示例交付共 3 册，含样书。</p><dl class="book-fees">${rows.map(([key,label,note])=>`<div><dt>${label}<small>${note}</small></dt><dd>¥${K.FEES[key]}<small>${book.paid[key]?'演示已支付':'待支付'}</small></dd></div>`).join('')}</dl><p class="caption">已付演示现金 ¥${K.paidTotal(book)}，服务金 ¥${P.state.billingOrders.find(item=>item.id===book.billingOrderId)?.credit||0}。不重复收取既有档案整理费用。</p></section>`;
   }
   /** 当前阶段只显示客户能够执行的下一步，本人定稿与发起人付款分别处理。 */
   function next(book) {

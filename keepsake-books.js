@@ -50,8 +50,8 @@
     const snapshot=book.snapshots.find(item=>item.version===book.version);
     return snapshot||{version:book.version,title:book.title,dedication:book.dedication,sections:selected(book).map(item=>({key:item.key,title:item.title,text:item.text||'',image:item.asset?.kind==='photo'?item.asset.poster:''}))};
   }
-  /** 同一项演示服务最多记一次付款，不触发支付或重复建档收费。 */
-  function paidTotal(book) {return Object.entries(book.paid).reduce((sum,[key,paid])=>sum+(paid?FEES[key]:0),0);}
+  /** 已付款服务按现金实付汇总，服务金另记，不能把抵扣额算作现金收入。 */
+  function paidTotal(book) {const credit=P.state.billingOrders.find(item=>item.id===book.billingOrderId&&!item.refunded)?.credit||0;return Object.entries(book.paid).reduce((sum,[key,paid])=>sum+(paid?FEES[key]:0),0)-credit;}
   /** 印制前取消按实际完成项目核算；发货后进入售后，不承诺自动全额退款。 */
   function requestService(book,kind) {
     const cancelling=kind==='cancel';
@@ -89,7 +89,7 @@
       if(!book.keys.length||selected(book).length!==book.keys.length){P.toast('所选资料权限有变化，请重新核对选材。');return true;}
       book.approvedKeys=[...book.keys];book.phase='quote';
     }
-    if(action==='book-edit-payment'&&payer&&book.phase==='quote'&&ready(book)){book.paid.editing=true;book.phase='editing';}
+    if(action==='book-edit-payment'&&payer&&book.phase==='quote'&&ready(book)){P.BillingViews.checkout(book.subject,'book',false,book.id);return true;}
     if(action==='book-finalize'&&owner&&book.phase==='proof'&&ready(book)){
       P.modal('确认这一版可以制作样书',`<p>确认《${P.escape(book.title)}》V${book.version} 的封面、全文、图片与署名。确认后固定这一版，原档案后续更新不会自动改书。</p>${P.button('我已核对完整校样，确认定稿','book-lock','btn full section')}`);return true;
     }

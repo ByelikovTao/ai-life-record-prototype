@@ -128,3 +128,9 @@
 .welcome-page .card .caption{margin:7px 0 14px}
 
 
+
+/* 共享权益与原型边界工具支持放大字号和窄屏换行。 */
+.billing-demo{padding:14px;border:1px dashed var(--line);border-radius:12px}
+.billing-demo .btn{margin:8px 6px 0 0;white-space:normal}
+.billing-chat-quota{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;flex-shrink:0}
+.billing-chat-quota span{flex:1 1 160px}

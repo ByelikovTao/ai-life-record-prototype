@@ -24,7 +24,7 @@
       <p class="studio-intro">把日子，<br><em>留成故事。</em></p>
       <p class="studio-caption">一份会继续生长的人生记录。<br>看见过去，也聊聊今天。</p>
       <nav id="studio-nav" class="studio-nav" aria-label="页面快捷入口"></nav>
-      <div class="studio-bottom"><span class="studio-dot"></span>可点击演示 · V1.19<br>示例人物与素材 · 刷新还原</div>
+      <div class="studio-bottom"><span class="studio-dot"></span>可点击演示 · V1.22<br>示例人物与素材 · 刷新还原</div>
     </aside>
     <main class="stage">
       <div class="review-toolbar" aria-label="原型预览设置">
@@ -34,6 +34,7 @@
         <button id="font-toggle" type="button" aria-pressed="false">大字号</button>
         <button id="reset-demo" type="button">重置演示</button>
         <!-- 报告属于评审工具，在新页阅读，保留原型中未提交的内存内容。 -->
+
 
       </div>
       <div class="phone" id="phone">
@@ -52,8 +53,9 @@
       <div class="palette"><i style="background:#F6F3EC"></i><i style="background:#234E43"></i><i style="background:#8B5D3B"></i></div>
       <div class="review-rule"><strong>温暖、克制、可信</strong><p>人物与故事做主角。原声、整理和推演各有清楚的标记。</p></div>
       <details><summary>查看当前演示状态</summary><pre id="state-preview"></pre></details>
-      <div class="state-examples"><label for="scenario-select">查看边界状态</label><select id="scenario-select"><option value="normal">正常内容</option><option value="private">未获授权的故事</option><option value="empty">空收藏</option><option value="quota">语音额度用尽</option><option value="failure">下一次整理失败</option></select><p>用于评审交互反馈，属于原型工具。</p></div>
+      <div class="state-examples"><label for="scenario-select">查看边界状态</label><select id="scenario-select"><option value="normal">正常内容</option><option value="private">未获授权的故事</option><option value="empty">空收藏</option><option value="quota">共享答复额度用尽</option><option value="failure">下一次整理失败</option></select><p>用于评审交互反馈，属于原型工具。</p></div>
       <a class="overview-link" href="overview.html">查看三屏总览 ↗</a>
+
 
     </aside>
   </div>
@@ -63,10 +65,15 @@
   <script src="archive-data.js" defer></script>
   <script src="person-archive.js" defer></script>
   <script src="content-chat.js" defer></script>
+  <script src="family-context.js" defer></script>
+  <script src="billing.js" defer></script>
+  <script src="billing-views.js" defer></script>
+  <script src="family-memories.js" defer></script>
   <script src="views.js" defer></script>
   <script src="family-tree.js" defer></script>
   <script src="family-views.js" defer></script>
   <script src="vendor/three.global.js" defer></script>
+  <script src="portrait-motion.js" defer></script>
   <script src="digital-human.js" defer></script>
   <script src="questions.js" defer></script>
   <script src="material-library.js" defer></script>

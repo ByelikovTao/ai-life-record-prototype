@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "date": "2026-10-27",
+  "method": "AI关键帧、二维定位与遮罩、嘴唇形状插值、人物前景上半身靠近；本地无声H.264片段，无三维人物模型。",
+  "files": [
+    {
+      "file": "blink.png",
+      "bytes": 2123307,
+      "sha256": "28ab64a275377ca4054271bfd408cd9280a9f7df4be40fadb8c441cb2fa95fa0"
+    },
+    {
+      "file": "idle-v3.mp4",
+      "bytes": 223177,
+      "sha256": "d43e386bbb0ed90c4f39de7c98531b573bf69f35cfa9000eb34a0c2b8669ed90"
+    },
+    {
+      "file": "media-validation.json",
+      "bytes": 3710,
+      "sha256": "626d4331e6732a55e21b009bb981f80fc1523bad55b162681d0f253d67c55ee8"
+    },
+    {
+      "file": "mouth-a.png",
+      "bytes": 2072608,
+      "sha256": "4770f4a10e4ca9ccc1f3082469741c8a34959cbceb8397d7ba7c8298eec8309b"
+    },
+    {
+      "file": "mouth-o.png",
+      "bytes": 2109145,
+      "sha256": "4ef294a7320ccffffef21a15d2d13e0a9e1d0fe9de2715c7c129bea2028d0bd9"
+    },
+    {
+      "file": "person-mask.png",
+      "bytes": 13582,
+      "sha256": "c78708551c267c1dacbe9f023416d2525f4977d3dd568f78e43dee8ab4e6e653"
+    },
+    {
+      "file": "room-empty.png",
+      "bytes": 2457559,
+      "sha256": "811c4322c6fa4b6f9a98785548561926aa1a8f625ed9975893532df65c0c9791"
+    },
+    {
+      "file": "settling-v3.mp4",
+      "bytes": 113087,
+      "sha256": "c781b387a7b45d1c39c0f5d78e465e65f08d58477eba1493bb3eb2f8818732e4"
+    },
+    {
+      "file": "source-landmarks.json",
+      "bytes": 141155,
+      "sha256": "1056a7307c5fe5eac2acccf58a1bbbe1cf1e43c25811732524c9a17204ebab95"
+    },
+    {
+      "file": "speaking-v3.mp4",
+      "bytes": 238867,
+      "sha256": "2cbddbcab8aa01c8f1fea4d37879d9370cb59f176762f550054b6057acf7d7e5"
+    }
+  ]
+}

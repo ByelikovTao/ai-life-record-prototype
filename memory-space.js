@@ -5,7 +5,8 @@
   const {icon:i,button:b,escape:e}=P;
   const ITEMS={desk:{label:'旧书桌',title:'那张一直没换的书桌',text:'很多故事，就从这扇窗边开始。',source:'old-home'},radio:{label:'收音机',title:'晚饭后的收音机',text:'关于这台收音机、晚饭后听过什么节目，现有记录还没有讲清楚。可以先看看同一老宅的相关资料，或把问题留给本人补充。',source:'old-home',sourceLabel:'查看老宅相关记录'},photo:{label:'全家福',title:'墙上的那张全家福',text:'走向不同的城市之后，这个家仍把我们连在一起。',source:'spring'}};
   const STOPS={entry:{x:0,z:2.12,yaw:0,pitch:-.06},desk:{x:.65,z:-.18},radio:{x:-.75,z:-.65},photo:{x:-.3,z:-1.52}};
-  const MODE_NAMES={tour:'全景看房',model:'房间模型',walk:'三维漫游'};
+  /** 观察方式用日常用语呈现，内部模式与相机操作保持原有契约。 */
+  const MODE_NAMES={tour:'看看老家',model:'屋子全貌',walk:'四处走走'};
   let active=null;
   let mountRequest=0;
   const CAMERA_ACTIONS=['space-focus','space-step','space-zoom','space-reset'];
@@ -31,6 +32,8 @@
   }
   /** 三维画面和可读的物件入口共存，保留非手势操作。 */
   function view() {
+    if(!P.FamilyContext.allowed(P.FamilyContext.current(),'space'))return P.FamilyContext.locked('space');
+    if(P.FamilyContext.current()!=='father')return '<div class="page empty"><h2>这位家人尚未建立回忆场景</h2><p>不会使用其他人的老家代替。</p></div>';
     const s=settings();
     return `<section class="memory-scene memory-3d" data-mode="${s.mode}" data-render-state="loading" aria-label="回忆里的家，老家的三维场景">
       <div id="memory-viewport" class="memory-viewport"><p class="memory-loading">正在打开这间有故事的老屋…</p></div>
@@ -206,6 +209,7 @@
   }
   /** 加载完整家具后渲染；异步加载期间离开页面会取消这一轮挂载。 */
   async function mount() {
+    if(!P.FamilyContext.allowed(P.FamilyContext.current(),'space'))return;
     const host=document.querySelector('.memory-3d');if(!host)return;
     const viewport=host.querySelector('#memory-viewport'),request=++mountRequest;let assets,renderer,scene,world,environment,tour,pipeline,ctx;
     host.dataset.renderState='loading';const retry=host.querySelector('[data-action="space-retry"]');if(retry)retry.disabled=true;syncControls();

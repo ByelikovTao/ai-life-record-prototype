@@ -1,4 +1,4 @@
-/* 家人会面式页面：写真主画面、字幕式对话、稳定输入区；不加载三维人物。 */
+/* 家人会面式页面：二维视频主画面、字幕式对话、稳定输入区；不加载三维人物。 */
 .avatar-page{height:100%;display:flex;flex-direction:column;gap:10px;padding:4px 18px 10px;overflow:hidden}
 .avatar-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:auto;scrollbar-width:thin}
 .avatar-page-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding:0 2px 2px}
@@ -52,7 +52,7 @@
 .large-type .avatar-page-heading h1{font-size:32px}
 .large-type .avatar-live-status p,.large-type .avatar-service-note{font-size:14px}
 .large-type .avatar-page .chat-form{border-radius:22px;align-items:center}
-/* 人物不生成动作，回应指示与气泡轻微出现；镜头变化仅表达模拟氛围。 */
+/* 回应指示和气泡只负责反馈；人物动作由本地二维视频提供。 */
 .avatar-live-status[data-phase="replying"]>span{background:#547E61;animation:reply-pulse 1s ease-in-out infinite}
 .avatar-conversation .message:last-child{animation:dialogue-arrive .35s ease-out}
 @keyframes reply-pulse{50%{opacity:.35}}
@@ -66,12 +66,16 @@
 .avatar-about-button{color:white;background:#FFFFFF1F;border-color:#FFFFFF55;backdrop-filter:blur(12px)}
 .avatar-preview-label{left:auto;right:14px;top:77px;color:#FFFEF9;background:#243A3266;border-color:#FFFFFF55}
 .avatar-image-shade{background:linear-gradient(180deg,#162A20AD,transparent 38%,transparent 49%,#26372F4D)}
-.avatar-portrait{animation:camera-drift 22s ease-in-out infinite;will-change:transform}
-.avatar-stage[data-call-state="paused"] .avatar-portrait{animation-play-state:paused}
 .avatar-call-controls{display:flex;justify-content:center;gap:10px}
 .avatar-call-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 15px;border:1px solid #DCE1D6;border-radius:22px;background:#ECEFE5;color:#506254;font-size:calc(12px * var(--unit));line-height:1.5;flex:1;min-width:0}
 .avatar-call-action .icon{width:16px;height:16px;flex-shrink:0}
 .avatar-call-action.end{background:#B86B5B;color:#FFFEF7;border-color:#B86B5B}
 .avatar-stage>.notice{position:absolute;top:112px;left:13px;right:13px;z-index:4;background:#FFFEFAF0}
-@keyframes camera-drift{0%,100%{transform:scale(1)}50%{transform:scale(1.025) translateY(-2px)}}
-@media(prefers-reduced-motion:reduce){.avatar-portrait{animation:none;will-change:auto}}
+/* 人物动作来自本地二维视频，不再通过移动整张照片模拟人物在动。 */
+.portrait-motion,.portrait-clips{position:absolute;inset:0;z-index:1}
+.portrait-clips video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 31%;opacity:0;transition:opacity .18s ease;pointer-events:none}
+.portrait-motion[data-mode="idle"] video[data-kind="idle"],.portrait-motion[data-mode="speaking"] video[data-kind="speaking"],.portrait-motion[data-mode="settling"] video[data-kind="settling"]{opacity:1}
+.portrait-motion-retry{position:absolute;left:50%;top:44%;transform:translateX(-50%);z-index:4;background:#FFFEFAED;color:var(--green);padding:10px 15px;border:1px solid #D5DECE;border-radius:20px;font-size:14px}
+.portrait-motion-retry[hidden]{display:none}
+.large-type .portrait-motion{height:350px;bottom:auto}
+@media(prefers-reduced-motion:reduce){.portrait-clips video{transition:none}}

@@ -19,18 +19,18 @@
     const ref=reference(value);if(!ref)return null;
     if(ref.kind==='story'){
       const story=P.visibleStories().find(item=>item.id===ref.storyId);
-      return story?{ref,person:story.subject,title:story.title,label:LABELS.story,text:story.text.join('\n\n'),story}:null;
+      return story?{ref,person:story.commonWith||story.subject,title:story.title,label:LABELS.story,text:story.text.join('\n\n'),story}:null;
     }
     if(ref.kind==='biography'){
       const profile=P.PersonArchive.biography(ref.personId),chapter=P.PersonArchive.chapter(ref.personId,ref.chapterId);
       return chapter?{ref,person:ref.personId,title:chapter.title,label:LABELS.biography,date:chapter.years,text:chapter.body.join('\n\n'),sourceLabel:profile.sourceLabel,supportingStories:chapter.stories}:null;
     }
     const asset=P.PersonArchive.getItem(ref.assetId);if(!asset)return null;
-    const story=P.visibleStories().find(item=>item.id===asset.relatedStoryId && item.subject===asset.subject);
+    const story=P.visibleStories().find(item=>item.id===asset.relatedStoryId && item.subject===asset.subject&&P.FamilyContext.usable(item,asset.subject));
     return {ref,person:asset.subject,title:asset.title,label:LABELS[asset.kind],date:asset.date,text:asset.body?.join('\n\n') || asset.description,sourceLabel:asset.sourceLabel,asset,story};
   }
   /** 尚未建立数字人的人物保持原有开通状态，不能借另一位家人的形象冒名回答。 */
-  function available(person) {return Boolean(P.state.members.includes(person) && P.state.accounts[person]?.hasDigital);}
+  function available(person) {return Boolean(P.FamilyContext.allowed(person,'digital') && P.state.accounts[person]?.hasDigital);}
   /** 同一资料的标识不含视频秒数，避免同一问题在相邻画面重复留存。 */
   function key(value) {const ref=reference(value);return ref?.kind==='asset'?'asset:'+ref.assetId:ref?.kind==='biography'?'biography:'+ref.personId+':'+ref.chapterId:ref?.kind==='story'?'story:'+ref.storyId:'';}
   /** 回看按钮只编码引用，历史回复各自固定来源，不能读取后来切换的实时话题。 */
@@ -91,6 +91,8 @@
     const ref=reference(P.state.chatContext);if(!ref || ref.kind==='story')return null;
     const item=resolve(ref),unknown={type:'unknown',question:text,storyId:item?.story?.id || '',contentSource:ref,text:'当前资料没有记录这个细节。可以把问题留给本人补充，不根据画面或片段猜测。'};
     if(!item)return {...unknown,text:'这份资料目前暂未向你开放，不能引用其中的内容。'};
+    if(item.asset&&!P.FamilyContext.answerable(item))return {...unknown,text:'本人尚未授权数字人引用这份家人资料。'};
+    if(item.ref.kind==='biography'&&item.supportingStories?.some(story=>!P.FamilyContext.usable(story,item.person)))return {...unknown,text:'这一章含有未获问答授权的家人经历，请选择本人已授权的原始记录。'};
     if(!item.text.trim())return {...unknown,text:'这一章暂无向你开放的事件正文，可以换一段已分享的经历继续聊。'};
     if(!available(item.person))return {...unknown,text:'这位家人的数字人尚未建立或开放，当前不能代替本人回应。'};
     if(/没有记录|没记录|未记录|不知道|还有哪些/.test(text))return unknown;
@@ -106,7 +108,7 @@
     return {type:'memory',text:parts.join('\n\n'),contentSource:ref,source:item.story?.id,supportingStoryIds:item.supportingStories?.map(story=>story.id),sourceLabel:ref.kind==='biography'?'据示例传记章节整理':'据示例资料'+(item.story?'及已授权关联故事':'说明')+'整理'};
   }
   /** 历史正文逐条检查入口资料及实际引用的事件，撤回任一依据都不继续展示旧答案。 */
-  function messageReadable(message) {return !message.contentSource || Boolean(resolve(message.contentSource) && (!message.source || P.visibleStories().some(item=>item.id===message.source)) && (message.supportingStoryIds || []).every(id=>P.visibleStories().some(item=>item.id===id)));}
+  function messageReadable(message) {if(message.type==='memory'&&message.contentSource){const item=resolve(message.contentSource);if(item?.asset?.author!==item?.person&&!item?.asset?.aiAllowed&&item?.asset)return false;}return !message.contentSource || Boolean(resolve(message.contentSource) && (!message.source || P.visibleStories().some(item=>item.id===message.source)) && (message.supportingStoryIds || []).every(id=>P.visibleStories().some(item=>item.id===id&&P.FamilyContext.usable(item,P.state.chatTarget))));}
   /** 只接管内容追问动作，解析失败明确反馈，避免失效按钮制造空白对话。 */
   function handleAction(action,element) {
     if(action==='content-chat-prompt'){P.sendChatMessage(element.dataset.question || '');return true;}

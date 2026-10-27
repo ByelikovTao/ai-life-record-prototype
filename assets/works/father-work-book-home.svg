@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" role="img" aria-labelledby="title desc">
+<title id="title">老屋里的四季 · 虚构作品示意</title><desc id="desc">以老屋、四季和家庭记忆为主题的虚构散文集，展示内容提要与短节选，无真实出版信息。</desc>
+<!-- 代码绘制的作品展示示意，不是出版物封面或书画原作扫描。 -->
+<rect width="720" height="860" fill="#F0E9D9"/><rect x="35" y="35" width="650" height="790" rx="6" fill="#FBF8EF" stroke="#CEC4AD"/>
+<text x="360" y="124" text-anchor="middle" font-size="19" fill="#695640">个人作品 · 著作节选</text>
+<path d="M124 210H596M124 229H420" stroke="#695640" opacity=".3" stroke-width="2"/><text x="360" y="365" text-anchor="middle" font-size="40" fill="#695640" font-family="SimSun,serif">老屋里的四季</text><text x="360" y="422" text-anchor="middle" font-size="22" fill="#695640">陈远山 · 著作节选</text><path d="M310 516H410" stroke="#695640" stroke-width="2"/>
+<text x="360" y="746" text-anchor="middle" font-size="20" fill="#695640">2022 · 虚构演示作品</text><text x="360" y="784" text-anchor="middle" font-size="17" fill="#7F786A">原型展示图 · 非真实客户存档</text>
+</svg>

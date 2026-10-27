@@ -6,7 +6,7 @@
   /** 来源取自这条历史回答，不跟随后来切换的资料或人物改变。 */
   function reference(message) {return P.ContentChat.reference(message.contentSource || (message.source||message.storyId?{kind:'story',storyId:message.source||message.storyId}:null));}
   /** 原资料撤回时停用相关反馈正文及修订答复，不因处理反馈扩大原权限。 */
-  function available(item) {return !item.ref || Boolean(P.ContentChat.resolve(item.ref));}
+  function available(item) {return !item.ref || P.FamilyContext.answerable(P.ContentChat.resolve(item.ref));}
   /** 反馈只在提交者与数字人本人之间流转，第三位家人没有查看权。 */
   function entries() {return P.state.answerFeedback.filter(item=>item.from===P.state.actor||item.owner===P.state.actor);}
   /** 每条历史回复使用稳定编号，避免旧按钮按消息位置指向另一条回答。 */

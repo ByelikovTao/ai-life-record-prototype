@@ -1,0 +1,129 @@
+{
+  "checks": {
+    "clipsAreH264Portrait24fps": true,
+    "eyesCloseInDecodedFrames": true,
+    "mouthOpensInDecodedFrames": true,
+    "headNodsLocally": true,
+    "backgroundStaysStable": true,
+    "bodyLeansCloser": true,
+    "mouthCadenceIsGentle": true,
+    "bodyReturnsSmoothly": true
+  },
+  "metadata": {
+    "idle": {
+      "width": 512,
+      "height": 768,
+      "fps": 24.0,
+      "frames": 192,
+      "codec": "h264",
+      "sha256": "d43e386bbb0ed90c4f39de7c98531b573bf69f35cfa9000eb34a0c2b8669ed90"
+    },
+    "speaking": {
+      "width": 512,
+      "height": 768,
+      "fps": 24.0,
+      "frames": 192,
+      "codec": "h264",
+      "sha256": "2cbddbcab8aa01c8f1fea4d37879d9370cb59f176762f550054b6057acf7d7e5"
+    },
+    "settling": {
+      "width": 512,
+      "height": 768,
+      "fps": 24.0,
+      "frames": 30,
+      "codec": "h264",
+      "sha256": "c781b387a7b45d1c39c0f5d78e465e65f08d58477eba1493bb3eb2f8818732e4"
+    }
+  },
+  "landmarkMeasurements2D": {
+    "idle-neutral": {
+      "eye": 0.15790270032358655,
+      "mouth": 0.0022704564725475143,
+      "noseY": 272.46546936035156,
+      "faceWidth": 0.24752360901994372
+    },
+    "idle-blink": {
+      "eye": 0.04206501978717346,
+      "mouth": 0.005681878989532421,
+      "noseY": 274.0986099243164,
+      "faceWidth": 0.25078405332843984
+    },
+    "idle-nod": {
+      "eye": 0.1483958672552917,
+      "mouth": 0.0029961007342618295,
+      "noseY": 280.5823974609375,
+      "faceWidth": 0.2549140392748558
+    },
+    "idle-open": {
+      "eye": 0.15742343866331532,
+      "mouth": 0.001787128282911233,
+      "noseY": 273.13817596435547,
+      "faceWidth": 0.24668438550683527
+    },
+    "speaking-neutral": {
+      "eye": 0.15677008435630374,
+      "mouth": 0.0030068663384775576,
+      "noseY": 272.64424896240234,
+      "faceWidth": 0.24914896108894938
+    },
+    "speaking-blink": {
+      "eye": 0.023797000054352802,
+      "mouth": 0.005278947966932125,
+      "noseY": 275.94628143310547,
+      "faceWidth": 0.27116863151764387
+    },
+    "speaking-nod": {
+      "eye": 0.14271870068888975,
+      "mouth": 0.03617516520901226,
+      "noseY": 280.4836120605469,
+      "faceWidth": 0.2718270514551894
+    },
+    "speaking-open": {
+      "eye": 0.1571843355293328,
+      "mouth": 0.07185649347904377,
+      "noseY": 274.0538635253906,
+      "faceWidth": 0.27068912099745457
+    },
+    "settling-neutral": {
+      "eye": 0.17013824033002461,
+      "mouth": 0.0031888309236650105,
+      "noseY": 273.6540985107422,
+      "faceWidth": 0.268412528564211
+    },
+    "settling-returned": {
+      "eye": 0.15320717616761254,
+      "mouth": 0.003710293759748932,
+      "noseY": 272.9205322265625,
+      "faceWidth": 0.24984681215042742
+    }
+  },
+  "backgroundMeanPixelDifference": 0.06230077374318331,
+  "mouthOpeningEpisodes": [
+    {
+      "startSeconds": 0.4583333333333333,
+      "endSeconds": 0.9583333333333334
+    },
+    {
+      "startSeconds": 2.375,
+      "endSeconds": 2.875
+    },
+    {
+      "startSeconds": 3.4166666666666665,
+      "endSeconds": 3.75
+    },
+    {
+      "startSeconds": 4.416666666666667,
+      "endSeconds": 4.916666666666667
+    },
+    {
+      "startSeconds": 5.416666666666667,
+      "endSeconds": 5.791666666666667
+    },
+    {
+      "startSeconds": 6.208333333333333,
+      "endSeconds": 6.541666666666667
+    }
+  ],
+  "peakMouthRatio": 0.07811165401380743,
+  "scope": "\u771f\u5b9eMP4\u89e3\u7801\u4e0e\u4e8c\u7ef4\u5b9a\u4f4d\u70b9\u6d4b\u91cf\uff1b\u4e0d\u8bc1\u660e\u9010\u5b57\u53e3\u578b\u540c\u6b65\u6216\u5b9e\u9645\u6d4f\u89c8\u5668\u81ea\u52a8\u64ad\u653e\u3002"
+}

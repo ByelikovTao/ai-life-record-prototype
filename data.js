@@ -51,24 +51,19 @@
     {id:'spring', title:'今年春节，全家又坐在一起', year:'2026', date:'2026年春节', recorded:'2026年2月20日', category:'家庭日常', image:'family', author:'xia', scope:'family', text:['爸爸说，团圆并不需要安排很多事。一家人围着桌子吃饭，就已经很好。','我这次才知道，那道每年都会做的菜，最早是奶奶教给妈妈的。下次，我也想学会。'], quote:'一家人围着桌子吃饭，就已经很好。', source:'陈知夏的家庭记录', duration:'02:15'},
     {id:'private', title:'留给自己的几句话', year:'2026', date:'2026年10月', recorded:'2026年10月18日', category:'个人记录', image:'room', author:'father', scope:'private', text:['有些话，我想先留给自己。等准备好了，再慢慢讲给家人听。'], quote:'有些话，想先留给自己。', source:'本人文字记录', duration:'01:00'}
   ];
-  const PLANS = {
-    basic:{name:'基础账号', price:0, minutes:0, space:0, records:0},
-    personal:{name:'个人会员', price:999, minutes:600, space:10, records:60},
-    legacy:{name:'个人传承会员', price:2999, minutes:2400, space:50, records:120}
-  };
-  /** 录入、切账号和提交后重置使用同一份草稿结构；补充与本人记录分别处理。 */
+  /** 草稿同时记录对象和类型，自己的记录、补充与共同回忆各自保存，不随人物切换改归属。 */
   function emptyRecord() {
-    return {text:'',title:'',eventYear:String(new Date().getFullYear()),scope:'private',viewers:[],kind:'own',storyId:'',pendingId:null,seconds:0,recording:false,paused:false,reviewed:false};
+    return {text:'',title:'',eventYear:String(new Date().getFullYear()),scope:'private',viewers:[],kind:'own',subject:'',storyId:'',pendingId:null,seconds:0,recording:false,paused:false,reviewed:false};
   }
-  /** 每个基础账号独立获得体验额度，不会因其他家人使用而扣减。 */
-  function newAccount(plan='basic') {
-    return {plan,used:0,trialRemaining:120,hasDigital:false,setupIncluded:false};
+  /** 账号只维护身份与建档状态，年度权益由人物服务统一维护。 */
+  function newAccount() {
+    return {videoDelivered:false,hasDigital:false,setupIncluded:false};
   }
   /** 创建隔离的演示初始状态，刷新或重置后不继承历史数据。 */
   function initialState() {
     const members=['father','mother','xia','grandpa','nian'];
-    const stories=structuredClone(STORIES).map(story=>({...story,subject:'father',confirmedBy:'father',viewers:story.scope==='family'?[...members]:[]}));
-    return {keepsakeBooks:[],keepsakeBookId:'',actor:'xia',route:'home',variant:new URLSearchParams(location.search).get('variant') || 'A',lifeTab:'overview',videoFilter:'all',archivePerson:'father',archiveAssets:null,archiveProfiles:null,archiveItemId:'',archiveChapterId:'',biographyMode:'read',archiveReturn:null,archivePlayback:{},familyTab:'列表',year:'1986',hotspot:'desk',guide:false,chatTarget:'father',chatContext:null,chatMessages:[],chatDrafts:{},questionDrafts:{},storyId:'first-order',saved:[],stories,members,invitations:[],pending:[],questions:[],accessRequests:[],idSequence:0,materialDrafts:{},materialSubmissions:[],answerFeedback:[],feedbackDrafts:{},feedbackReviewDrafts:{},feedbackReviewId:null,relationshipChapters:null,chapterDrafts:{},chapterNoteDrafts:{},chapterId:null,accounts:{father:{...newAccount('legacy'),used:126,hasDigital:true,setupIncluded:true},xia:newAccount(),nian:newAccount()},record:emptyRecord(),fontLarge:false,modal:null,notice:''};
+    const stories=structuredClone(STORIES).map(story=>({...story,subject:'father',confirmedBy:'father',aiAllowed:true,viewers:story.scope==='family'?[...members]:[]}));
+    return {billingSeedDate:new Date().toISOString().slice(0,10),billingToday:new Date().toISOString().slice(0,10),personServices:{},billingOrders:[],usageReceipts:[],referrals:[],rewardLedger:[],billingPeople:{},familyFocus:{xia:'father',nian:'father'},familyInvitations:{xia:['father','mother'],nian:['father']},familyAccess:{father:{archive:['xia','nian'],digital:['xia','nian'],space:['xia','nian']},mother:{archive:['xia'],digital:[],space:[]}},familyRequests:[],keepsakeBooks:[],keepsakeBookId:'',actor:'xia',route:'home',variant:new URLSearchParams(location.search).get('variant') || 'A',lifeTab:'overview',videoFilter:'all',archivePerson:'father',archiveAssets:null,archiveProfiles:null,archiveItemId:'',archiveChapterId:'',biographyMode:'read',archiveReturn:null,archivePlayback:{},familyTab:'列表',year:'1986',hotspot:'desk',guide:false,chatTarget:'father',chatContext:null,chatMessages:[],chatDrafts:{},questionDrafts:{},storyId:'first-order',saved:[],stories,members,invitations:[],pending:[],questions:[],accessRequests:[],idSequence:0,materialDrafts:{},materialSubmissions:[],answerFeedback:[],feedbackDrafts:{},feedbackReviewDrafts:{},feedbackReviewId:null,relationshipChapters:null,chapterDrafts:{},chapterNoteDrafts:{},chapterId:null,accounts:{father:{...newAccount(),videoDelivered:true,hasDigital:true,setupIncluded:true},xia:newAccount(),nian:newAccount()},record:emptyRecord(),fontLarge:false,modal:null,notice:''};
   }
   /** 两个还原入口同时清除动态人物与业务状态，保留头像等消费者持有的对象引用。 */
   function resetDemoState() {
@@ -94,14 +89,12 @@
   /** 获取当前账号对应的会员权益。 */
   function account() { return App.state.accounts[App.state.actor]; }
   /** 仅向当前访问者提供获授权的故事。 */
-  function visibleStories() { return App.state.stories.filter(story=>story.author===App.state.actor || (story.scope!=='private' && story.viewers.includes(App.state.actor))); }
-  /** 当前账号的剩余额度只读取该账号，付费会员与体验额度互不叠加扣费。 */
-  function remainingMinutes() {const ac=account();return Math.max(0,ac.plan==='basic'?ac.trialRemaining:PLANS[ac.plan].minutes-ac.used);}
+  function visibleStories() { return App.state.stories.filter(story=>App.FamilyContext.readable(story)); }
   /** 内存递增编号避免连续提交落在同一毫秒时覆盖记录或问题。 */
   function nextId(prefix) {App.state.idSequence++;return `${prefix}-${App.state.idSequence}`;}
   /** 按秒转换为录制时间显示。 */
   function duration(seconds) { return `${Math.floor(seconds/60).toString().padStart(2,'0')}:${(seconds%60).toString().padStart(2,'0')}`; }
-  window.App={state:initialState(),initialState,resetDemoState,emptyRecord,newAccount,nextId,PEOPLE,PLANS,icon,escape,button,link,avatar,badge,account,visibleStories,remainingMinutes,duration,views:{}};
+  window.App={state:initialState(),initialState,resetDemoState,emptyRecord,newAccount,nextId,PEOPLE,icon,escape,button,link,avatar,badge,account,visibleStories,duration,views:{}};
 }
 
 

@@ -28,7 +28,7 @@
           map.image=image;map.needsUpdate=true;
           if(tour.era!==year)return;root.material.map=map;root.material.needsUpdate=true;tour.ready=true;onStatus('','ready');
         };
-        image.onerror=()=>{maps.delete(year);map.dispose();if(!disposed&&tour.era===year){onStatus('全景素材未能加载，可以重试或切换房间模型。','error');console.warn('记忆全景素材加载失败，年代：'+year);}};
+        image.onerror=()=>{maps.delete(year);map.dispose();if(!disposed&&tour.era===year){onStatus('全景素材未能加载，可以重试或切换到“屋子全貌”。','error');console.warn('记忆全景素材加载失败，年代：'+year);}};
         image.src=window.MemoryRoomImages[year];
       },
       dispose(){disposed=true;maps.forEach(map=>map.dispose());root.geometry.dispose();root.material.dispose();scene.remove(root);}

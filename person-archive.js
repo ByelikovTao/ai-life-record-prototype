@@ -5,15 +5,15 @@
   const TABS={overview:'档案总览',video:'视频',photo:'照片',biography:'人生传记',work:'个人作品',place:'记忆地点'};
   const VIDEO_FILTERS={all:'全部视频',film:'人生影片',self:'本人拍摄',family:'家人拍摄'};
   const TYPES={film:'人生影片',photo:'照片',clip:'生活影像',work:'个人作品',document:'书信与原始资料'};
-  /** 模板只负责种子数据，当前演示的资料实例由本模块唯一初始化，重置后重新创建。 */
+  /** 已有示例资料视为完成本人问答授权；新增家人材料仍须逐份确认，重置时重建。 */
   function ensure() {
     const s=P.state;
-    if(s.archiveAssets===null)s.archiveAssets=structuredClone(P.ARCHIVE_DATA.assets);
+    if(s.archiveAssets===null)s.archiveAssets=structuredClone(P.ARCHIVE_DATA.assets).map(item=>({...item,aiAllowed:true}));
     if(s.archiveProfiles===null)s.archiveProfiles=structuredClone(P.ARCHIVE_DATA.people);
     return s;
   }
   /** 选择谁的档案不会改变登录账号，资料仍检查当前访问者的授权。 */
-  function readable(item) {return Boolean(item)&&(item.author===P.state.actor || (item.scope!=='private' && item.viewers.includes(P.state.actor)));}
+  function readable(item) {return P.FamilyContext.readable(item);}
   /** 追问与来源回看只取得当前获授权的单份资料，不暴露私密条目的正文或媒体路径。 */
   function getItem(id) {const item=ensure().archiveAssets.find(asset=>asset.id===id);return assetReadable(item)?item:null;}
   /** 事件资料同时服从自身和所属事件的权限，直接打开家书地址也不能绕过事件授权。 */
@@ -21,7 +21,7 @@
   /** 视频合并归档人物与本人拍摄的范围；其他资料按归档人物查询，不生成重复视频条目。 */
   function assets(person,tab) {
     if(!['video','photo','work'].includes(tab))return [];
-    return ensure().archiveAssets.filter(item=>assetReadable(item)&&(tab==='video'?(item.kind==='film'&&item.subject===person || item.kind==='clip'&&(item.subject===person || item.author===person)):item.subject===person&&item.kind===tab));
+    return ensure().archiveAssets.filter(item=>assetReadable(item)&&item.inArchive!==false&&(tab==='video'?(item.kind==='film'&&item.subject===person || item.kind==='clip'&&(item.subject===person || item.author===person)):item.subject===person&&item.kind===tab));
   }
   /** 人生影片优先作为成片类型；生活影像按当前查看人物与拍摄者的关系互斥分类。 */
   function videoType(item,person) {return item.kind==='film'?'film':item.author===person?'self':'family';}
@@ -36,7 +36,7 @@
   /** 传记正文整份授权，缺失或未开放时不从其他素材猜测生平。 */
   function biography(person) {const profile=ensure().archiveProfiles[person];return readable(profile)?profile:null;}
   /** 完整阅读和事件浏览均从当前事件实例取正文，不在传记模板另存一份经历。 */
-  function events(person) {return P.visibleStories().filter(item=>item.subject===person).sort((left,right)=>Number(right.year)-Number(left.year));}
+  function events(person) {return P.visibleStories().filter(item=>P.FamilyContext.inArchive(item,person)).sort((left,right)=>Number(right.year)-Number(left.year));}
   /** 章节叙述与获授权事件组合为即时阅读内容，不改变原记录或扩大其分享范围。 */
   function chapter(person,id) {
     const section=biography(person)?.sections.find(item=>item.id===id);if(!section)return null;
@@ -131,11 +131,14 @@
   }
   /** 人物选择与登录账号分离，纪念书从档案顶部直达，不隐藏在资料分类内。 */
   function view() {
+    const retentionPerson=P.state.archivePerson;if(!P.Billing.online(retentionPerson))return `<div class="page empty"><h1>线上保管已结束</h1><p>原稿未在本演示中删除。可导出本人资料或选择保管服务。</p>${P.button('导出我的资料迁出清单','billing-export','btn')}${P.link('查看保管权益','membership','text-link full section')}</div>`;
     const s=ensure(),person=s.archivePerson;
     if(!s.members.includes(person) || !P.PEOPLE[person])return `<div class="page empty"><h2>没有找到这位人物的档案</h2>${l('返回家庭','family','btn')}</div>`;
+    if(person!==s.actor&&!P.FamilyContext.allowed(person))return P.FamilyContext.locked('archive',person);
+    if(person===s.actor&&s.actor!=='father'&&!P.account().videoDelivered)return `<div class="page empty"><h2>开通我的完整人生空间</h2><p>可以先在“我的记录”留下生活；完整人生档案与本人数字人需先完成拍摄服务。</p>${b('了解拍摄与开通条件','video-service','btn')}${l('查看我的记录','my-records','text-link full')}</div>`;
     const profile=biography(person),tab=s.lifeTab;
     let body=tab==='overview'?overview(person):tab==='video'?videoView(person):tab==='biography'?biographyView(person):tab==='place'?placeView(person):listing(person,tab);
-    return `<div class="page person-archive-page"><div class="form-field archive-person-picker"><label for="archive-person-select">当前查看的人物档案</label><select id="archive-person-select">${s.members.map(id=>`<option value="${id}" ${person===id?'selected':''}>${e(P.PEOPLE[id].name)} · ${e(P.relation(id))}</option>`).join('')}</select></div><div class="person-heading">${a(person,'large')}<div><p class="caption">${e(P.relation(person))}${P.PEOPLE[person].born?' · '+e(P.PEOPLE[person].born)+' 年生':''}</p><h1 class="page-title">${e(P.PEOPLE[person].name)}的人物档案</h1></div></div><p class="page-subtitle">${e(profile?.tagline || '影片、相片、传记与拍摄作品，在这里集中留存。')}</p>${P.KeepsakeBooks.entry(person)}<div class="feature-entry">${l(i('plus')+' 补充与整理资料','materials','btn secondary')}</div>${shortcuts(person)}<nav class="archive-secondary-tabs" aria-label="档案浏览视角">${['overview','place'].map(id=>b(TABS[id],'archive-tab',tab===id?'active':'',`data-value="${id}"`)).join('')}</nav><section class="archive-content" data-archive-tab="${tab}">${body}</section><p class="archive-demo-note">人物与资料均为原型示例。演示视频由图片编排，不代表客户成片或本人实拍。</p></div>`;
+    return `<div class="page person-archive-page">${s.actor==='father'?`<div class="form-field archive-person-picker"><label for="archive-person-select">当前查看的人物档案</label><select id="archive-person-select">${(s.actor==='father'?s.members:[...new Set([...(s.familyInvitations[s.actor]||[]),s.actor])]).map(id=>`<option value="${id}" ${person===id?'selected':''}>${e(P.PEOPLE[id].name)} · ${e(P.relation(id))}</option>`).join('')}</select></div>`:P.FamilyContext.picker()}<div class="person-heading">${a(person,'large')}<div><p class="caption">${e(P.relation(person))}${P.PEOPLE[person].born?' · '+e(P.PEOPLE[person].born)+' 年生':''}</p><h1 class="page-title">${e(P.PEOPLE[person].name)}的人物档案</h1></div></div><p class="page-subtitle">${e(profile?.tagline || '影片、相片、传记与拍摄作品，在这里集中留存。')}</p>${P.KeepsakeBooks.entry(person)}<div class="feature-entry">${l(i('plus')+' 补充与整理资料','materials','btn secondary')}</div>${shortcuts(person)}<nav class="archive-secondary-tabs" aria-label="档案浏览视角">${['overview','place'].map(id=>b(TABS[id],'archive-tab',tab===id?'active':'',`data-value="${id}"`)).join('')}</nav><section class="archive-content" data-archive-tab="${tab}">${body}</section><p class="archive-demo-note">人物与资料均为原型示例。演示视频由图片编排，不代表客户成片或本人实拍。</p></div>`;
   }
   /** 来源上下文绑定被打开的条目，跨人物拍摄的片段返回时仍保留原资料分区。 */
   function origin(item) {
@@ -148,13 +151,13 @@
     const cues=P.ARCHIVE_DATA.captions[item.src] || [];
     return cues.length?`<details class="archive-captions"><summary>查看示例字幕</summary><ol>${cues.map(cue=>`<li><span>${P.duration(cue.start)}—${P.duration(cue.end)}</span><p>${e(cue.text)}</p></li>`).join('')}</ol></details>`:'';
   }
-  /** 媒体详情先校验授权，再输出媒体、正文与带当前资料的追问入口。 */
+  /** 媒体详情先校验授权，再输出媒体、作品展示图、正文与带当前资料的追问入口。 */
   function detail() {
     const s=ensure(),item=s.archiveAssets.find(asset=>asset.id===s.archiveItemId);
     if(!item)return `<div class="page empty"><h2>没有找到这份档案资料</h2>${l('返回人物档案','life','btn')}</div>`;
     if(!assetReadable(item))return `<div class="page empty">${i('lock')}<h2>这份资料暂未向你开放</h2><p>查看人物档案不代表可以读取其全部私密资料。</p>${l('返回人物档案','life/'+item.subject,'btn')}</div>`;
     const context=origin(item),video=['film','clip'].includes(item.kind),label=video?VIDEO_FILTERS[videoType(item,context.person)]:TYPES[item.kind],photos=photoSequence(context.person,context.storyId),index=photos.findIndex(asset=>asset.id===item.id);
-    const media=video?`<video data-archive-video="${item.id}" controls playsinline preload="metadata" poster="${item.poster}" src="${item.src}">当前浏览器不支持视频播放。</video><p id="archive-video-status" class="caption" role="status">${P.duration(item.duration)} · 无声演示片段，可播放、暂停或拖动进度。</p>`:item.kind==='photo'?`<figure class="archive-photo-detail"><img src="${item.src || item.poster}" alt="${e(item.title)}"><figcaption>${e(item.description)}</figcaption></figure>${photoControls(photos,index,context.storyId)}`:`<article>${(item.body || []).map(text=>`<p class="story-paragraph">${e(text)}</p>`).join('')}</article>`;
+    const media=video?`<video data-archive-video="${item.id}" controls playsinline preload="metadata" poster="${item.poster}" src="${item.src}">当前浏览器不支持视频播放。</video><p id="archive-video-status" class="caption" role="status">${P.duration(item.duration)} · 无声演示片段，可播放、暂停或拖动进度。</p>`:item.kind==='photo'?`<figure class="archive-photo-detail"><img src="${item.src || item.poster}" alt="${e(item.title)}"><figcaption>${e(item.description)}</figcaption></figure>${photoControls(photos,index,context.storyId)}`:`${item.kind==='work'&&item.poster?`<figure class="archive-photo-detail"><img src="${e(item.poster)}" alt="${e(item.title)}，作品展示示意"><figcaption>作品封面或展示图 · 原型示意</figcaption></figure>`:''}<article>${(item.body || []).map(text=>`<p class="story-paragraph">${e(text)}</p>`).join('')}</article>`;
     return `<div class="page archive-detail">${b(i('back')+' '+e(returnLabel(context)),'archive-return','text-link',`data-id="${item.id}"`)}<p class="eyebrow section">${label} · 示例档案</p><h1 class="page-title">${e(item.title)}</h1><p class="caption">${e(item.date)}</p><div class="archive-player section">${media}</div>${video?captionsView(item):''}${P.ContentChat.entry({kind:'asset',assetId:item.id})}<dl class="archive-meta"><div><dt>归档人物</dt><dd>${e(P.PEOPLE[item.subject].name)}</dd></div><div><dt>${item.kind==='clip'?'拍摄者（分类示例）':'提供者'}</dt><dd>${e(P.PEOPLE[item.author].name)}</dd></div><div><dt>分享范围</dt><dd>${item.scope==='private'?'仅自己':item.scope==='selected'?'指定家人':'已授权家庭成员'}</dd></div></dl>${item.kind==='photo'?'':`<p class="story-paragraph">${e(item.description)}</p>`}<div class="note"><strong>资料来源</strong><p>${e(item.sourceLabel)}</p></div>${item.relatedStoryId && item.relatedStoryId!==context.storyId && P.visibleStories().some(story=>story.id===item.relatedStoryId)?l('查看关联人生事件','story/'+item.relatedStoryId,'btn secondary full section'):''}</div>`;
   }
   /** 进入详情固定原人物、分区及已核验的父事件，回看仍回到实际打开资料的位置。 */
@@ -188,6 +191,7 @@
     if(action==='biography-mode'){if(['read','events'].includes(element.dataset.value)){P.state.biographyMode=element.dataset.value;P.state.archiveChapterId='';P.render();}return true;}
     if(action==='archive-events'){const person=element.dataset.person;if(P.state.members.includes(person)){P.state.archivePerson=person;P.state.lifeTab='biography';P.state.biographyMode='events';P.state.archiveChapterId='';P.navigate('life/'+person);}return true;}
     if(action==='archive-tab'){if(Object.hasOwn(TABS,element.dataset.value)){P.state.lifeTab=element.dataset.value;if(element.dataset.value==='video')P.state.videoFilter='all';P.render();}return true;}
+    if(action==='archive-person'&&P.state.actor!=='father'&&(element.dataset.id||element.value)!==P.state.actor){P.FamilyContext.select(element.dataset.id||element.value);return true;}
     if(action==='archive-person'){const person=element.dataset.id || element.value;if(P.state.members.includes(person)){P.state.lifeTab='overview';P.state.videoFilter='all';P.state.biographyMode='read';P.state.archiveChapterId='';P.navigate('life/'+person);}return true;}
     if(action==='archive-open'){open(element.dataset.id,element.dataset.person || P.state.archivePerson,element.dataset.tab || P.state.lifeTab,element.dataset.storyId || '',element.dataset.videoFilter || P.state.videoFilter);return true;}
     if(action==='archive-return'){const item=ensure().archiveAssets.find(asset=>asset.id===element.dataset.id);if(item){const context=origin(item);if(context.storyId)return P.navigate('story/'+context.storyId);P.state.archivePerson=context.person;P.state.lifeTab=context.tab;if(context.tab==='video')P.state.videoFilter=context.videoFilter || 'all';P.navigate('life/'+context.person);}return true;}

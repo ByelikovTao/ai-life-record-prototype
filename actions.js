@@ -3,7 +3,8 @@
 {
   const P=window.App;
   const {icon:i,button:b,link:l,badge:t,avatar:a,escape:e}=P;
-  const SETUP_PRICE=2000;
+  /** 整理中的请求只绑定原草稿对象，不作为可跨账号复制的草稿字段。 */
+  const organizing=new WeakSet();
   /** 展开来源，始终先检查当前角色是否有权读取对应材料。 */
   function source(id='first-order') {
     const item=P.visibleStories().find(x=>x.id===id);
@@ -24,16 +25,20 @@
   /** 文字回答统一更新会话与无声动作，不让资料追问另外维护第二套消息流。 */
   function completeReply(reply) {
     // 仅在本人已确认、资料仍获授权且问题相同的情况下使用修订答复。
-    reply=P.AnswerFeedback.apply(reply);P.state.chatMessages.push(reply);P.render();P.DigitalHuman?.respond(reply.text);
+    reply=P.AnswerFeedback.apply(reply);
+    if(reply.type!=='corrected'&&!P.Billing.consume(P.state.chatTarget,'qa',P.nextId('qa-request'))){P.toast('当前人物的共享答复额度已用完或年度服务到期，仍可查看资料和留问本人。');return;}
+    P.state.chatMessages.push(reply);P.render();P.DigitalHuman?.respond(reply.text);
     setTimeout(()=>{const history=document.querySelector('.avatar-conversation');if(history)history.scrollTop=history.scrollHeight;},20);
   }
   /** 当前媒体或章节优先作为话题；显式新记录和故事入口仍可切换到对应故事。 */
   function sendMessage(text,storyId='') {
+    if(!P.ContentChat.available(P.state.chatTarget))return P.toast('这位家人的数字人尚未向你开放。');
     const value=text.trim();
     if (!value) return;
+    if(!P.Billing.period(P.state.chatTarget))return P.toast('年度AI服务已到期，仍可查看已交付资料或把问题留给本人。');
     P.state.chatMessages.push({type:'user',text:value});
     if(!storyId && !/刚写|新记录/.test(value)){const contextual=P.ContentChat.reply(value);if(contextual)return completeReply(contextual);}
-    const visible=P.visibleStories().filter(item=>item.subject===P.state.chatTarget);
+    const visible=P.visibleStories().filter(item=>P.FamilyContext.usable(item,P.state.chatTarget));
     const wantsLatest=/刚写|新记录/.test(value),latest=wantsLatest?visible.findLast(item=>item.id.startsWith('record-')):null;
     const topic=/创业|订单|最难/.test(value)?'first-order':/书桌|老家|收音机|家书/.test(value)?'old-home':/全家福|春节/.test(value)?'spring':'';
     const id=storyId || (wantsLatest?latest?.id || '':topic || P.state.chatContext?.storyId);
@@ -58,7 +63,7 @@
   /** 延迟问答绑定本次来源，切换资料、账号、重置或离页后旧入口不再抢回话题。 */
   function openQuestion(text,storyId='') {
     const s=P.state,actor=s.actor;
-    const source=P.visibleStories().find(item=>item.id===storyId),target=source?.subject || 'father';
+    const source=P.visibleStories().find(item=>item.id===storyId),target=source?.commonWith||source?.subject || P.FamilyContext.current();
     if(s.chatTarget!==target)s.chatMessages=[];
     s.chatTarget=target;s.chatContext=storyId?{kind:'story',storyId}:null;P.navigate('chat');
     const context=s.chatContext;
@@ -67,10 +72,10 @@
   /** 从故事补充入口携带关联来源；已有草稿先留在当前账号，避免被新入口覆盖。 */
   function contribute(storyId) {
     const source=P.visibleStories().find(item=>item.id===storyId);
-    if(!source || source.subject!=='father')return P.toast('请从陈远山当前可查看的故事开始补充。');
+    if(!source || !P.FamilyContext.invited(source.commonWith||source.subject))return P.toast('请从当前获授权的人生事件开始补充。');
     captureRecord();
     if(P.state.record.text.trim())return P.modal('你还有一份未完成的记录',`<p>先保存或完成当前草稿，再补充《${e(source.title)}》。</p>${l('继续当前记录','record','btn full')}`);
-    P.state.record={...P.emptyRecord(),kind:'contribution',storyId,title:'补充：'+source.title};P.navigate('record');
+    P.state.record={...P.emptyRecord(),kind:'contribution',subject:source.commonWith||source.subject,storyId,title:'补充：'+source.title};P.navigate('record');
   }
   /** 录入页和确认页均保存当前输入，回去更正时不丢分享范围或名单。 */
   function captureRecord() {
@@ -107,9 +112,12 @@
     if (!r.title.trim()) r.title='今天的一段回忆';
     if (event.submitter?.value==='draft') {P.state.draftSaved=true;P.navigate('profile');P.toast('草稿已保存，仅自己可见。刷新原型会还原。');}
     else {
+      const organize=event.submitter?.value==='organize',person=r.subject||P.state.actor;
+      if(organize&&(r.text.length>P.Billing.RULES.textLimit||(r.organizedText!==r.text&&!P.Billing.canUse(person,'organize'))))return P.toast('文字整理限每次5,000字，需该人物有效服务、授权与剩余额度；也可免费查看原文并确认。');
+      if(organizing.has(r))return;
       if (P.state.failNextRecord) {P.state.failNextRecord=false;P.toast('本次整理未完成，原文字已保留。可以保存草稿或再次尝试。');return;}
-      const submit=event.submitter,s=P.state,actor=s.actor;if(submit){submit.disabled=true;submit.textContent='正在整理，请稍候…';}
-      setTimeout(()=>{if(P.state!==s || s.actor!==actor || s.record!==r || s.route!=='record')return;r.reviewed=true;P.navigate('review');},450);
+      const submit=event.submitter,s=P.state,actor=s.actor;organizing.add(r);if(submit){submit.disabled=true;submit.textContent='正在整理，请稍候…';}
+      setTimeout(()=>{organizing.delete(r);if(P.state!==s || s.actor!==actor || s.record!==r || s.route!=='record')return;if(organize&&r.organizedText!==r.text){if(!P.Billing.consume(person,'organize',P.nextId('organize-request')))return P.toast('整理额度或服务状态已改变，原文字保留。');r.organizedText=r.text;}r.aiOrganized=organize;r.reviewed=true;P.navigate('review');},450);
     }
   }
   /** 本人记录可直接确认，家人补充共享经历则进入待确认列表。 */
@@ -117,18 +125,19 @@
     const data=new FormData(form),r=P.state.record;
     if (!data.get('confirmed')) return;
     if (!r.text.trim()) return P.toast('先记录想留下的话，再确认保存。');
-    const scope=String(data.get('scope')),actor=P.state.actor,contribution=r.kind==='contribution' && actor!=='father';
+    const scope=String(data.get('scope')),actor=P.state.actor,target=r.subject||P.FamilyContext.current(),contribution=r.kind==='contribution' && actor!==target;
+    if(contribution&&!P.FamilyContext.invited(target))return P.toast('请只向已邀请你的人物补充经历。');
     if(contribution && r.pendingId && !P.state.pending.some(entry=>entry.id===r.pendingId && entry.author===actor && entry.status==='returned'))return P.toast('原补充的状态已经变化，请回到家庭页重新核对。');
     if(!['private','selected','family'].includes(scope))return P.toast('请选择有效的分享范围。');
     const viewers=scope==='family'?[...P.state.members]:scope==='selected'?data.getAll('viewers').filter(id=>P.state.members.includes(id) && id!==actor):[];
     if(scope==='selected' && !viewers.length)return P.toast('请选择至少一位家人，或改为仅自己保存。');
-    if(contribution && (scope==='private' || !viewers.includes('father')))return P.toast('补充陈远山的经历需要向本人开放核对；也可以先保存为草稿。');
+    if(contribution && (scope==='private' || !viewers.includes(target)))return P.toast('补充对方经历需要向本人开放核对；也可以先保存为草稿。');
     const now=new Date(),recorded=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
     if(!/^\d{4}$/.test(r.eventYear) || Number(r.eventYear)>now.getFullYear() || Number(r.eventYear)<1000)return P.toast('请先核对事情发生的年份。');
-    const item={id:contribution&&r.pendingId?r.pendingId:P.nextId('record'),title:r.title || '今天的一段回忆',year:r.eventYear,date:`${r.eventYear}年（具体日期未填写）`,recorded,category:contribution?'家人补充':'个人记录',image:'family',author:actor,subject:contribution?'father':actor,scope,text:[r.text],quote:r.text.slice(0,52),source:P.PEOPLE[actor].name+'的记录',duration:r.seconds?P.duration(r.seconds):'文字记录',viewers,storyId:r.storyId,confirmedBy:contribution?null:actor};
+    const item={id:contribution&&r.pendingId?r.pendingId:P.nextId('record'),title:r.title || '今天的一段回忆',year:r.eventYear,date:`${r.eventYear}年（具体日期未填写）`,recorded,category:contribution?'家人补充':'个人记录',image:'family',author:actor,subject:contribution?target:actor,scope,text:[r.text],quote:r.text.slice(0,52),source:P.PEOPLE[actor].name+'的记录',duration:r.seconds?P.duration(r.seconds):'文字记录',viewers,storyId:r.storyId,confirmedBy:contribution?null:actor};
     if(contribution){
       P.state.pending=P.state.pending.filter(entry=>entry.id!==r.pendingId);P.state.pending.push({...item,status:'pending',feedback:''});
-      P.navigate('family');P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('已提交给陈远山核对，确认后才进入他的人生档案。');
+      P.navigate('family');P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('已提交给'+P.PEOPLE[target].name+'核对，确认后才进入对方的人生档案。');
     } else {
       P.state.stories.push(item);P.navigate('story/'+item.id);P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('记录已确认，并按你选择的范围保存。');
     }
@@ -174,7 +183,7 @@
     const id=item.personId;if(P.state.accounts[id])return P.toast('这位人物已经认领账号，请直接切换到该账号。');
     item.status='accepted';
     if(!P.PEOPLE[id])P.PEOPLE[id]={name:item.name,short:item.name.slice(0,1),relation:item.relation,born:'',color:'sand'};
-    P.state.accounts[id]=P.newAccount();
+    P.state.accounts[id]=P.newAccount();P.state.familyInvitations[id]=['father'];P.state.familyFocus[id]='father';P.state.familyAccess.father.archive.push(id);
     if(!P.state.members.includes(id))P.state.members.push(id);P.state.inviteIndex=null;P.changeActor(id);P.navigate('home');
     P.toast('受邀人已核对并加入。当前正在预览该家人的账号。');
   }
@@ -182,26 +191,7 @@
   function person(id) {
     const p=P.PEOPLE[id];
     if (!p) return;
-    P.modal(p.name,`<div class="person-modal-top">${a(id,'large')}<div><h3>${e(p.name)}</h3><p class="caption">${e(P.relation(id))}${p.born?' · '+p.born+'年生':''}</p>${t(id==='grandpa'?'家人记载':'关系已确认',id==='grandpa'?'gray':'')}</div></div><p>${id==='father'?'可以查看已分享的人生记录，也可以与已授权的数字人交流。':id==='grandpa'?'历史人物资料由家人整理，保留记录者身份。这里没有默认建立逝者数字人。':'你们可以一起补充共同经历。本人尚未建立或向你开放数字人服务。'}</p>${l('查看'+e(p.name)+'的完整档案','life/'+id,'btn full')}${id==='father'?l('与他的数字人聊聊','chat','text-link full'):''}${P.state.actor==='father' && !P.state.accounts[id] && id!=='grandpa'?b('邀请本人认领已有人物','invite-claim','btn secondary full',`data-id="${id}"`):''}<p class="caption section">管理身份和亲属称呼不代表可以查看全部个人资料。</p>`);
-  }
-  /** 选择会员前清楚列出当前权益、差价和一次性建档范围。 */
-  function checkout(planId) {
-    const ac=P.account(),plan=P.PLANS[planId];
-    if (ac.plan===planId) return;
-    if (ac.plan==='legacy') return P.modal('下一年度的会员安排','<p>当前年度的传承会员继续有效。正式产品会在续费时确认下一年度方案，本原型不进行降级扣款。</p>');
-    const current=P.PLANS[ac.plan];
-    const price=Math.max(0,plan.price-current.price);
-    const setup=planId==='legacy'&&!ac.hasDigital&&!ac.setupIncluded?SETUP_PRICE:0;
-    P.state.checkout={actor:P.state.actor,planId,price,setup};
-    P.modal('核对这次开通',`<p>服务账号：<strong>${e(P.PEOPLE[P.state.actor].name)}</strong></p><div class="checkout-price"><span>${plan.name}${ac.plan==='personal'?'升级差额':''}</span><span>¥${price.toLocaleString()}</span></div><div class="checkout-price"><span>首次数字人基础建档</span><span>${setup?'¥'+setup.toLocaleString():ac.setupIncluded?'订单已含，不重复收费':'本次不收取'}</span></div><div class="checkout-price total"><span>本次合计</span><span>¥${(price+setup).toLocaleString()}</span></div><p class="caption">演示有效期至 2027年10月26日。已付费升级按完整年度差额模拟；正式按剩余服务期限核算。价格与权益待验证。</p><form id="checkout-form"><label class="check-row"><input type="checkbox" name="agree" required><span>我已核对账号、服务范围和一次性费用，了解本次为演示开通。</span></label><button class="btn full" type="submit">确认演示开通</button></form>`);
-  }
-  /** 演示开通只改变当前账号的会员状态，不执行真实付款。 */
-  function completeCheckout(form) {
-    if (!new FormData(form).get('agree') || P.state.checkout?.actor!==P.state.actor) return;
-    const ac=P.account(),order=P.state.checkout;
-    ac.plan=order.planId;
-    if (order.setup) ac.setupOrdered=true;
-    P.state.checkout=null;P.closeModal();P.render();P.toast('演示会员已开通。未发生真实扣款；数字人建档需另行确认资料。');
+    P.modal(p.name,`<div class="person-modal-top">${a(id,'large')}<div><h3>${e(p.name)}</h3><p class="caption">${e(P.relation(id))}${p.born?' · '+p.born+'年生':''}</p>${t(id==='grandpa'?'家人记载':'关系已确认',id==='grandpa'?'gray':'')}</div></div><p>${id==='father'?'可以查看已分享的人生记录，也可以与已授权的数字人交流。':id==='grandpa'?'历史人物资料由家人整理，保留记录者身份。这里没有默认建立逝者数字人。':'你们可以一起补充共同经历。本人尚未建立或向你开放数字人服务。'}</p>${l('查看'+e(p.name)+'的完整档案','life/'+id,'btn full')}${P.ContentChat.available(id)?b('与这位家人聊聊','family-person-chat','text-link full',`data-person="${id}"`):''}${P.state.actor==='father' && !P.state.accounts[id] && id!=='grandpa'?b('邀请本人认领已有人物','invite-claim','btn secondary full',`data-id="${id}"`):''}<p class="caption section">管理身份和亲属称呼不代表可以查看全部个人资料。</p>`);
   }
   /** 仅允许资料本人更改其已有故事的可见范围。 */
   function share(id) {
@@ -219,24 +209,28 @@
     const viewers=scope==='family'?[...P.state.members]:scope==='selected'?data.getAll('viewers').filter(id=>P.state.members.includes(id) && id!==P.state.actor):[];
     if(scope==='selected' && !viewers.length)return P.toast('请选择至少一位家人，或改为仅自己。');
     item.scope=scope;item.viewers=viewers;
+    // 已纳入的内容不因提供者扩大名单而自动扩大，本人需再次确认新增成员。
     P.closeModal();P.render();P.toast('分享范围已更新，不影响其他家人的独立记录。');
   }
   /** 待处理数量按当前本人或内容提供者计算，不把全部申请只交给家庭管理人。 */
   function pendingCount() {
     const s=P.state;
-    return s.pending.filter(item=>item.status==='pending' && item.subject===s.actor).length+s.accessRequests.filter(request=>request.status==='pending' && s.stories.some(item=>item.id===request.storyId && item.author===s.actor)).length;
+    return s.accessRequests.filter(request=>request.status==='pending-owner'&&s.stories.some(item=>item.id===request.storyId&&(item.commonWith||item.subject)===s.actor)).length+s.stories.filter(item=>item.commonWith===s.actor&&item.scope!=='private'&&item.viewers.includes(s.actor)&&!item.inclusions?.[s.actor]?.reviewed).length+s.familyRequests.filter(item=>item.person===s.actor&&item.status==='pending').length+s.pending.filter(item=>item.status==='pending' && item.subject===s.actor).length+s.accessRequests.filter(request=>request.status==='pending' && s.stories.some(item=>item.id===request.storyId && item.author===s.actor)).length;
   }
   /** 本人可确认家人补充；查看申请始终交给该内容的分享控制人。 */
   function pending() {
     const additions=P.state.pending.filter(item=>item.status==='pending' && item.subject===P.state.actor).map(x=>`<div class="pending-item"><strong>${e(x.title)}</strong><p>${e(P.PEOPLE[x.author]?.name || '家人')}补充：${e(x.text[0])}</p><p class="caption">分享：${x.scope==='family'?'提交时的家庭成员':x.viewers.map(id=>e(P.PEOPLE[id].name)).join('、')}</p>${b('核对并加入档案','approve-pending','btn compact',`data-id="${x.id}"`)} ${b('退回更正','return-pending','text-link',`data-id="${x.id}"`)}</div>`).join('');
     const requests=P.state.accessRequests.filter(x=>x.status==='pending' && P.state.stories.some(item=>item.id===x.storyId && item.author===P.state.actor)).map(x=>`<div class="pending-item"><strong>查看申请</strong><p>${e(P.PEOPLE[x.actor].name)}希望查看《${e(P.state.stories.find(item=>item.id===x.storyId).title)}》。</p>${b('仅向这位家人开放','approve-access','btn compact',`data-id="${x.id}"`)} ${b('暂不开放','deny-access','text-link',`data-id="${x.id}"`)}</div>`).join('');
-    P.modal('家人的补充与申请',additions+requests || '<p>暂时没有需要确认的内容。</p>');
+    const ownerRequests=P.state.accessRequests.filter(request=>request.status==='pending-owner').map(request=>({request,item:P.state.stories.find(item=>item.id===request.storyId&&(item.commonWith||item.subject)===P.state.actor)})).filter(value=>value.item).map(({request,item})=>`<div class="pending-item"><p>提供者同意向${e(P.PEOPLE[request.actor].name)}分享《${e(item.title)}》，等待你确认。</p>${b('核对新增分享对象','family-consent','btn',`data-id="${item.id}"`)}</div>`).join('');
+    const common=P.state.stories.filter(item=>item.commonWith===P.state.actor&&item.scope!=='private'&&item.viewers.includes(P.state.actor)&&!item.inclusions?.[P.state.actor]?.reviewed).map(item=>`<div class="pending-item"><strong>${e(item.title)}</strong><p>${e(P.PEOPLE[item.author].name)}讲述的共同回忆</p>${b('核对纳入与问答范围','family-consent','btn',`data-id="${item.id}"`)}</div>`).join('');
+    const permissions=P.state.familyRequests.some(item=>item.person===P.state.actor&&item.status==='pending')?l('处理人生空间开放申请','family-permissions','btn full'):'';
+    P.modal('家人的补充与申请',ownerRequests+common+permissions+additions+requests || '<p>暂时没有需要确认的内容。</p>');
   }
   /** 确认后进入档案并标明确认者；退回会保留原稿给提供者继续更正。 */
   function reviewPending(id,approve) {
     const item=P.state.pending.find(entry=>entry.id===id && entry.subject===P.state.actor && entry.status==='pending');
     if(!item)return;
-    if(approve){P.state.pending=P.state.pending.filter(entry=>entry.id!==id);const {status,feedback,...story}=item;P.state.stories.push({...story,confirmedBy:P.state.actor});}
+    if(approve){P.state.pending=P.state.pending.filter(entry=>entry.id!==id);const {status,feedback,...story}=item;P.state.stories.push({...story,confirmedBy:P.state.actor,approvedViewers:[...story.viewers],aiAllowed:false});}
     else {item.status='returned';item.feedback='请再核对这段经历的时间、人物与经过，修改后重新提交。';}
     P.closeModal();P.render();P.toast(approve?'已确认补充，保留提供者与原分享范围。':'已退回提供者更正，原稿没有丢失。');
   }
@@ -245,13 +239,13 @@
     const item=P.state.pending.find(entry=>entry.id===id && entry.author===P.state.actor && entry.status==='returned');
     if(!item)return;
     captureRecord();if(P.state.record.text.trim())return P.toast('请先保存或完成当前草稿，再更正退回的补充。');
-    P.state.record={...P.emptyRecord(),title:item.title,text:item.text.join('\n\n'),eventYear:item.year,scope:item.scope,viewers:[...item.viewers],kind:'contribution',storyId:item.storyId,pendingId:item.id};P.navigate('record');
+    P.state.record={...P.emptyRecord(),title:item.title,text:item.text.join('\n\n'),eventYear:item.year,scope:item.scope,viewers:[...item.viewers],kind:'contribution',subject:item.subject,storyId:item.storyId,pendingId:item.id};P.navigate('record');
   }
   /** 重复查看申请不会不断堆积；不存在或已获授权的内容不创建申请。 */
   function requestAccess() {
     const s=P.state;
     if(!s.stories.some(item=>item.id===s.storyId) || P.visibleStories().some(item=>item.id===s.storyId))return P.toast('当前不需要申请这段内容。');
-    if(!s.accessRequests.some(item=>item.actor===s.actor && item.storyId===s.storyId && item.status==='pending'))s.accessRequests.push({id:P.nextId('access'),actor:s.actor,storyId:s.storyId,status:'pending'});
+    if(!s.accessRequests.some(item=>item.actor===s.actor && item.storyId===s.storyId && ['pending','pending-owner'].includes(item.status)))s.accessRequests.push({id:P.nextId('access'),actor:s.actor,storyId:s.storyId,status:'pending'});
     P.render();P.toast('申请已提交给内容提供者，授权前仍无法查看。');
   }
   /** 授权只增加申请人；拒绝申请不会扩大原有可见范围。 */
@@ -259,6 +253,11 @@
     const request=P.state.accessRequests.find(entry=>entry.id===id && entry.status==='pending');
     const item=P.state.stories.find(story=>story.id===request?.storyId && story.author===P.state.actor);
     if(!request || !item)return;
+    const owner=item.commonWith||item.subject,approved=item.commonWith?item.inclusions?.[owner]?.viewers:item.approvedViewers;
+    if(approve&&owner!==item.author&&(item.commonWith||approved)&&!(approved||[]).includes(request.actor)){
+      item.scope='selected';item.viewers=[...new Set([...item.viewers,request.actor])];request.status='pending-owner';
+      P.closeModal();P.render();return P.toast('提供者已同意，仍需共同经历的本人确认范围；暂未开放给申请人。');
+    }
     request.status=approve?'accepted':'declined';
     if(approve){item.scope='selected';item.viewers=[...new Set([...item.viewers,request.actor])];}
     P.closeModal();P.render();P.toast(approve?'已仅向申请人开放。':'本次暂不开放，原有分享范围保持不变。');
@@ -274,6 +273,8 @@
   /** 统一派发按钮动作；新增动作应保持与其界面文案一致。 */
   function act(action,el) {
     const s=P.state;
+    if(P.FamilyContext.handleAction(action,el)||P.FamilyMemories.handleAction(action,el))return;
+    if(P.BillingViews.handleAction(action,el))return;
     if(P.KeepsakeBooks.handleAction(action,el))return;
     if(P.MaterialLibrary.handleAction(action,el)||P.AnswerFeedback.handleAction(action,el)||P.RelationshipChapters.handleAction(action,el))return;
     if(P.ContentChat.handleAction(action,el))return;
@@ -298,12 +299,11 @@
     if (action==='enter-owner') {P.changeActor('father');return P.navigate('home');}
     if (action==='enter-family') {P.changeActor('xia');return P.navigate('home');}
     if (action==='video-service') return P.modal('视频服务与开通条件','<p>当前方案以约 ¥15,000 的视频服务作为 APP 开通入口；这是视频服务收费，不是制作成本。</p><p>完成交付后可开通家庭空间，家人受邀加入。APP 会员与定制增购另行报价，已在订单中包含的权益不重复购买。</p><p class="caption">本页为产品规则示例，具体报价与交付范围由实际订单确认。</p>');
-    if (action==='choose-plan') return checkout(el.dataset.plan);
     if (action==='share-owned') return share(el.dataset.id);
     if (action==='share-story') return share(s.storyId);
     if (action==='save-story') {if(!P.visibleStories().some(item=>item.id===s.storyId))return P.toast('这段故事暂未开放，不能收藏。');s.saved=s.saved.includes(s.storyId)?s.saved.filter(x=>x!==s.storyId):[...s.saved,s.storyId];P.render();return P.toast(s.saved.includes(s.storyId)?'已收藏这段故事。':'已取消收藏。');}
     if (action==='ask-order' || action==='ask-advice') return openQuestion(action==='ask-order'?'第一次创业时最担心什么？':'遇到困难时，你会怎么做？',action==='ask-order'?'first-order':'');
-    if (action==='ask-story') {const item=P.visibleStories().find(story=>story.id===s.storyId && story.subject==='father');if(item)return openQuestion(`讲讲《${item.title}》这段经历。`,item.id);return P.toast('这段经历尚未作为该数字人的获授权资料。');}
+    if (action==='ask-story') {const item=P.visibleStories().find(story=>story.id===s.storyId && P.FamilyContext.inArchive(story,P.FamilyContext.current()));if(item)return openQuestion(`讲讲《${item.title}》这段经历。`,item.id);return P.toast('这段经历尚未作为该数字人的获授权资料。');}
     if (action==='ask-space') {const id=el.dataset.id || s.hotspot,item=P.MemorySpace.items()[id];if(item)return openQuestion(`讲讲${id==='radio'?'老家的收音机':item.title}。`,item.source);return;}
     if (action==='contribute-story') return contribute(el.dataset.id);
     if (action==='focus-chat') return document.getElementById('chat-input')?.focus();
@@ -315,8 +315,8 @@
     if (action==='toggle-font') return P.toggleFont();
     if (action==='clear-chat-context') {s.chatContext=null;return P.render();}
     // 首页自由聊天结束旧资料话题；跨人物时清空旧对话，输入草稿仍由数字人模块按账号保存。
-    if (action==='home-chat') {if(s.chatTarget!=='father')s.chatMessages=[];s.chatTarget='father';s.chatContext=null;return P.navigate('chat');}
-    if (action==='home-ask-story') {const item=P.visibleStories().find(story=>story.id===el.dataset.id && story.subject==='father');if(item)return openQuestion(`讲讲《${item.title}》这段经历。`,item.id);return P.toast('这段经历暂未向你开放。');}
+    if (action==='home-chat') {if(s.chatTarget!==P.FamilyContext.current())s.chatMessages=[];s.chatTarget=P.FamilyContext.current();s.chatContext=null;return P.navigate('chat');}
+    if (action==='home-ask-story') {const item=P.visibleStories().find(story=>story.id===el.dataset.id && P.FamilyContext.inArchive(story,P.FamilyContext.current()));if(item)return openQuestion(`讲讲《${item.title}》这段经历。`,item.id);return P.toast('这段经历暂未向你开放。');}
     if (action==='choose-person') return P.modal('选择交流的人物',`<div class="family-selector"><button data-action="close-modal">${a('father')}<span>爸爸的数字人<small>陈远山 · 已获授权</small></span>${i('check')}</button><button data-action="unavailable-person">${a('mother')}<span>妈妈 · 林慧<small>尚未建立或开放数字人</small></span>${i('lock')}</button></div>`);
     if (action==='unavailable-person') return P.toast('这位家人尚未建立或向你开放数字人服务。');
     if (action==='close-modal') return P.closeModal();
@@ -325,6 +325,8 @@
   function submit(event) {
     event.preventDefault();
     const form=event.target;
+    if(P.FamilyContext.submit(form)||P.FamilyMemories.submit(form))return;
+    if(P.BillingViews.submit(form))return;
     if(P.KeepsakeBooks.submit(form))return;
     if(P.MaterialLibrary.submit(form,event)||P.AnswerFeedback.submit(form,event)||P.RelationshipChapters.submit(form,event))return;
     if(P.QuestionInbox?.submit(form))return;
@@ -333,7 +335,6 @@
     if (form.id==='publish-form') return publishRecord(form);
     if (form.id==='invite-form') return createInvite(form);
     if (form.id==='accept-invite-form') return acceptInvite(form);
-    if (form.id==='checkout-form') return completeCheckout(form);
     if (form.id==='share-form') return applyShare(form);
   }
   P.act=act;P.submit=submit;P.captureRecord=captureRecord;P.sendChatMessage=sendMessage;P.pendingCount=pendingCount;
