@@ -1,0 +1,40 @@
+name: 发布原型到 GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 部署使用 GitHub 自动提供的 GITHUB_TOKEN，无需在工作流中保存个人 Token。
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 串行部署，避免多个版本同时覆盖在线原型。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 拉取项目
+        uses: actions/checkout@v6
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      # 保留原型内部的相对路径，让 index.html 成为网站首页。
+      - name: 上传原型目录
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: 发布网页
+        id: deployment
+        uses: actions/deploy-pages@v4
