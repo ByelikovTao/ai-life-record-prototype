@@ -1,0 +1,11 @@
+# 文档、图片、视频与三维模型按二进制保存，避免换行转换
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.mp4 binary
+*.glb binary
+*.woff binary
+*.woff2 binary

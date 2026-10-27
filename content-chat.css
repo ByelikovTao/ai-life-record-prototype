@@ -1,0 +1,16 @@
+/* 当前资料与追问紧邻展示，沿用人物档案的暖白、墨绿和可阅读字号。 */
+.content-chat-entry{margin:18px 0 8px;padding:14px;border:1px solid #CDD8C9;border-radius:14px;background:#EEF2E8;min-width:0}
+.content-chat-entry>strong{display:flex;align-items:center;gap:7px;font-size:calc(14px * var(--unit));line-height:1.6;color:var(--green)}
+.content-chat-entry>p{font-size:calc(12px * var(--unit));line-height:1.75;color:var(--secondary);margin:7px 0 12px}
+.content-chat-entry .btn{white-space:normal;line-height:1.6}
+.content-chat-context.avatar-context{display:flex;flex-direction:column;align-items:stretch;gap:6px;background:#EEF2E8;border:1px solid #D3DDCD;padding:10px;min-width:0}
+.content-chat-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.content-chat-heading>span{font-size:calc(11px * var(--unit));color:var(--secondary);line-height:1.6}
+.content-chat-context>strong{font-size:calc(13px * var(--unit));font-weight:600;line-height:1.6;overflow-wrap:anywhere}
+.content-chat-links{display:flex;gap:8px;flex-wrap:wrap}
+.content-chat-links .text-link,.content-chat-heading .text-link{font-size:calc(11px * var(--unit));line-height:1.6;min-height:30px}
+.content-chat-prompts{display:flex;gap:6px;flex-wrap:wrap;min-width:0}
+.content-chat-chip{max-width:100%;padding:7px 9px;border:1px solid #CCD7C5;border-radius:10px;background:#FFFEFA;font-size:calc(11px * var(--unit));line-height:1.6;color:var(--green);text-align:left;white-space:normal;overflow-wrap:anywhere}
+.message.assistant>p{white-space:pre-wrap}
+.message .content-chat-links{margin-top:8px}
+.content-chat-context>p{margin:0;line-height:1.7}

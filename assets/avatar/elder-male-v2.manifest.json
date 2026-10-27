@@ -1,0 +1,105 @@
+{
+  "generator": "https://github.com/olatunde85/3d-gen",
+  "commit": "0c3473d7d46a2badcdcd1dcfd4aeb0762eb04b20",
+  "assetsBase": "https://ara3dgen.com/assets/",
+  "license": "CC0-1.0",
+  "animations": false,
+  "sha256": "ef713fb389e4535d4b5828190bd3919c560087f3a262c420d906d4fbbceffcc7",
+  "inputs": [
+    {
+      "path": "catalog.json",
+      "sha256": "36f1ab37ebe7e2f11d843f749cc84906ba59f4bdcfb480694cf83cb71df3c80f",
+      "bytes": 68292
+    },
+    {
+      "path": "base.pack",
+      "sha256": "aaf3ce5024324ca4bf61eb0c4320b6e05cf44e4e7e3d3f58bd35b1375b0d664e",
+      "bytes": 615072
+    },
+    {
+      "path": "targets.pack",
+      "sha256": "6acc08e8f7efd5dabd101e75cc3dd3b3d9f050c9e77c72d73f39ac86ea7e889a",
+      "bytes": 6498862
+    },
+    {
+      "path": "proxies/shoes_shoes02.pack",
+      "sha256": "55836c0d1db8a9bb95d806337a4546af6087b22fc5b6f9669a4bb4652232ffed",
+      "bytes": 52799
+    },
+    {
+      "path": "proxies/eyes_high-poly.pack",
+      "sha256": "3b460002b494c86aeb441235c0d54a1728b4df8775b8bf1bb9d488882c27759f",
+      "bytes": 34811
+    },
+    {
+      "path": "proxies/tongue_tongue01.pack",
+      "sha256": "566dc4992b9632fc0586be6c39f5c5576d23a599517dd876750fd4fef2b74469",
+      "bytes": 5671
+    },
+    {
+      "path": "proxies/hair_short04.pack",
+      "sha256": "89e2041b0be087ada0d5d67234241c27dfdef1529010b78f5ffbe0d109fd98ee",
+      "bytes": 34523
+    },
+    {
+      "path": "proxies/teeth_teeth_base.pack",
+      "sha256": "67ca3e31dd5092f704ca01d9f187697ea7035b75bdaa2867d86bc4f39f7ea166",
+      "bytes": 124255
+    },
+    {
+      "path": "proxies/outfit_male_casualsuit01.pack",
+      "sha256": "f0bb29ede0f8bd388da76dd5fa31b772f80f83fc3e17d7faf6c8b7bbf743d719",
+      "bytes": 363339
+    },
+    {
+      "path": "proxies/eyebrows_eyebrow003.pack",
+      "sha256": "548fd280ef2292097163d701db1372b486189bdad01d97938fbff491e9a7724f",
+      "bytes": 4846
+    },
+    {
+      "path": "textures/outfit_shoes02.jpg",
+      "sha256": "d46ce5a1157eeb036a7f619b0df7de6109a61bb0b834faa3719c77c1cb4531dd",
+      "bytes": 126058
+    },
+    {
+      "path": "textures/eyes_blackbrown.png",
+      "sha256": "e47d93acd123ce949893aa344d07ac255719b0089f4fad394532eafdd41f4213",
+      "bytes": 390465
+    },
+    {
+      "path": "textures/skin_old_asian_male.jpg",
+      "sha256": "717459767f01143bd8e87de2ba4f3c10b71b988d2209ac9aae20ea57a3664dc5",
+      "bytes": 369052
+    },
+    {
+      "path": "textures/tongue_tongue01.jpg",
+      "sha256": "295c683ee7e13b012880e10cd663e79f7b163d0ee6e78a088069a9ccd87b8a14",
+      "bytes": 46643
+    },
+    {
+      "path": "textures/outfit_male_casualsuit01.jpg",
+      "sha256": "0c0170c5316be8e0d89f4002432360bea5ad1c33e115c9c16df281c65cbc77ac",
+      "bytes": 286309
+    },
+    {
+      "path": "textures/outfit_male_casualsuit01_normal.jpg",
+      "sha256": "e09780b1ab00cbd4daaf92ef70227f73e98f2987f7876eb7326ec6af9000ba55",
+      "bytes": 253748
+    },
+    {
+      "path": "textures/teeth_teeth_base.png",
+      "sha256": "3b4e7c4e1cf36e2f825927892d8181204157b4752f5615a5ce1099f21f2b0802",
+      "bytes": 697030
+    },
+    {
+      "path": "textures/eyebrows_eyebrow003.png",
+      "sha256": "3e2588f2258864796d4bb75a7f9663b70d7664f5fbcccb6c49a5b058d1356f6c",
+      "bytes": 41030
+    },
+    {
+      "path": "textures/hair_short04.png",
+      "sha256": "288800441decd3976ea167a9c3857a7b0644b1d749792344323909d4d18a30b2",
+      "bytes": 1489940
+    }
+  ]
+}

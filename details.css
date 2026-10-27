@@ -1,0 +1,130 @@
+/* 家庭、记录和会员的辅助页面，沿用全局字号缩放。 */
+.family-summary{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:calc(13px * var(--unit));color:var(--secondary)}
+.avatar-stack{display:flex;padding-left:5px}
+.avatar-stack .avatar{border:2px solid var(--canvas);margin-left:-5px;width:33px;height:33px}
+.member-list{border-top:1px solid var(--line)}
+.member-row{display:flex;align-items:center;gap:10px;width:100%;padding:16px 0;text-align:left;background:none;border-bottom:1px solid #DEDFD5}
+.member-row strong{display:block;font-size:calc(16px * var(--unit));font-weight:500}
+.member-row strong small{font-size:calc(13px * var(--unit));color:var(--secondary);margin-left:6px;white-space:normal}
+.member-row em{display:block;font-size:calc(13px * var(--unit));font-style:normal;color:var(--subtle);margin-top:4px}
+.member-row>.icon{width:13px;color:var(--subtle)}
+.member-row .badge{font-size:calc(13px * var(--unit));padding:3px 5px}
+.family-actions{margin-top:20px;text-align:center}
+.family-actions .caption{margin-top:10px}
+.family-tree{background:#EAF0E4;padding:20px 10px;border-radius:16px;overflow:auto;min-width:0}
+/* 问题卡的长标题和回复在窄屏、大字号下允许换行，不把状态标记挤出卡片。 */
+.question-card{min-width:0;overflow-wrap:anywhere}
+.question-card>.row{flex-wrap:wrap;gap:8px;align-items:flex-start}
+.question-card .story-paragraph{white-space:pre-wrap}
+.tree-person{background:var(--surface);border:1px solid #D1DBC8;border-radius:13px;padding:12px 10px;min-width:95px;display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.tree-person strong{font-size:calc(14px * var(--unit));font-weight:500}
+.tree-person small{font-size:calc(13px * var(--unit));color:var(--secondary)}
+.couple-line{height:1px;width:30px;background:#ABB99E}
+.invitation-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid var(--line);padding:12px 0}
+.invitation-row .grow{flex:1 1 100%;min-width:0;overflow-wrap:anywhere}
+.invitation-row strong{font-size:calc(16px * var(--unit));font-weight:500}
+.invite-hero{text-align:center;padding:13px 0}
+.invite-hero .avatar{width:75px;height:75px;margin-bottom:12px}
+.invite-hero .page-title{font-size:calc(27px * var(--unit));margin-top:8px}
+.invite-hero>p:last-child{font-size:calc(14px * var(--unit));color:var(--secondary)}
+.invite-hero~.card .badge{margin-top:12px}
+.invitation-actions{display:flex;gap:10px;margin-top:14px}
+.recording-card{text-align:center;padding:24px 10px 20px;background:var(--surface);border-radius:17px;border:1px solid #E0E3D7;margin:23px 0}
+.record-orbit{width:78px;height:78px;background:var(--soft);border:1px solid #C6D4BE;color:var(--green);display:flex;justify-content:center;align-items:center;border-radius:50%;margin:0 auto 14px}
+.record-orbit>.icon{width:32px;height:32px}
+.record-orbit.recording{box-shadow:0 0 0 9px #E3EADCCC;animation:recordPulse 1.7s infinite alternate}
+.record-time{font:31px/1.4 Georgia,serif;color:var(--green);letter-spacing:1px;margin-bottom:8px}
+.record-controls{display:flex;justify-content:center;gap:10px;margin:18px 0 10px;flex-wrap:wrap}
+.record-controls .btn{min-height:44px;padding:9px 14px;font-size:calc(14px * var(--unit))}
+.demo-note{font-size:calc(13px * var(--unit));max-width:230px;margin:auto}
+.record-form-buttons{display:flex;gap:10px}
+.record-form-buttons .btn{flex:1;padding-left:10px;padding-right:10px}
+.review-story h2{font-size:calc(22px * var(--unit));margin-bottom:15px}
+.review-story>p{font-size:calc(17px * var(--unit));line-height:1.9;white-space:pre-wrap}
+.review-story{padding:20px}
+.profile-heading{display:flex;align-items:center;gap:13px;padding:10px 0 20px}
+.profile-heading>div{flex:1;min-width:0}
+.profile-heading h1{font:600 calc(26px * var(--unit))/1.6 SimSun,serif}
+.profile-heading .caption{font-size:calc(13px * var(--unit))}
+.profile-heading .avatar{width:60px;height:60px}
+.membership-summary{padding:21px;border-radius:17px;background:var(--green);color:var(--surface)}
+.membership-summary .caption{color:#D5E0D5;font-size:calc(13px * var(--unit))}
+.membership-summary h2{font:600 calc(25px * var(--unit))/1.7 SimSun,serif}
+.membership-summary>.row>.icon{width:40px;height:40px;opacity:.6;stroke-width:1}
+.membership-summary>p{font-size:calc(13px * var(--unit));color:#DEE8DA;margin:10px 0 17px}
+.membership-summary .btn{font-size:calc(13px * var(--unit));min-height:40px}
+.quota-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin:20px 0 8px;padding-bottom:20px}
+.quota-grid>div{padding-left:15px}
+.quota-grid>div:first-child{padding-left:5px;border-right:1px solid var(--line)}
+.quota-grid strong{font:28px/1.5 Georgia,serif;color:var(--green);display:block}
+.quota-grid strong small{font:calc(13px * var(--unit))/1.5 "Microsoft YaHei",sans-serif;color:var(--secondary)}
+.quota-grid span{font-size:calc(13px * var(--unit));color:var(--secondary)}
+.menu-row{display:flex;align-items:center;gap:12px;min-height:61px;padding:10px 0;border-bottom:1px solid #DEDFD6;background:none;text-align:left;width:100%;font-size:calc(15px * var(--unit))}
+.menu-row>.icon:first-child{color:var(--green);width:20px}
+.menu-row>span{flex:1;min-width:0}
+.menu-row>.icon:last-child{width:16px;color:var(--subtle)}
+.note>p{margin-top:8px}
+.membership-page>.eyebrow{font-size:calc(13px * var(--unit));letter-spacing:1px}
+.membership-page .page-title{font-size:calc(31px * var(--unit));margin:9px 0 10px}
+.current-entitlement{padding:15px 0;border-bottom:1px solid var(--line);margin:13px 0 20px}
+.current-entitlement>span{display:flex;gap:6px;align-items:center;font-size:calc(14px * var(--unit));color:var(--green);font-weight:600}
+.current-entitlement>span>.icon{width:16px}
+.current-entitlement>p{font-size:calc(13px * var(--unit));color:var(--secondary);margin-top:5px;line-height:1.8}
+.plan-card{padding:20px 17px;border:1px solid #C9D0C0;border-radius:17px;background:var(--surface);margin-bottom:17px}
+.plan-card.featured{border:1px solid var(--green);background:#EDF1E7}
+.plan-card h2{font-size:calc(20px * var(--unit));font-family:SimSun,serif}
+.plan-card .row{flex-wrap:wrap}
+.plan-card>.caption{font-size:calc(13px * var(--unit));margin-top:9px;line-height:1.8}
+.plan-price{margin:15px 0 16px;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.plan-price strong{font:36px/1.4 Georgia,serif;color:var(--green);letter-spacing:-1px}
+.plan-price span{font-size:calc(13px * var(--unit));color:var(--secondary)}
+.plan-card ul{padding:0;margin:0 0 20px;list-style:none;display:grid;gap:12px}
+.plan-card li{font-size:calc(13px * var(--unit));line-height:1.7;display:flex;gap:8px;align-items:flex-start}
+.plan-card li .icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--green)}
+.plan-card .btn{font-size:calc(15px * var(--unit))}
+.plan-card .badge{font-size:calc(13px * var(--unit))}
+.saved-entry{padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.checkout-price{display:flex;justify-content:space-between;gap:12px;padding:10px 0;font-size:15px;border-bottom:1px solid var(--line)}
+.checkout-price.total{font-weight:700;font-size:20px;color:var(--green);border:0;margin-bottom:10px}
+.audio-demo{background:var(--soft);padding:16px;border-radius:12px;margin-bottom:15px}
+.audio-demo .row{justify-content:center}
+.audio-demo .wave{margin-top:15px}
+.person-modal-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.person-modal-top h3{font:600 24px/1.6 SimSun,serif}
+.privacy-options{display:grid;gap:8px;margin:15px 0}
+.privacy-options label{display:flex;gap:10px;align-items:flex-start;background:#F3F4ED;padding:12px;border-radius:10px;font-size:15px}
+.privacy-options input{margin-top:5px;accent-color:var(--green)}
+.source-transcript{font:17px/1.9 SimSun,serif;padding:20px;border-left:2px solid #BCA484;background:#F4F1E7;margin:15px 0}
+.pending-item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.pending-item strong{font-size:17px}
+.pending-item p{font-size:14px;color:var(--secondary);margin-top:8px}
+.family-selector{display:grid;gap:10px}
+.family-selector button{background:var(--soft);border-radius:12px;padding:15px;text-align:left;display:flex;align-items:center;gap:10px;font-size:16px}
+.family-selector small{display:block;color:var(--secondary);font-size:12px}
+.large-type .member-row{flex-wrap:wrap}
+.large-type .member-row>.badge{margin-left:50px}
+.large-type .family-summary{flex-wrap:wrap}
+.large-type .profile-heading{flex-wrap:wrap}
+.large-type .plan-price strong{font-size:44px}
+.large-type .record-form-buttons{flex-direction:column}
+.large-type .record-controls .btn{width:100%}
+.large-type .profile-heading>.icon-button{margin-left:auto}
+.large-type .tree-person{min-width:130px}
+.large-type .quota-grid{grid-template-columns:1fr;gap:15px}
+.large-type .quota-grid>div{padding:0}
+.large-type .quota-grid>div:first-child{padding:0;border-right:0}
+@keyframes recordPulse{to{box-shadow:0 0 0 14px #E3EADC55}}
+.state-examples{display:grid;gap:8px;margin-top:22px;font-size:11px}
+.tree-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.state-examples select{padding:7px;border:1px solid #C5CDBD;background:#F7F6F0;border-radius:7px;font-size:12px;min-width:0}
+.state-examples p{font-size:11px;color:var(--subtle)}
+.large-text .modal p,.large-text .modal .form-field>label,.large-text .modal .check-row{font-size:calc(15px * var(--unit))}
+.large-text .modal .btn,.large-text .modal .form-field input,.large-text .modal .form-field select{font-size:calc(16px * var(--unit))}
+.large-text .modal .caption{font-size:calc(13px * var(--unit))}
+.large-text .modal .checkout-price{font-size:calc(15px * var(--unit));flex-wrap:wrap}
+.large-text .modal .source-transcript{font-size:calc(17px * var(--unit))}
+.welcome-page>img{display:block;width:100%;height:205px;object-fit:cover}
+.welcome-page .page{padding-top:24px}
+.welcome-page .card .caption{margin:7px 0 14px}
+
+

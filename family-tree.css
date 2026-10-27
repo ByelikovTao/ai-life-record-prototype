@@ -1,0 +1,19 @@
+/* 关系图明确区分直接关系与父母尚未记录的隔代、旁系关系。 */
+.family-tree-canvas{min-width:290px;max-width:520px;margin:auto}
+.lineage-caption{font-size:calc(12px * var(--unit));line-height:1.6;color:var(--secondary);text-align:center;margin:0 0 14px}
+.lineage-focus,.lineage-branch{position:relative;border:1px solid #CBD6C4;border-radius:14px;background:#F7F9F2;padding:12px 10px;margin-top:18px}
+.lineage-focus{background:#E0E9DA;border-color:#A7B99F}
+.lineage-focus h3,.lineage-branch h3{font-size:calc(13px * var(--unit));font-weight:600;color:var(--green);text-align:center;margin:0 0 10px}
+.lineage-members{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
+.lineage-members .couple-line{width:18px;flex-shrink:0}
+.lineage-branch>p{font-size:calc(12px * var(--unit));line-height:1.7;color:var(--secondary);margin:10px 0 0}
+.lineage-indirect{border-style:dashed;background:#FCFBF6}
+.lineage-branch:not(:first-of-type):before,.lineage-focus:before{content:"";position:absolute;top:-19px;left:50%;width:1px;height:18px;background:#B4C0AA}
+.lineage-indirect:before{display:none}
+.share-viewers{border:1px solid var(--line,#D9DDD4);border-radius:12px;padding:10px 12px;margin:12px 0 18px;min-width:0}
+.share-viewers legend{font-size:calc(13px * var(--unit));color:var(--secondary);padding:0 4px}
+.share-viewers .check-row{border-bottom:1px solid #E8EBE1;padding:9px 0}
+.share-viewers .check-row:last-of-type{border-bottom:0}
+.share-viewers .check-row small{display:block;color:var(--secondary);font-size:calc(12px * var(--unit));line-height:1.6}
+.record-context{font-size:calc(13px * var(--unit));line-height:1.7;margin-bottom:14px;padding:10px 12px;border-radius:10px;background:var(--green-light,#E4ECE6)}
+.record-context strong{display:block;font-weight:500}

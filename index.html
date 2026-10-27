@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#234E43">
+  <title>AI 人生记录 · 交互原型</title>
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="screens.css">
+  <link rel="stylesheet" href="details.css">
+  <link rel="stylesheet" href="family-tree.css">
+  <link rel="stylesheet" href="memory-space.css">
+  <link rel="stylesheet" href="digital-human.css">
+  <link rel="stylesheet" href="person-archive.css">
+  <link rel="stylesheet" href="content-chat.css">
+</head>
+<body>
+  <!-- 静态原型：业务资料只在内存中变化；数字人为无声形象演示，不连接真实 AI 或支付。 -->
+  <div class="studio">
+    <aside class="studio-sidebar" aria-label="原型导览">
+      <a class="wordmark" href="#home">AI 人生记录<span>PRIVATE FAMILY MEMORIES</span></a>
+      <p class="studio-intro">把日子，<br><em>留成故事。</em></p>
+      <p class="studio-caption">一份会继续生长的人生记录。<br>看见过去，也聊聊今天。</p>
+      <nav id="studio-nav" class="studio-nav" aria-label="页面快捷入口"></nav>
+      <div class="studio-bottom"><span class="studio-dot"></span>可点击演示 · V1.12<br>示例人物与素材 · 刷新还原</div>
+    </aside>
+    <main class="stage">
+      <div class="review-toolbar" aria-label="原型预览设置">
+        <span class="review-label">预览设置</span>
+        <label>身份 <select id="actor-select"><option value="xia">女儿 · 陈知夏</option><option value="father">本人 · 陈远山</option></select></label>
+        <label>宽度 <select id="width-select"><option value="390">390</option><option value="360">360</option><option value="430">430</option></select></label>
+        <button id="font-toggle" type="button" aria-pressed="false">大字号</button>
+        <button id="reset-demo" type="button">重置演示</button>
+      </div>
+      <div class="phone" id="phone">
+        <div class="statusbar" aria-hidden="true"><b>9:41</b><div><span class="signal">▂▄▆</span><span class="wifi">◔</span><span class="battery"></span></div></div>
+        <header id="app-header" class="app-header"></header>
+        <div id="app-content" class="app-content" tabindex="-1"></div>
+        <nav id="bottom-nav" class="bottom-nav" aria-label="主要导航"></nav>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
+      <div class="variant-switcher" aria-label="首页布局比较"><button id="variant-prev" aria-label="上一种首页布局">←</button><span id="variant-label"></span><button id="variant-next" aria-label="下一种首页布局">→</button></div>
+      <p class="stage-note">静态交互原型 · 对话、录音、建档及支付均为演示 · 价格与权益待验证</p>
+    </main>
+    <aside class="review-panel" aria-label="设计说明">
+      <span class="eyebrow">DESIGN NOTES</span>
+      <h2 id="review-title">从故事开始</h2><p id="review-description"></p>
+      <div class="palette"><i style="background:#F6F3EC"></i><i style="background:#234E43"></i><i style="background:#8B5D3B"></i></div>
+      <div class="review-rule"><strong>温暖、克制、可信</strong><p>人物与故事做主角。原声、整理和推演各有清楚的标记。</p></div>
+      <details><summary>查看当前演示状态</summary><pre id="state-preview"></pre></details>
+      <div class="state-examples"><label for="scenario-select">查看边界状态</label><select id="scenario-select"><option value="normal">正常内容</option><option value="private">未获授权的故事</option><option value="empty">空收藏</option><option value="quota">语音额度用尽</option><option value="failure">下一次整理失败</option></select><p>用于评审交互反馈，属于原型工具。</p></div>
+      <a class="overview-link" href="overview.html">查看三屏总览 ↗</a>
+    </aside>
+  </div>
+  <dialog id="modal" class="modal"><div id="modal-content"></div></dialog>
+  <script src="data.js" defer></script>
+  <script src="archive-data.js" defer></script>
+  <script src="person-archive.js" defer></script>
+  <script src="content-chat.js" defer></script>
+  <script src="views.js" defer></script>
+  <script src="family-tree.js" defer></script>
+  <script src="family-views.js" defer></script>
+  <script src="vendor/three.global.js" defer></script>
+  <script src="avatar-model-data.js" defer></script>
+  <script src="avatar-model.js" defer></script>
+  <script src="digital-human.js" defer></script>
+  <script src="questions.js" defer></script>
+  <script src="room-image-data.js" defer></script>
+  <script src="room-model-data.js" defer></script>
+  <script src="room-surface-data.js" defer></script>
+  <script src="room-assets.js" defer></script>
+  <script src="room-materials.js" defer></script>
+  <script src="room-furniture.js" defer></script>
+  <script src="room-model.js" defer></script>
+  <script src="room-tour.js" defer></script>
+  <script src="room-renderer.js" defer></script>
+  <script src="memory-space.js" defer></script>
+  <script src="actions.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
