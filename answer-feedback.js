@@ -42,18 +42,20 @@
     const r=P.state.feedbackDrafts[P.state.actor];
     if(!r)return `<div class="page empty"><h2>先选择一条需要纠正的回答</h2>${l('回到数字人','chat','btn')}</div>`;
     if(r.ref&&!P.ContentChat.resolve(r.ref))return `<div class="page empty"><h2>原资料暂未向你开放</h2>${l('查看我的纠正','corrections','btn')}</div>`;
-    return `<div class="page feature-page"><h1 class="page-title">纠正数字人回答</h1><p class="page-subtitle">提交给 ${e(P.PEOPLE[r.owner].name)}本人核对。提交不会直接修改原始资料。</p><div class="note section"><strong>当时的问题</strong><p>${e(r.question)}</p><strong>原回答</strong><p class="feature-prose">${e(r.original)}</p></div><form id="answer-feedback-form" data-feature-form data-actor="${P.state.actor}" class="section"><div class="form-field"><label for="answer-field-reason">哪里需要调整？</label><select id="answer-field-reason" name="reason">${Object.entries(REASONS).map(([id,label])=>`<option value="${id}" ${r.reason===id?'selected':''}>${label}</option>`).join('')}</select></div><div class="form-field"><label for="answer-field-suggestion">你的更正或补充建议</label><textarea id="answer-field-suggestion" name="suggestion" maxlength="2000" required placeholder="请说明正确情况、你记得的细节，或表达哪里不像本人。">${e(r.suggestion)}</textarea></div><p class="caption">原问题、原回答和建议仅发送给本人；原资料仍按自己的授权范围查看。本人可确认、修改或暂不采纳。</p><button type="submit" class="btn full">提交本人核对</button></form></div>`;
+    return `<div class="page feature-page"><h1 class="page-title">纠正TA的回答</h1><p class="page-subtitle">提交给 ${e(P.PEOPLE[r.owner].name)}本人核对。提交不会直接修改原始资料。</p><div class="note section"><strong>当时的问题</strong><p>${e(r.question)}</p><strong>原回答</strong><p class="feature-prose">${e(r.original)}</p></div><form id="answer-feedback-form" data-feature-form data-actor="${P.state.actor}" class="section"><div class="form-field"><label for="answer-field-reason">哪里需要调整？</label><select id="answer-field-reason" name="reason">${Object.entries(REASONS).map(([id,label])=>`<option value="${id}" ${r.reason===id?'selected':''}>${label}</option>`).join('')}</select></div><div class="form-field"><label for="answer-field-suggestion">你的更正或补充建议</label><textarea id="answer-field-suggestion" name="suggestion" maxlength="2000" required placeholder="请说明正确情况、你记得的细节，或表达哪里不像本人。">${e(r.suggestion)}</textarea></div><p class="caption">原问题、原回答和建议仅发送给本人；原资料仍按自己的授权范围查看。本人可确认、修改或暂不采纳。</p><button type="submit" class="btn full">提交本人核对</button></form></div>`;
   }
-  /** 列表不向第三位家人显示反馈数量、原回答或处理结论。 */
+  /** “纠正TA的回答”展示反馈进度，不向第三位家人显示原回答或处理结论。 */
   function view() {
     const items=entries();
-    return `<div class="page feature-page"><h1 class="page-title">回答纠正与处理</h1><p class="page-subtitle">原回答保留，修订经过本人确认；只有你与相关本人可查看。</p><div class="section stack">${items.length?[...items].reverse().map(card).join(''):'<div class="empty"><h2>暂时没有纠正</h2><p>在数字人的回答旁选择“纠正或补充”。</p>'+l('去看看数字人','chat','btn')+'</div>'}</div></div>`;
+    // 处理结果只有提供者实际进入列表且仍有权查看时才算已读；本人待核对不在这里清除。
+    items.forEach(item=>{if(item.from===P.state.actor&&item.status!=='pending'&&available(item))item.resultRead=true;});
+    return `<div class="page feature-page"><h1 class="page-title">纠正TA的回答</h1><p class="page-subtitle">发现TA说错了？提交本人核对。这里查看你的反馈与处理进度，原回答仍会保留。</p><div class="section stack">${items.length?[...items].reverse().map(card).join(''):'<div class="empty"><h2>暂时没有纠正</h2><p>在数字人的回答旁选择“纠正或补充”。</p>'+l('去看看数字人','chat','btn')+'</div>'}</div></div>`;
   }
   /** 处理前重新校验原资料权限；失效资料不从快照中泄露正文。 */
   function card(item) {
     if(!available(item))return `<article class="card"><p>相关资料当前未向你开放，这条纠正暂时不能查看或处理。</p></article>`;
     const owner=item.owner===P.state.actor,status=item.status==='pending'?'等待本人核对':item.status==='accepted'?'本人已确认修订':'本人暂不采纳';
-    return `<article class="card"><div class="tags">${t(REASONS[item.reason],'gray')}${t(status,item.status==='pending'?'warm':'')}</div><h2 class="section">${e(item.question)}</h2><p class="caption">${e(P.PEOPLE[item.from].name)}提交给 ${e(P.PEOPLE[item.owner].name)}</p><details class="section"><summary>回看原回答</summary><p class="feature-prose">${e(item.original)}</p></details><p class="feature-prose section"><strong>建议：</strong>${e(item.suggestion)}</p>${item.status!=='pending'?`<div class="note section"><strong>${item.status==='accepted'?'本人确认的修订答复':'处理意见'}</strong><p class="feature-prose">${e(item.approved||item.note)}</p>${item.note&&item.approved?`<p>${e(item.note)}</p>`:''}</div>${owner&&item.status==='accepted'?b('另存为我的记录草稿','answer-to-record','text-link',`data-id="${item.id}"`):''}`:owner?b('核对并处理','answer-inspect','btn secondary section',`data-id="${item.id}"`):''}</article>`;
+    return `<article class="card"><div class="tags">${t(REASONS[item.reason],'gray')}${t(status,item.status==='pending'?'warm':'')}</div><h2 class="section">${e(item.question)}</h2><p class="caption">${e(P.PEOPLE[item.from].name)}提交给 ${e(P.PEOPLE[item.owner].name)}</p><details class="section"><summary>回看原回答</summary><p class="feature-prose">${e(item.original)}</p></details><p class="feature-prose section"><strong>建议：</strong>${e(item.suggestion)}</p>${item.status!=='pending'?`<div class="note section"><strong>${item.status==='accepted'?'本人确认的修订答复':'处理意见'}</strong><p class="feature-prose">${e(item.approved||item.note)}</p>${item.note&&item.approved?`<p>${e(item.note)}</p>`:''}</div>${owner&&item.status==='accepted'?b('另存为记录草稿','answer-to-record','text-link',`data-id="${item.id}"`):''}`:owner?b('核对并处理','answer-inspect','btn secondary section',`data-id="${item.id}"`):''}</article>`;
   }
   /** 本人可以修改修订文本，说明采纳或退回原因，不替其他作者改动原材料。 */
   function inspect(id) {
@@ -97,7 +99,7 @@
     if(form.id==='answer-feedback-form'){
       const r=P.state.feedbackDrafts[P.state.actor];if(!r||!r.suggestion.trim()||!Object.hasOwn(REASONS,r.reason))return true;
       if(r.ref&&!P.ContentChat.resolve(r.ref)){P.toast('原资料已不可用，请重新核对。');return true;}
-      P.state.answerFeedback.push({...structuredClone(r),id:P.nextId('correction'),from:P.state.actor,status:'pending',approved:'',note:''});
+      P.state.answerFeedback.push({...structuredClone(r),id:P.nextId('correction'),from:P.state.actor,status:'pending',approved:'',note:'',resultRead:false});
       form.featureState=null;delete P.state.feedbackDrafts[P.state.actor];P.navigate('corrections');P.toast('已提交本人核对，原回答和档案未被改写。');return true;
     }
     const item=P.state.answerFeedback.find(value=>value.id===form.dataset.id&&value.owner===P.state.actor&&value.status==='pending');
@@ -105,10 +107,12 @@
     const r=P.state.feedbackReviewDrafts[item.id],decision=event.submitter?.value;
     if(decision==='accept'&&!r.text.trim() || decision==='decline'&&!r.note.trim()){P.toast('请填写修订答复，或说明暂不采纳的原因。');return true;}
     if(!['accept','decline'].includes(decision))return true;
-    item.status=decision==='accept'?'accepted':'declined';item.approved=decision==='accept'?r.text.trim():'';item.note=r.note.trim();P.navigate('corrections');P.toast('处理结果已保存，原始资料保持原文。');return true;
+    item.status=decision==='accept'?'accepted':'declined';item.approved=decision==='accept'?r.text.trim():'';item.note=r.note.trim();item.resultRead=false;P.navigate('corrections');P.toast('处理结果已保存，原始资料保持原文。');return true;
   }
   /** 待处理数属于数字人本人，原资料失效时仍保留待核对状态而不显示正文。 */
   function pendingCount() {return P.state.answerFeedback.filter(item=>item.owner===P.state.actor&&item.status==='pending').length;}
-  P.AnswerFeedback={tools,capture,apply,readable,handleAction,submit,pendingCount};
+  /** 本人待核对或提供者有可查看的未读处理结果时提醒；其他家人不会收到。 */
+  function hasNotice(){return pendingCount()>0||entries().some(item=>item.from===P.state.actor&&item.status!=='pending'&&item.resultRead===false&&available(item));}
+  P.AnswerFeedback={tools,capture,apply,readable,handleAction,submit,pendingCount,hasNotice};
   Object.assign(P.views,{corrections:view,'correction-edit':edit,'correction-review':review});
 }

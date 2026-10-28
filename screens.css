@@ -5,21 +5,23 @@
 .home-intro .page-title{font-size:calc(26px * var(--unit))}
 .home-chat-prompt>.caption{margin-bottom:10px}
 .home-chat-prompt>.text-link{margin-top:10px}
-.home-inbox{padding:16px;background:var(--soft);border-radius:14px}
-.home-inbox-row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between}
-.home-inbox-row+.home-inbox-row{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-.home-inbox-row p{flex:1 1 160px;font-size:calc(13px * var(--unit));line-height:1.8;overflow-wrap:anywhere}
-.home-inbox-row button{flex-shrink:0}
+/* 待办合为暖白轻卡片，整行触达；数量右对齐，不使用成片绿色底。 */
+.home-tasks{margin:16px 0 12px;padding:12px 14px 4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.home-tasks-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
+.home-tasks-heading h2{font-size:calc(15px * var(--unit));font-weight:600}
+.home-tasks-heading>span{font-size:calc(11px * var(--unit));color:var(--secondary);text-align:right}
+.home-task-row{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:10px 0;background:none;color:var(--ink);text-align:left;text-decoration:none;border-top:1px solid #EAECE4;font-size:calc(14px * var(--unit));line-height:1.6}
+.home-task-row>.icon:first-child{width:18px;height:18px;color:var(--green)}
+.home-task-label{flex:1;min-width:0;overflow-wrap:anywhere}
+.home-task-count{display:flex;align-items:center;justify-content:center;min-width:23px;min-height:23px;padding:0 5px;border-radius:7px;background:var(--copper-soft);color:var(--copper);font-size:calc(12px * var(--unit));font-weight:600}
+.home-task-row>.icon:last-child{width:14px;height:14px;color:var(--secondary)}
 [data-home-section="events"]>.caption{margin-bottom:14px}
 [data-home-section="events"] .section-heading{flex-wrap:wrap;align-items:baseline}
-/* 家庭图谱是首页的内容入口，长说明与两倍字号自然换行。 */
-.home-family-card{margin:18px 0 6px}
-.home-family-link{display:flex;align-items:center;gap:12px;width:100%;padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--soft);text-align:left;color:var(--green)}
-.home-family-symbol{display:flex;align-items:center;justify-content:center;flex:0 0 40px;height:40px;border-radius:50%;background:var(--surface)}
-.home-family-copy{flex:1;min-width:0;overflow-wrap:anywhere}
-.home-family-copy strong{display:block;font:600 calc(17px * var(--unit))/1.6 SimSun,serif}
-.home-family-copy small,.home-family-copy em{display:block;font-size:calc(12px * var(--unit));line-height:1.7;color:var(--secondary);font-style:normal}
-.home-family-copy em{margin-top:3px;color:var(--copper)}
+/* 图谱采用至少44px的轻入口，移除大卡片背景、说明及装饰图标容器。 */
+.home-family-card{margin:4px 0 6px}
+.home-family-link{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:6px 0;background:none;text-align:left;color:var(--green);font-size:calc(13px * var(--unit))}
+.home-family-link>span{flex:1;min-width:0;overflow-wrap:anywhere}
+.home-family-link small{font-size:calc(12px * var(--unit));color:var(--secondary);margin-left:8px}
 .home-family-link>.icon{width:16px;flex-shrink:0}
 .film-cover{display:block;width:100%;aspect-ratio:16/9;position:relative;padding:0;background:#D8D8CE;overflow:hidden;border-radius:13px;text-align:left}
 .film-cover>img{display:block;width:100%;height:100%;object-fit:cover}
@@ -45,11 +47,8 @@
 .record-prompt p small{display:block;font-size:calc(13px * var(--unit));color:var(--subtle);margin-top:3px}
 .record-prompt>.text-link{font-size:calc(14px * var(--unit));margin-top:8px}
 .home-family .question-row{background:var(--surface);border:1px solid var(--line)}
-.home-family .eyebrow,.home-timeline .eyebrow{margin:4px 0 10px;font-size:calc(13px * var(--unit));letter-spacing:1px}
+.home-family .eyebrow{margin:4px 0 10px;font-size:calc(13px * var(--unit));letter-spacing:1px}
 .home-family .page-title{font-size:calc(27px * var(--unit))}
-.home-timeline .timeline-entry{grid-template-columns:1fr}
-.home-timeline .timeline-year{font-size:22px;margin-bottom:0}
-.home-timeline .timeline-button>img{height:150px}
 .person-heading{display:flex;align-items:center;gap:14px;padding:7px 0 12px}
 .person-heading .page-title{font-size:calc(24px * var(--unit));margin:0}
 .person-heading .caption{font-size:calc(13px * var(--unit))}

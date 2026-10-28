@@ -103,14 +103,14 @@
     if (!r.text.trim()) r.text='今天和家人一起翻看旧照片，又想起老家窗边的那张书桌。很多平时没有讲完的话，我想慢慢留下来。';
     P.render();P.toast('录音演示已结束。请检查下方的示例文字，再保存或更正。');
   }
-  /** 将表单草稿留在当前账号内存，或进入整理确认页面。 */
+  /** 所有记录草稿统一回到我提交的资料，继续使用当前账号的同一份内存原稿。 */
   function saveRecord(event) {
     captureRecord();
     const r=P.state.record;r.recording=false;r.paused=false;
     if (!r.text.trim()) return P.toast('先写下想记录的话，再保存或整理。');
     if(!/^\d{4}$/.test(r.eventYear) || Number(r.eventYear)>new Date().getFullYear() || Number(r.eventYear)<1000)return P.toast('请填写有效的事情发生年份，不晚于今年。');
     if (!r.title.trim()) r.title='今天的一段回忆';
-    if (event.submitter?.value==='draft') {P.state.draftSaved=true;P.navigate('profile');P.toast('草稿已保存，仅自己可见。刷新原型会还原。');}
+    if (event.submitter?.value==='draft') {P.state.draftSaved=true;P.MaterialLibrary.open('drafts');P.toast('草稿已保存，仅自己可见。刷新原型会还原。');}
     else {
       const organize=event.submitter?.value==='organize',person=r.subject||P.state.actor;
       if(organize&&(r.text.length>P.Billing.RULES.textLimit||(r.organizedText!==r.text&&!P.Billing.canUse(person,'organize'))))return P.toast('文字整理限每次5,000字，需该人物有效服务、授权与剩余额度；也可免费查看原文并确认。');
@@ -120,7 +120,7 @@
       setTimeout(()=>{organizing.delete(r);if(P.state!==s || s.actor!==actor || s.record!==r || s.route!=='record')return;if(organize&&r.organizedText!==r.text){if(!P.Billing.consume(person,'organize',P.nextId('organize-request')))return P.toast('整理额度或服务状态已改变，原文字保留。');r.organizedText=r.text;}r.aiOrganized=organize;r.reviewed=true;P.navigate('review');},450);
     }
   }
-  /** 本人记录可直接确认，家人补充共享经历则进入待确认列表。 */
+  /** 本人确认或家人提交后统一回到我的提交；内容、提供者、分享范围及原审核机制保留。 */
   function publishRecord(form) {
     const data=new FormData(form),r=P.state.record;
     if (!data.get('confirmed')) return;
@@ -134,12 +134,12 @@
     if(contribution && (scope==='private' || !viewers.includes(target)))return P.toast('补充对方经历需要向本人开放核对；也可以先保存为草稿。');
     const now=new Date(),recorded=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
     if(!/^\d{4}$/.test(r.eventYear) || Number(r.eventYear)>now.getFullYear() || Number(r.eventYear)<1000)return P.toast('请先核对事情发生的年份。');
-    const item={id:contribution&&r.pendingId?r.pendingId:P.nextId('record'),title:r.title || '今天的一段回忆',year:r.eventYear,date:`${r.eventYear}年（具体日期未填写）`,recorded,category:contribution?'家人补充':'个人记录',image:'family',author:actor,subject:contribution?target:actor,scope,text:[r.text],quote:r.text.slice(0,52),source:P.PEOPLE[actor].name+'的记录',duration:r.seconds?P.duration(r.seconds):'文字记录',viewers,storyId:r.storyId,confirmedBy:contribution?null:actor};
+    const item={id:contribution&&r.pendingId?r.pendingId:P.nextId('record'),title:r.title || '今天的一段回忆',year:r.eventYear,date:`${r.eventYear}年（具体日期未填写）`,recorded,category:contribution?'家人补充':'个人记录',image:'family',author:actor,subject:contribution?target:actor,scope,text:[r.text],quote:r.text.slice(0,52),source:P.PEOPLE[actor].name+'的记录',duration:r.seconds?P.duration(r.seconds):'文字记录',viewers,storyId:r.storyId,archiveAddition:Boolean(r.archiveAddition),confirmedBy:contribution?null:actor};
     if(contribution){
       P.state.pending=P.state.pending.filter(entry=>entry.id!==r.pendingId);P.state.pending.push({...item,status:'pending',feedback:''});
-      P.navigate('family');P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('已提交给'+P.PEOPLE[target].name+'核对，确认后才进入对方的人生档案。');
+      P.MaterialLibrary.open('pending');P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('已提交给'+P.PEOPLE[target].name+'核对，确认后才进入对方的人生档案。');
     } else {
-      P.state.stories.push(item);P.navigate('story/'+item.id);P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('记录已确认，并按你选择的范围保存。');
+      P.state.stories.push(item);P.MaterialLibrary.open('archived');P.state.record=P.emptyRecord();P.state.draftSaved=false;P.toast('记录已确认，并按你选择的范围保存。');
     }
   }
   /** 管理人可协助组织成员，普通成员看到邀请规则。 */
@@ -234,12 +234,12 @@
     else {item.status='returned';item.feedback='请再核对这段经历的时间、人物与经过，修改后重新提交。';}
     P.closeModal();P.render();P.toast(approve?'已确认补充，保留提供者与原分享范围。':'已退回提供者更正，原稿没有丢失。');
   }
-  /** 提供者只能更正自己被退回的补充，避免覆盖仍在核对中的材料。 */
+  /** 仅更正自己被退回的补充，保留归档人物与分类来源，不覆盖仍在核对中的材料。 */
   function editPending(id) {
     const item=P.state.pending.find(entry=>entry.id===id && entry.author===P.state.actor && entry.status==='returned');
     if(!item)return;
     captureRecord();if(P.state.record.text.trim())return P.toast('请先保存或完成当前草稿，再更正退回的补充。');
-    P.state.record={...P.emptyRecord(),title:item.title,text:item.text.join('\n\n'),eventYear:item.year,scope:item.scope,viewers:[...item.viewers],kind:'contribution',subject:item.subject,storyId:item.storyId,pendingId:item.id};P.navigate('record');
+    P.state.record={...P.emptyRecord(),title:item.title,text:item.text.join('\n\n'),eventYear:item.year,scope:item.scope,viewers:[...item.viewers],kind:'contribution',subject:item.subject,storyId:item.storyId,pendingId:item.id,archiveAddition:Boolean(item.archiveAddition)};P.navigate('record');
   }
   /** 重复查看申请不会不断堆积；不存在或已获授权的内容不创建申请。 */
   function requestAccess() {
@@ -316,7 +316,6 @@
     if (action==='clear-chat-context') {s.chatContext=null;return P.render();}
     // 首页自由聊天结束旧资料话题；跨人物时清空旧对话，输入草稿仍由数字人模块按账号保存。
     if (action==='home-chat') {if(s.chatTarget!==P.FamilyContext.current())s.chatMessages=[];s.chatTarget=P.FamilyContext.current();s.chatContext=null;return P.navigate('chat');}
-    if (action==='home-ask-story') {const item=P.visibleStories().find(story=>story.id===el.dataset.id && P.FamilyContext.inArchive(story,P.FamilyContext.current()));if(item)return openQuestion(`讲讲《${item.title}》这段经历。`,item.id);return P.toast('这段经历暂未向你开放。');}
     if (action==='choose-person') return P.modal('选择交流的人物',`<div class="family-selector"><button data-action="close-modal">${a('father')}<span>爸爸的数字人<small>陈远山 · 已获授权</small></span>${i('check')}</button><button data-action="unavailable-person">${a('mother')}<span>妈妈 · 林慧<small>尚未建立或开放数字人</small></span>${i('lock')}</button></div>`);
     if (action==='unavailable-person') return P.toast('这位家人尚未建立或向你开放数字人服务。');
     if (action==='close-modal') return P.closeModal();

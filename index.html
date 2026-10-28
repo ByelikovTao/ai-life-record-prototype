@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#234E43">
-  <title>AI 人生记录 · 交互原型</title>
+  <title>传家记 · 交互原型</title>
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="screens.css">
   <link rel="stylesheet" href="details.css">
@@ -15,12 +15,13 @@
   <link rel="stylesheet" href="content-chat.css">
   <link rel="stylesheet" href="family-features.css">
   <link rel="stylesheet" href="keepsake-books.css">
+  <link rel="stylesheet" href="entry-flow.css">
 </head>
 <body>
   <!-- 静态原型：业务资料只在内存中变化；数字人为无声形象演示，不连接真实 AI 或支付。 -->
   <div class="studio">
     <aside class="studio-sidebar" aria-label="原型导览">
-      <a class="wordmark" href="#home">AI 人生记录<span>PRIVATE FAMILY MEMORIES</span></a>
+      <a class="wordmark" href="#home">传家记<span>PRIVATE FAMILY MEMORIES</span></a>
       <p class="studio-intro">把日子，<br><em>留成故事。</em></p>
       <p class="studio-caption">一份会继续生长的人生记录。<br>看见过去，也聊聊今天。</p>
       <nav id="studio-nav" class="studio-nav" aria-label="页面快捷入口"></nav>
@@ -33,6 +34,7 @@
         <label>宽度 <select id="width-select"><option value="390">390</option><option value="360">360</option><option value="430">430</option></select></label>
         <button id="font-toggle" type="button" aria-pressed="false">大字号</button>
         <button id="reset-demo" type="button">重置演示</button>
+        <button id="restart-entry" type="button">重新体验下载登录</button>
         <!-- 报告属于评审工具，在新页阅读，保留原型中未提交的内存内容。 -->
 
 
@@ -44,7 +46,6 @@
         <nav id="bottom-nav" class="bottom-nav" aria-label="主要导航"></nav>
         <div id="toast" class="toast" role="status" aria-live="polite"></div>
       </div>
-      <div class="variant-switcher" aria-label="首页布局比较"><button id="variant-prev" aria-label="上一种首页布局">←</button><span id="variant-label"></span><button id="variant-next" aria-label="下一种首页布局">→</button></div>
       <p class="stage-note">静态交互原型 · 对话、录音、建档及支付均为演示 · 价格与权益待验证</p>
     </main>
     <aside class="review-panel" aria-label="设计说明">
@@ -92,6 +93,7 @@
   <script src="room-renderer.js" defer></script>
   <script src="memory-space.js" defer></script>
   <script src="actions.js" defer></script>
+  <script src="entry-flow.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

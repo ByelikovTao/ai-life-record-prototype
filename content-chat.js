@@ -60,8 +60,8 @@
     const position=item.asset && ['film','clip'].includes(item.asset.kind)?` · 追问位置 ${P.duration(item.ref.position || 0)}`:'';
     return `<aside class="content-chat-context avatar-context"><div class="content-chat-heading"><span>${e(P.PEOPLE[item.person].name)} · ${item.label}${position}</span>${b('结束追问','clear-chat-context','text-link')}</div><strong>围绕《${e(item.title)}》继续聊</strong><div class="content-chat-links">${sourceButton(item.ref,item.ref.kind==='biography'?'回看这一章':'回看原内容')}</div><div class="content-chat-prompts">${prompts(item).map(text=>b(e(text),'content-chat-prompt','content-chat-chip',`data-question="${e(text)}"`)).join('')}</div></aside>`;
   }
-  /** 进入时冻结实际播放秒数，导航会暂停原生媒体；切换人物时清除上一位的对话。 */
-  function start(value) {
+  /** 进入时冻结实际播放秒数；首页可传入影片问题，其余入口沿用内容问题，离页或切账号取消迟到发送。 */
+  function start(value,question='') {
     const item=resolve(value);if(!item)return P.toast('这份资料暂未向当前账号开放。');
     if(!available(item.person))return P.toast('这位家人尚未建立或开放数字人。');
     const ref=item.ref;
@@ -74,7 +74,7 @@
     P.DigitalHuman.captureDraft();P.DigitalHuman.stop();
     if(P.state.chatTarget!==item.person)P.state.chatMessages=[];
     const state=P.state,actor=state.actor;state.chatTarget=item.person;state.chatContext=ref;P.navigate('chat');
-    setTimeout(()=>{if(P.state===state && state.actor===actor && state.route==='chat' && state.chatContext===ref)P.sendChatMessage(prompts(item)[0]);},0);
+    setTimeout(()=>{if(P.state===state && state.actor===actor && state.route==='chat' && state.chatContext===ref)P.sendChatMessage(question || prompts(item)[0]);},0);
   }
   /** 回看恢复原资料分区、视频追问位置或传记章节，不自动开始播放。 */
   function returnTo(value) {
@@ -114,7 +114,7 @@
     if(action==='content-chat-prompt'){P.sendChatMessage(element.dataset.question || '');return true;}
     if(action!=='content-chat-start' && action!=='content-chat-source')return false;
     let ref;try{ref=reference(JSON.parse(element.dataset.context || 'null'));}catch{P.toast('这份内容入口已失效，请重新打开原资料。');return true;}
-    if(action==='content-chat-start')start(ref);else returnTo(ref);return true;
+    if(action==='content-chat-start')start(ref,element.dataset.question || '');else returnTo(ref);return true;
   }
   P.ContentChat={reference,resolve,key,available,sourceButton,entry,contextView,start,returnTo,reply,messageReadable,handleAction};
 }

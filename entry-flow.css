@@ -1,0 +1,74 @@
+/* 首次体验独占手机视口；原有应用导航在完成模拟登录后恢复。 */
+.entry-mode #app-header,.entry-mode #bottom-nav{display:none}
+.entry-mode{background:#fcfbf7}
+.entry-page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.entry-page{padding:20px 20px 32px;font-size:calc(14px * var(--unit));line-height:1.7}
+.entry-page h1{font-size:calc(26px * var(--unit))}
+.entry-page button{min-height:44px}
+.entry-logo{width:76px;height:76px;flex-shrink:0;border-radius:19px}
+.market-heading>span{font-size:12px;color:var(--secondary)}
+.market-heading h1{margin:4px 0 20px}
+.market-search{display:flex;align-items:center;gap:7px;padding:5px 8px 5px 12px;background:#eeefe9;border-radius:14px}
+.market-search input{width:0;flex:1;border:0;background:transparent;min-height:40px;min-width:0;font-size:14px}
+.market-search button{font-size:14px;background:none;color:var(--green);font-weight:700;padding:0 5px}
+.market-feature{margin:24px 0;padding:27px 22px;border-radius:20px;background:linear-gradient(135deg,#e0e9df,#f2e6cf);color:var(--green)}
+.market-feature>span{font-size:12px;letter-spacing:2px}
+.market-feature h2{font:28px/1.6 SimSun,serif;margin:12px 0 18px}
+.market-suggest,.market-chip{background:#fffaf0;border-radius:24px;padding:8px 17px;color:var(--green)}
+.entry-section-title{font-size:calc(18px * var(--unit));margin:24px 0 14px}
+.entry-caption{font-size:12px;color:var(--secondary);margin-top:20px}
+.market-result{display:flex;align-items:center;gap:8px;margin:20px 0}
+.market-result-info{min-width:0;display:flex;align-items:center;gap:12px;text-align:left;flex:1;background:transparent;padding:0}
+.market-result-info .entry-logo{width:62px;height:62px;border-radius:15px}
+.market-result-info strong{font-size:18px;display:block}
+.market-result-info small{display:block;font-size:11px;color:var(--secondary)}
+.market-get{background:var(--soft);color:var(--green);border-radius:22px;font-weight:700;padding:0 16px}
+.entry-empty{padding:35px 0;text-align:center;color:var(--secondary)}
+.entry-empty p{font-size:13px;margin-top:10px}
+.entry-back{background:transparent;padding:0;color:var(--green);margin-bottom:18px}
+.store-identity{display:flex;gap:15px;align-items:center;margin-bottom:22px}
+.store-identity h1{font-size:26px}
+.store-identity p{font-size:13px;color:var(--secondary);margin:3px 0}
+.store-identity span{font-size:11px;color:var(--copper)}
+.entry-primary{display:block;background:var(--green);color:white;border-radius:13px;min-height:50px!important;width:100%;font-weight:700;padding:12px 14px;font-size:calc(15px * var(--unit))}
+.store-facts{display:grid;grid-template-columns:1fr 1fr;border-block:1px solid var(--line);padding:16px 0;margin-top:24px;text-align:center}
+.store-facts>div+div{border-left:1px solid var(--line)}
+.store-facts strong,.store-facts span{display:block}
+.store-facts span{font-size:11px;color:var(--secondary)}
+/* 预览统一画布与顶部对齐，避免聊天气泡和文案长度改变各张卡片尺寸。 */
+.store-previews{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.preview-button{display:flex;align-items:flex-start;padding:0;border-radius:16px;text-align:left;flex:0 0 218px;background:none;scroll-snap-align:start}
+.store-preview{display:flex;flex-direction:column;width:100%;height:440px;padding:20px 15px 0;background:#e3e9dc;border:1px solid #d4dccd;border-radius:16px;overflow:hidden;color:var(--green)}
+.store-preview>span{font-size:11px;letter-spacing:2px}
+.store-preview h3{font:22px/1.5 SimSun,serif;margin:8px 0 20px;height:66px;flex-shrink:0}
+.preview-screen{flex:1;min-height:0;border:4px solid #fffcf3;border-bottom:0;border-radius:17px 17px 0 0;background:#fcf9f0;padding-bottom:17px;overflow:hidden;color:var(--ink)}
+.preview-screen>img{width:100%;height:116px;object-fit:cover;display:block}
+.preview-screen>strong{display:block;font-size:12px;padding:12px 10px 4px}
+.preview-screen>p{font-size:11px;padding:0 10px;color:var(--secondary)}
+.preview-bubble{background:#e3eadf;margin:10px;border-radius:10px;padding:8px;font-size:11px}
+.preview-1{background:#e9e1d2}.preview-1 .preview-screen>img{object-fit:contain;background:#e9dfcc}
+.preview-2{background:#e5e9e6}.preview-3{background:#e7decb}
+/* 放大阅读按内容自然延展，不沿用横向列表的固定画布。 */
+.modal .store-preview{max-width:300px;margin:auto;height:auto;min-height:420px}.modal .preview-screen{flex:none}.modal .preview-screen>img{height:210px}
+.store-description{margin-top:24px;font-size:13px}.store-description h2{font-size:18px;margin-bottom:12px}
+.store-description ul{padding-left:20px;margin:14px 0}.store-description li{margin:8px 0}
+.install-progress{margin-top:14px}.install-progress>span{display:block;height:4px;background:var(--soft);overflow:hidden;border-radius:4px}
+.install-progress>span:after{content:'';display:block;width:55%;height:100%;background:var(--green);animation:entry-install 1.5s ease-in-out infinite}
+.install-progress p{font-size:12px;color:var(--secondary);margin-top:6px}
+@keyframes entry-install{from{transform:translateX(-100%)}to{transform:translateX(185%)}}
+@media(prefers-reduced-motion:reduce){.install-progress>span:after{animation:none}}
+.login-brand{text-align:center;margin:6px 0 30px}.login-brand .entry-logo{width:70px;height:70px}
+.login-brand h1{font:26px/1.5 SimSun,serif;margin-top:15px}.login-brand p{font-size:13px;color:var(--secondary);margin-top:7px}
+/* 填号操作紧邻输入区，整行按钮提供至少44px的点击高度。 */
+.entry-fill{display:block;width:100%;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--green);font-size:calc(14px * var(--unit));font-weight:600}
+.entry-login>label:not(.entry-consent){display:block;margin:15px 0 8px;font-weight:600}
+.entry-login input[type=tel],.entry-login input[name=code]{width:100%;min-width:0;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fffefa;font-size:16px}
+.entry-code-row{display:flex;gap:8px}.entry-code-row input{flex:1;width:0!important}
+.entry-send{color:var(--green);background:var(--soft);border-radius:11px;padding:10px;font-size:13px}
+.entry-login fieldset{border:1px solid var(--line);border-radius:11px;padding:12px;margin:22px 0 16px}
+.entry-login legend{font-size:12px;color:var(--secondary)}.entry-login fieldset label{display:block;font-size:13px;padding:5px 0}
+.entry-login input[type=radio],.entry-consent input{accent-color:var(--green);width:18px;height:18px;flex-shrink:0}
+.entry-consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.9}.entry-consent input{margin-top:4px}
+.entry-text{background:none;color:var(--green);padding:0 3px;text-decoration:underline;font-size:inherit;min-height:32px!important}
+.entry-error{min-height:26px;font-size:12px;color:var(--danger);padding:6px 0}
+.entry-demo{margin-top:24px;border-top:1px solid var(--line);padding-top:16px;color:var(--secondary);font-size:12px}.entry-demo strong{color:var(--green)}

@@ -37,8 +37,11 @@
 .record-controls{display:flex;justify-content:center;gap:10px;margin:18px 0 10px;flex-wrap:wrap}
 .record-controls .btn{min-height:44px;padding:9px 14px;font-size:calc(14px * var(--unit))}
 .demo-note{font-size:calc(13px * var(--unit));max-width:230px;margin:auto}
-.record-form-buttons{display:flex;gap:10px}
-.record-form-buttons .btn{flex:1;padding-left:10px;padding-right:10px}
+/* 原文确认独占首行，辅助操作并列；扣次说明放在按钮外，避免窄屏长文案挤压。 */
+.record-form-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.record-form-buttons .btn{min-width:0;padding-left:10px;padding-right:10px}
+.record-form-buttons [value="review"]{grid-column:1/-1}
+.record-organize-note{margin-top:8px}
 .review-story h2{font-size:calc(22px * var(--unit));margin-bottom:15px}
 .review-story>p{font-size:calc(17px * var(--unit));line-height:1.9;white-space:pre-wrap}
 .review-story{padding:20px}
@@ -47,12 +50,14 @@
 .profile-heading h1{font:600 calc(26px * var(--unit))/1.6 SimSun,serif}
 .profile-heading .caption{font-size:calc(13px * var(--unit))}
 .profile-heading .avatar{width:60px;height:60px}
-.membership-summary{padding:21px;border-radius:17px;background:var(--green);color:var(--surface)}
-.membership-summary .caption{color:#D5E0D5;font-size:calc(13px * var(--unit))}
-.membership-summary h2{font:600 calc(25px * var(--unit))/1.7 SimSun,serif}
-.membership-summary>.row>.icon{width:40px;height:40px;opacity:.6;stroke-width:1}
-.membership-summary>p{font-size:calc(13px * var(--unit));color:#DEE8DA;margin:10px 0 17px}
-.membership-summary .btn{font-size:calc(13px * var(--unit));min-height:40px}
+/* 个人中心用紧凑的整块服务入口，长状态与大字号自然换行，不再占用整张促销卡片。 */
+.profile-service-summary{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:14px;background:var(--soft);color:var(--green);text-align:left}
+.profile-service-summary>span{flex:1;min-width:0;overflow-wrap:anywhere}
+.profile-service-summary strong{display:block;font-size:calc(16px * var(--unit))}
+.profile-service-summary small,.profile-service-summary em{display:block;font-size:calc(12px * var(--unit));font-style:normal;line-height:1.7}
+.profile-service-summary small{color:var(--secondary);margin:3px 0}
+.profile-service-summary>.icon{width:17px;flex-shrink:0}
+.profile-main-menu{margin-top:12px}
 .quota-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin:20px 0 8px;padding-bottom:20px}
 .quota-grid>div{padding-left:15px}
 .quota-grid>div:first-child{padding-left:5px;border-right:1px solid var(--line)}
@@ -106,7 +111,7 @@
 .large-type .family-summary{flex-wrap:wrap}
 .large-type .profile-heading{flex-wrap:wrap}
 .large-type .plan-price strong{font-size:44px}
-.large-type .record-form-buttons{flex-direction:column}
+.large-type .record-form-buttons{grid-template-columns:minmax(0,1fr)}
 .large-type .record-controls .btn{width:100%}
 .large-type .profile-heading>.icon-button{margin-left:auto}
 .large-type .tree-person{min-width:130px}

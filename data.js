@@ -53,17 +53,42 @@
   ];
   /** 草稿同时记录对象和类型，自己的记录、补充与共同回忆各自保存，不随人物切换改归属。 */
   function emptyRecord() {
-    return {text:'',title:'',eventYear:String(new Date().getFullYear()),scope:'private',viewers:[],kind:'own',subject:'',storyId:'',pendingId:null,seconds:0,recording:false,paused:false,reviewed:false};
+    return {text:'',title:'',eventYear:String(new Date().getFullYear()),scope:'private',viewers:[],kind:'own',subject:'',storyId:'',pendingId:null,archiveAddition:false,seconds:0,recording:false,paused:false,reviewed:false};
   }
   /** 账号只维护身份与建档状态，年度权益由人物服务统一维护。 */
   function newAccount() {
     return {videoDelivered:false,hasDigital:false,setupIncluded:false};
   }
-  /** 创建隔离的演示初始状态，刷新或重置后不继承历史数据。 */
+  /** 虚构待办用于红点演示；每次刷新或重置重新创建，处理不改写种子数据。 */
+  function demoTasks() {
+    return {
+      questions:[
+        {id:'demo-question-xia',from:'xia',owner:'father',text:'【演示】爸，你第一次拿到创业订单时，最想把好消息告诉谁？',storyId:'first-order',contentContext:{kind:'story',storyId:'first-order'},status:'pending',answer:'',replyRead:false,created:'演示数据'},
+        {id:'demo-question-nian',from:'nian',owner:'father',text:'【演示】爷爷，小时候老家窗边的书桌，是谁经常在用？',storyId:'old-home',contentContext:{kind:'story',storyId:'old-home'},status:'pending',answer:'',replyRead:false,created:'演示数据'}
+      ],
+      answerFeedback:[
+        {id:'demo-feedback-year',from:'xia',owner:'father',question:'【演示】第一笔订单是什么时候接到的？',original:'我记得是1997年接到的。',suggestion:'档案里记的是1998年，请爸爸核对一下具体年份。',reason:'fact',ref:{kind:'story',storyId:'first-order'},status:'pending',approved:'',note:'',resultRead:false},
+        {id:'demo-feedback-style',from:'nian',owner:'father',question:'【演示】爷爷，你想对家人说些什么？',original:'请大家持续优化沟通效率，提升家庭协同水平。',suggestion:'这句话有点像工作报告，爷爷平常会说得更亲切一些，请爷爷改成自己的表达。',reason:'style',ref:{kind:'story',storyId:'old-home'},status:'pending',approved:'',note:'',resultRead:false}
+      ]
+    };
+  }
+  /** 共同回忆示例直接使用原稿与本人纳入契约，确认不自动授予数字人引用。 */
+  function demoCommonMemories() {
+    const samples=[
+      ['sea','xia','第一次陪爸爸去看海','2025','那天我们沿着海边慢慢走，爸爸说年轻时总忙着工作，很少停下来看看风景。我想把那一刻的轻松留下来。',false],
+      ['dumplings','nian','和爷爷一起包饺子','2026','爷爷教我把饺子边捏紧，还说以前过年一家人都围在桌边帮忙。我包得不好看，爷爷还是笑着夸我。',false],
+      ['photos','xia','一起整理老照片','2024','周末陪爸爸整理旧相册，才知道几张老照片背后的故事。爸爸说，照片里的人和当时的心情，都值得记下来。',true],
+      ['writing','nian','爷爷教我写名字','2023','爷爷握着我的手，一笔一画地教我写名字。他说写字不用急，做事也一样，先把每一笔写认真。',true]
+    ];
+    return samples.map(([key,author,title,year,text,confirmed])=>({id:'demo-common-'+key,author,subject:author,commonWith:'father',inclusions:confirmed?{father:{active:true,reviewed:true,viewers:['father'],ai:false}}:{},title:'【演示】'+title,text:[text],year,date:year+'年 · 演示回忆',recorded:'演示数据',scope:'selected',viewers:['father'],category:'共同回忆',image:'family',source:PEOPLE[author].name+'的共同回忆演示',confirmedBy:author,quote:text.slice(0,52)}));
+  }
+  /** 创建隔离初始状态；首页固定采用影片后交流，不再保存布局选择。 */
   function initialState() {
     const members=['father','mother','xia','grandpa','nian'];
+    const tasks=demoTasks();
     const stories=structuredClone(STORIES).map(story=>({...story,subject:'father',confirmedBy:'father',aiAllowed:true,viewers:story.scope==='family'?[...members]:[]}));
-    return {billingSeedDate:new Date().toISOString().slice(0,10),billingToday:new Date().toISOString().slice(0,10),personServices:{},billingOrders:[],usageReceipts:[],referrals:[],rewardLedger:[],billingPeople:{},familyFocus:{xia:'father',nian:'father'},familyInvitations:{xia:['father','mother'],nian:['father']},familyAccess:{father:{archive:['xia','nian'],digital:['xia','nian'],space:['xia','nian']},mother:{archive:['xia'],digital:[],space:[]}},familyRequests:[],keepsakeBooks:[],keepsakeBookId:'',actor:'xia',route:'home',variant:new URLSearchParams(location.search).get('variant') || 'A',lifeTab:'overview',videoFilter:'all',archivePerson:'father',archiveAssets:null,archiveProfiles:null,archiveItemId:'',archiveChapterId:'',biographyMode:'read',archiveReturn:null,archivePlayback:{},familyTab:'列表',year:'1986',hotspot:'desk',guide:false,chatTarget:'father',chatContext:null,chatMessages:[],chatDrafts:{},questionDrafts:{},storyId:'first-order',saved:[],stories,members,invitations:[],pending:[],questions:[],accessRequests:[],idSequence:0,materialDrafts:{},materialSubmissions:[],answerFeedback:[],feedbackDrafts:{},feedbackReviewDrafts:{},feedbackReviewId:null,relationshipChapters:null,chapterDrafts:{},chapterNoteDrafts:{},chapterId:null,accounts:{father:{...newAccount(),videoDelivered:true,hasDigital:true,setupIncluded:true},xia:newAccount(),nian:newAccount()},record:emptyRecord(),fontLarge:false,modal:null,notice:''};
+    stories.push(...demoCommonMemories());
+    return {billingSeedDate:new Date().toISOString().slice(0,10),billingToday:new Date().toISOString().slice(0,10),personServices:{},billingOrders:[],usageReceipts:[],referrals:[],rewardLedger:[],billingPeople:{},familyFocus:{xia:'father',nian:'father'},familyInvitations:{xia:['father','mother'],nian:['father']},familyAccess:{father:{archive:['xia','nian'],digital:['xia','nian'],space:['xia','nian']},mother:{archive:['xia'],digital:[],space:[]}},familyRequests:[],keepsakeBooks:[],keepsakeBookId:'',actor:'xia',route:'home',lifeTab:'overview',videoFilter:'all',archivePerson:'father',archiveAssets:null,archiveProfiles:null,archiveItemId:'',archiveChapterId:'',biographyMode:'read',archiveReturn:null,archivePlayback:{},familyTab:'列表',year:'1986',hotspot:'desk',guide:false,chatTarget:'father',chatContext:null,chatMessages:[],chatDrafts:{},questionDrafts:{},storyId:'first-order',saved:[],stories,members,invitations:[],pending:[],questions:tasks.questions,accessRequests:[],idSequence:0,materialDrafts:{},materialTabs:{},materialSubmissions:[],answerFeedback:tasks.answerFeedback,feedbackDrafts:{},feedbackReviewDrafts:{},feedbackReviewId:null,relationshipChapters:null,chapterDrafts:{},chapterNoteDrafts:{},chapterId:null,accounts:{father:{...newAccount(),videoDelivered:true,hasDigital:true,setupIncluded:true},xia:newAccount(),nian:newAccount()},record:emptyRecord(),fontLarge:false,modal:null,notice:''};
   }
   /** 两个还原入口同时清除动态人物与业务状态，保留头像等消费者持有的对象引用。 */
   function resetDemoState() {

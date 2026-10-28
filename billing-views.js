@@ -6,8 +6,11 @@
   function people() {return P.state.members.filter(id=>P.state.accounts[id]?.videoDelivered&&P.FamilyContext.authorized(id,'archive'));}
   /** 会员页选择独立于账号身份，默认跟随正在了解的家人。 */
   function person() {const ids=people(),current=P.state.billingPeople[P.state.actor]||P.FamilyContext.current();return ids.includes(current)?current:ids[0]||'';}
-  /** 个人中心显示人物共享权益，家人的账号始终是免费参与身份。 */
-  function profileSummary() {const id=person();return `<div class="membership-summary"><h2>${P.state.actor===id?'我的家庭共享服务':'家人免费参与'}</h2><p>${id?e(P.PEOPLE[id].name)+' · '+(B.period(id)?'699元年度服务有效，全家共享':'AI年度服务未生效；基础权益按保管期限保留'):'受邀查看、手动参与和留言免费；完整人生空间需先完成拍摄。'}</p>${l('查看共享额度与到期权益','membership','btn light full section')}${l('查看699元方案','billing-plan','text-link full section')}</div>`;}
+  /** 个人中心用单个紧凑入口展示共享状态，完整额度与方案留在会员页。 */
+  function profileSummary() {
+    const id=person(),status=id?e(P.PEOPLE[id].name)+' · '+(B.period(id)?'699元年度服务有效，全家共享':'年度服务未生效'):'受邀家人免费参与';
+    return l(`<span><strong>家庭共享服务</strong><small>${status}</small><em>共享额度与到期权益</em></span>${P.icon('arrow')}`,'membership','profile-service-summary');
+  }
   /** 对话页用共享答复次数说明额度，不能再用未接入的语音分钟数收费。 */
   function chatQuota(id) {const p=B.period(id);return `<div class="notice billing-chat-quota"><span>${p?'全家剩余 '+Math.max(0,R.qa-p.qaUsed)+' 次有效答复／本年度':'年度AI服务已到期，可看历史资料并留问本人'}${p&&p.qaUsed/R.qa>=.8?' · 已使用 '+Math.floor(p.qaUsed/R.qa*100)+'%':''}</span>${l('共享权益','membership')}</div>`;}
   /** 公共权益说明不展示其他家庭成员的私聊或推荐钱包。 */

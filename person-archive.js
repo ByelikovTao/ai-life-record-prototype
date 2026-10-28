@@ -129,16 +129,22 @@
     const filter=context.tab==='video'&&context.videoFilter&&context.videoFilter!=='all'?' · '+VIDEO_FILTERS[context.videoFilter]:'';
     return '返回'+P.PEOPLE[context.person].name+'的'+TABS[context.tab]+filter;
   }
-  /** 人物选择与登录账号分离，纪念书从档案顶部直达，不隐藏在资料分类内。 */
+  /** 添加操作放在具体分类，当前人物和资料类型由入口一次带入。 */
+  function addEntry(person,tab) {
+    const entries={video:['clip','添加视频'],photo:['photo','添加照片'],biography:['biography','补充一段经历'],work:['work','添加作品']};
+    const entry=entries[tab];
+    return entry?`<div class="feature-entry">${b(i('plus')+' '+entry[1],'material-new','btn secondary',`data-person="${person}" data-kind="${entry[0]}"`)}</div>`:'';
+  }
+  /** 人物选择与登录账号分离；已完成视频建档的本人在自己的档案顶部进入纪念书。 */
   function view() {
     const retentionPerson=P.state.archivePerson;if(!P.Billing.online(retentionPerson))return `<div class="page empty"><h1>线上保管已结束</h1><p>原稿未在本演示中删除。可导出本人资料或选择保管服务。</p>${P.button('导出我的资料迁出清单','billing-export','btn')}${P.link('查看保管权益','membership','text-link full section')}</div>`;
     const s=ensure(),person=s.archivePerson;
     if(!s.members.includes(person) || !P.PEOPLE[person])return `<div class="page empty"><h2>没有找到这位人物的档案</h2>${l('返回家庭','family','btn')}</div>`;
     if(person!==s.actor&&!P.FamilyContext.allowed(person))return P.FamilyContext.locked('archive',person);
-    if(person===s.actor&&s.actor!=='father'&&!P.account().videoDelivered)return `<div class="page empty"><h2>开通我的完整人生空间</h2><p>可以先在“我的记录”留下生活；完整人生档案与本人数字人需先完成拍摄服务。</p>${b('了解拍摄与开通条件','video-service','btn')}${l('查看我的记录','my-records','text-link full')}</div>`;
+    if(person===s.actor&&s.actor!=='father'&&!P.account().videoDelivered)return `<div class="page empty"><h2>开通我的完整人生空间</h2><p>已有草稿和提交记录可在“我提交的资料”查看；完整人生档案与本人数字人需先完成拍摄服务。</p>${b('了解拍摄与开通条件','video-service','btn')}${l('查看我提交的资料','materials','text-link full')}</div>`;
     const profile=biography(person),tab=s.lifeTab;
     let body=tab==='overview'?overview(person):tab==='video'?videoView(person):tab==='biography'?biographyView(person):tab==='place'?placeView(person):listing(person,tab);
-    return `<div class="page person-archive-page">${s.actor==='father'?`<div class="form-field archive-person-picker"><label for="archive-person-select">当前查看的人物档案</label><select id="archive-person-select">${(s.actor==='father'?s.members:[...new Set([...(s.familyInvitations[s.actor]||[]),s.actor])]).map(id=>`<option value="${id}" ${person===id?'selected':''}>${e(P.PEOPLE[id].name)} · ${e(P.relation(id))}</option>`).join('')}</select></div>`:P.FamilyContext.picker()}<div class="person-heading">${a(person,'large')}<div><p class="caption">${e(P.relation(person))}${P.PEOPLE[person].born?' · '+e(P.PEOPLE[person].born)+' 年生':''}</p><h1 class="page-title">${e(P.PEOPLE[person].name)}的人物档案</h1></div></div><p class="page-subtitle">${e(profile?.tagline || '影片、相片、传记与拍摄作品，在这里集中留存。')}</p>${P.KeepsakeBooks.entry(person)}<div class="feature-entry">${l(i('plus')+' 补充与整理资料','materials','btn secondary')}</div>${shortcuts(person)}<nav class="archive-secondary-tabs" aria-label="档案浏览视角">${['overview','place'].map(id=>b(TABS[id],'archive-tab',tab===id?'active':'',`data-value="${id}"`)).join('')}</nav><section class="archive-content" data-archive-tab="${tab}">${body}</section><p class="archive-demo-note">人物与资料均为原型示例。演示视频由图片编排，不代表客户成片或本人实拍。</p></div>`;
+    return `<div class="page person-archive-page">${s.actor==='father'?`<div class="form-field archive-person-picker"><label for="archive-person-select">当前查看的人物档案</label><select id="archive-person-select">${(s.actor==='father'?s.members:[...new Set([...(s.familyInvitations[s.actor]||[]),s.actor])]).map(id=>`<option value="${id}" ${person===id?'selected':''}>${e(P.PEOPLE[id].name)} · ${e(P.relation(id))}</option>`).join('')}</select></div>`:P.FamilyContext.picker()}<div class="person-heading">${a(person,'large')}<div><p class="caption">${e(P.relation(person))}${P.PEOPLE[person].born?' · '+e(P.PEOPLE[person].born)+' 年生':''}</p><h1 class="page-title">${e(P.PEOPLE[person].name)}的人物档案</h1></div></div><p class="page-subtitle">${e(profile?.tagline || '影片、相片、传记与拍摄作品，在这里集中留存。')}</p>${P.KeepsakeBooks.entry(person)}${shortcuts(person)}<nav class="archive-secondary-tabs" aria-label="档案浏览视角">${['overview','place'].map(id=>b(TABS[id],'archive-tab',tab===id?'active':'',`data-value="${id}"`)).join('')}</nav><section class="archive-content" data-archive-tab="${tab}">${addEntry(person,tab)}${body}</section><p class="archive-demo-note">人物与资料均为原型示例。演示视频由图片编排，不代表客户成片或本人实拍。</p></div>`;
   }
   /** 来源上下文绑定被打开的条目，跨人物拍摄的片段返回时仍保留原资料分区。 */
   function origin(item) {

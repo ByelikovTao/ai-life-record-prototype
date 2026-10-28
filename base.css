@@ -73,9 +73,6 @@ button:active:not(:disabled){transform:translateY(1px)}
 .review-panel summary{cursor:pointer}
 .review-panel pre{font:10px/1.7 monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0;padding:10px;background:#F4F3ED;border-radius:8px}
 .overview-link{display:block;margin-top:22px;font-size:12px;text-decoration:none}
-.variant-switcher{margin-top:17px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-radius:30px;background:#263D33;color:#FFFEFA;min-height:40px;padding:0 7px;font-size:11px}
-.variant-switcher button{background:none;color:white;width:34px;height:34px;border-radius:50%}
-.variant-switcher button:hover{background:#FFFFFF15}
 .stage-note{font-size:10px;color:var(--subtle);text-align:center;margin-top:10px;max-width:400px}
 /* 基础内容与控件使用同一套尺寸，系统字号放大时自然增高。 */
 .page{padding:8px 19px 28px;font-size:calc(17px * var(--unit))}
@@ -162,8 +159,6 @@ button:active:not(:disabled){transform:translateY(1px)}
 .phone{width:100%!important;height:auto;flex:1;min-height:0;border:0;border-radius:0;box-shadow:none}
 .statusbar{display:none}
 .app-header{padding-top:10px}
-.variant-switcher{position:fixed;right:12px;bottom:91px;z-index:12;min-height:31px;gap:3px;opacity:.93;font-size:10px;margin:0}
-.variant-switcher button{width:25px;height:28px}
 .stage-note{display:none}
 .page{padding-left:20px;padding-right:20px}
 .bottom-nav{padding-bottom:max(10px,env(safe-area-inset-bottom))}
@@ -171,7 +166,7 @@ button:active:not(:disabled){transform:translateY(1px)}
 .phone.space-mode .app-header{padding-top:14px}}
 body.embedded{background:var(--canvas)}
 .embedded .studio{display:block;min-height:0}
-.embedded .studio-sidebar,.embedded .review-panel,.embedded .review-toolbar,.embedded .variant-switcher,.embedded .stage-note{display:none}
+.embedded .studio-sidebar,.embedded .review-panel,.embedded .review-toolbar,.embedded .stage-note{display:none}
 .embedded .stage{padding:0}
 .embedded .phone{width:100%!important;height:100dvh;max-width:none;border:0;box-shadow:none;border-radius:0}
 .embedded .statusbar{display:flex}
@@ -180,9 +175,6 @@ body.embedded{background:var(--canvas)}
 .phone .caption{font-size:calc(14px * var(--unit))}
 .phone .text-link{min-height:44px}
 .phone button,.modal button,.check-row{min-height:48px}
-.variant-switcher{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:60;margin:0}
-.variant-switcher[hidden]{display:none}
-@media(max-width:760px){.variant-switcher{left:auto;right:12px;bottom:91px;transform:none}}
 
 
 
