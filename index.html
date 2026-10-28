@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="family-features.css">
   <link rel="stylesheet" href="keepsake-books.css">
   <link rel="stylesheet" href="entry-flow.css">
+  <link rel="stylesheet" href="demo-mindmap.css">
 </head>
 <body>
   <!-- 静态原型：业务资料只在内存中变化；数字人为无声形象演示，不连接真实 AI 或支付。 -->
@@ -32,6 +33,7 @@
         <span class="review-label">预览设置</span>
         <label>身份 <select id="actor-select"><option value="xia">女儿 · 陈知夏</option><option value="father">本人 · 陈远山</option></select></label>
         <label>宽度 <select id="width-select"><option value="390">390</option><option value="360">360</option><option value="430">430</option></select></label>
+        <button id="open-demo-mindmap" type="button">演示思维导图</button>
         <button id="font-toggle" type="button" aria-pressed="false">大字号</button>
         <button id="reset-demo" type="button">重置演示</button>
         <button id="restart-entry" type="button">重新体验下载登录</button>
@@ -62,6 +64,12 @@
   </div>
   <aside id="book-demo-controls" aria-label="纪念书流程演示" hidden></aside>
   <dialog id="modal" class="modal"><div id="modal-content"></div></dialog>
+  <!-- 演示导图独立于业务弹窗和路由，关闭后保留当前身份、滚动位置及未提交表单。 -->
+  <dialog id="demo-mindmap" class="demo-mindmap" aria-labelledby="demo-mindmap-title">
+    <div class="demo-mindmap-heading"><h2 id="demo-mindmap-title">演示思维导图</h2><div><button id="zoom-demo-mindmap" type="button" aria-pressed="false">放大查看</button><button id="close-demo-mindmap" type="button" autofocus>返回原型</button></div></div>
+    <div id="demo-mindmap-canvas" class="demo-mindmap-canvas"><img src="assets/demo-mindmap.svg" alt="传家记十分钟演示导图：先本人展示交付价值，再家人了解与参与，最后回本人回应与确认。"></div>
+  </dialog>
+  <script src="demo-mindmap.js" defer></script>
   <script src="data.js" defer></script>
   <script src="archive-data.js" defer></script>
   <script src="person-archive.js" defer></script>
