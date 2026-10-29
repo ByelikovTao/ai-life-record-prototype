@@ -47,16 +47,18 @@
   /** 页面级拒绝不输出场景或人物媒体，不能靠地址栏绕过授权。 */
   function locked(kind,person=current()) {
     if(!established(person))return `<div class="page empty"><h2>这位家人尚未完成拍摄建档</h2><p>仅加入家庭或出现在族谱中，不能开通完整人生空间；可继续保留个人记录和共同回忆。</p>${l('返回首页','home','btn')}</div>`;
+    // 档案已开放但交流未开放时，提供仍可访问的档案入口，不借另一人的形象代替。
+    if(kind==='digital'&&allowed(person,'archive'))return `<div class="page person-unavailable"><div class="empty">${P.avatar(person,'large')}<h3>${e(P.PEOPLE[person].name)} · ${e(P.relation(person))}</h3><h2>这位家人暂未开放数字人</h2><p>可以继续查看已向你开放的人生档案。</p>${l('查看已开放的档案','life/'+person,'btn full')}${l('返回首页','home','btn outline full section')}${b('申请开放交流','family-request','text-link full section',`data-person="${e(person)}" data-kind="digital"`)}</div></div>`;
     const labels={archive:'人生档案',digital:'数字人交流',space:'回忆场景'};
     return `<div class="page"><div class="empty">${i('lock')}<h2>${e(labels[kind])}暂未开放</h2><p>${e(P.PEOPLE[person]?.name||'这位家人')}尚未向你开放这项内容。会员不会扩大查看权限。</p>${b('申请开放','family-request','btn',`data-person="${e(person)}" data-kind="${kind}"`)}${l('返回首页','home','text-link full')}</div></div>`;
   }
-  /** 管理页提供独立名单，不把付费和家庭管理身份当作授权。 */
+  /** 独立名单配合人物头像核对身份；勾选只修改对应权限，不把付费当作授权。 */
   function permissions() {
     const actor=P.state.actor,access=P.state.familyAccess[actor];
     const requests=P.state.familyRequests.filter(item=>item.person===actor&&item.status==='pending');
     P.PersonArchive.assets(actor,'photo');
     const shared=[...P.state.stories,...P.state.archiveAssets.filter(item=>item.materialManaged)].filter(item=>item.commonWith===actor&&item.scope!=='private'&&item.viewers.includes(actor)||item.subject===actor&&item.author!==actor);
-    return `<div class="page"><h1 class="page-title">人生空间的授权</h1><p>查看档案、交流和进入场景分别决定；每份资料还遵循原分享范围。</p>${requests.map(item=>`<div class="card section"><p>${e(P.PEOPLE[item.actor].name)}申请开放${{archive:'档案',digital:'交流',space:'场景'}[item.kind]}</p>${b('仅向这位家人开放','family-request-approve','btn',`data-id="${item.id}"`)}${b('暂不开放','family-request-deny','text-link',`data-id="${item.id}"`)}</div>`).join('')}${access?`<form data-feature-form data-actor="${actor}" id="family-permissions-form" class="section">${Object.entries({archive:'人生档案',digital:'数字人交流',space:'回忆场景'}).map(([kind,label])=>`<fieldset><legend>${label}</legend>${P.state.members.filter(id=>id!==actor&&P.state.familyInvitations[id]?.includes(actor)).map(id=>`<label class="check-row"><input type="checkbox" name="${kind}" value="${id}" ${access[kind].includes(id)?'checked':''}>${e(P.PEOPLE[id].name)}</label>`).join('')}</fieldset>`).join('')}<button type="submit" class="btn full">保存授权名单</button></form>`:'<p class="note section">尚未完成拍摄及空间开通。可以免费参与家人分享的内容，开通自己的完整人生空间需先完成视频服务。</p>'}<h2 class="section">家人提供的经历</h2>${shared.map(item=>`<div class="card section"><h3>${e(item.title)}</h3><p>${e(P.PEOPLE[item.author].name)}讲述 · ${inArchive(item,actor)?'已纳入':'尚未纳入／已移出'}</p>${b('核对纳入与问答范围','family-consent','text-link',`data-id="${item.id}"`)}</div>`).join('')||'<p>暂无家人提交的共同经历。</p>'}${l('我的共同回忆与提交进度','common-memories','text-link full')}</div>`;
+    return `<div class="page"><h1 class="page-title">人生空间的授权</h1><p>查看档案、交流和进入场景分别决定；每份资料还遵循原分享范围。</p>${requests.map(item=>`<div class="card section"><p>${e(P.PEOPLE[item.actor].name)}申请开放${{archive:'档案',digital:'交流',space:'场景'}[item.kind]}</p>${b('仅向这位家人开放','family-request-approve','btn',`data-id="${item.id}"`)}${b('暂不开放','family-request-deny','text-link',`data-id="${item.id}"`)}</div>`).join('')}${access?`<form data-feature-form data-actor="${actor}" id="family-permissions-form" class="section">${Object.entries({archive:'人生档案',digital:'数字人交流',space:'回忆场景'}).map(([kind,label])=>`<fieldset><legend>${label}</legend>${P.state.members.filter(id=>id!==actor&&P.state.familyInvitations[id]?.includes(actor)).map(id=>`<label class="check-row"><input type="checkbox" name="${kind}" value="${id}" ${access[kind].includes(id)?'checked':''}>${P.avatar(id)}<span>${e(P.PEOPLE[id].name)}</span></label>`).join('')}</fieldset>`).join('')}<button type="submit" class="btn full">保存授权名单</button></form>`:'<p class="note section">尚未完成拍摄及空间开通。可以免费参与家人分享的内容，开通自己的完整人生空间需先完成视频服务。</p>'}<h2 class="section">家人提供的经历</h2>${shared.map(item=>`<div class="card section"><h3>${e(item.title)}</h3><p>${e(P.PEOPLE[item.author].name)}讲述 · ${inArchive(item,actor)?'已纳入':'尚未纳入／已移出'}</p>${b('核对纳入与问答范围','family-consent','text-link',`data-id="${item.id}"`)}</div>`).join('')||'<p>暂无家人提交的共同经历。</p>'}${l('我的共同回忆与提交进度','common-memories','text-link full')}</div>`;
   }
   /** 双向确认可缩小范围；数字人使用默认为关闭，需要本人明确勾选。 */
   function consent(id) {
@@ -69,7 +71,7 @@
     const s=P.state;
     if(action==='family-person-chat'){if(!established(el.dataset.person)||!allowed(el.dataset.person,'digital')){P.toast('这位家人尚未完成拍摄建档或开放数字人。');return true;}if(el.dataset.person===s.actor){s.chatTarget=s.actor;s.chatContext=null;s.chatMessages=[];}else select(el.dataset.person);P.navigate('chat');return true;}
     if(action==='choose-person'&&s.actor!=='father')action='family-select';
-    if(action==='family-select'){P.modal('想了解哪位家人',`${selectable().map(person=>b(e(P.PEOPLE[person].name)+' · '+e(P.relation(person)),'family-focus','btn secondary full section',`data-person="${person}"`)).join('')}<p class="caption">仅显示已完成拍摄建档且向你开放的人物。自己的日常记录仍在“我的”中查看。</p>`);return true;}
+    if(action==='family-select'){P.modal('想了解哪位家人',`${selectable().map(person=>b(`${P.avatar(person)}<span><strong>${e(P.PEOPLE[person].name)} · ${e(P.relation(person))}</strong><small>已完成拍摄建档</small></span><span class="selection-dot" aria-hidden="true"></span>`,'family-focus','family-person-choice section',`data-person="${person}" aria-pressed="${person===current()}"`)).join('')}<p class="caption">仅显示已完成拍摄建档且向你开放的人物。自己的日常记录仍在“我的”中查看。</p>`,'sheet');return true;}
     if(action==='family-focus'){select(el.dataset.person);return true;}
     if(action==='family-consent'){consent(el.dataset.id);return true;}
     if(action==='family-request'){

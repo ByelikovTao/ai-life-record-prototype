@@ -50,13 +50,13 @@
     }
     P.render();P.toast('问题已保存，本人可在“家人问我的”中查看并回复。');
   }
-  /** 回答表单只提供给问题的接收者，保留明确的本人回复标记。 */
+  /** 问题卡用提问人头像核对身份；回答表单只向接收本人开放，保留回复标记。 */
   function card(item) {
     const canAnswer=item.owner===P.state.actor && item.status==='pending';
     const source=P.visibleStories().find(story=>story.id===item.storyId);
     const original=P.ContentChat.resolve(item.contentContext);
     const content=original?P.ContentChat.sourceButton(item.contentContext,'关联'+original.label+'：'+original.title):'';
-    return `<article class="card question-card"><div class="row between"><strong>${e(P.PEOPLE[item.from].name)}的问题</strong>${t(item.status==='answered'?'本人已回复':'等待本人回复',item.status==='answered'?'':'warm')}</div><p class="story-paragraph">${e(item.text)}</p><p class="caption">${e(item.created)} · 留给 ${e(P.PEOPLE[item.owner].name)}</p>${content}${source?l('关联故事：'+e(source.title),'story/'+source.id):''}${item.status==='answered'?`<div class="note section"><strong>${e(P.PEOPLE[item.owner].name)} · 本人回复</strong><p style="white-space:pre-wrap">${e(item.answer)}</p><small>由本人手动填写，非数字人生成。</small></div>`:canAnswer?`<form class="section" id="question-answer-${e(item.id)}" data-question-answer="${e(item.id)}"><div class="form-field"><label for="answer-${e(item.id)}">补充你的回答</label><textarea id="answer-${e(item.id)}" name="answer" maxlength="${ANSWER_LIMIT}" required placeholder="慢慢写下你记得的经过…">${e(drafts().answers[item.id] || '')}</textarea></div><button class="btn" type="submit">回复这位家人</button></form>`:''}</article>`;
+    return `<article class="card question-card"><div class="row between">${P.avatar(item.from)}<strong>${e(P.PEOPLE[item.from].name)}的问题</strong>${t(item.status==='answered'?'本人已回复':'等待本人回复',item.status==='answered'?'':'warm')}</div><p class="story-paragraph">${e(item.text)}</p><p class="caption">${e(item.created)} · 留给 ${e(P.PEOPLE[item.owner].name)}</p>${content}${source?l('关联故事：'+e(source.title),'story/'+source.id):''}${item.status==='answered'?`<div class="note section"><strong>${e(P.PEOPLE[item.owner].name)} · 本人回复</strong><p style="white-space:pre-wrap">${e(item.answer)}</p><small>由本人手动填写，非数字人生成。</small></div>`:canAnswer?`<form class="section" id="question-answer-${e(item.id)}" data-question-answer="${e(item.id)}"><div class="form-field"><label for="answer-${e(item.id)}">补充你的回答</label><textarea id="answer-${e(item.id)}" name="answer" maxlength="${ANSWER_LIMIT}" required placeholder="慢慢写下你记得的经过…">${e(drafts().answers[item.id] || '')}</textarea></div><button class="btn" type="submit">回复这位家人</button></form>`:''}</article>`;
   }
   /** 本人只查看并回复收到的问题；访问家人时只展示留给当前人物的问题与提问表单。 */
   function view() {

@@ -198,7 +198,7 @@
     const item=P.state.stories.find(x=>x.id===id && x.author===P.state.actor);
     if (!item) return P.toast('这段资料的分享范围由本人决定。');
     P.state.shareStoryId=id;
-    P.modal('这段故事分享给谁',`<p>${e(item.title)}</p><form id="share-form"><div class="privacy-options">${[['private','仅自己'],['selected','指定家人，按下方名单选择'],['family','当前家庭的家人']].map(([key,name])=>`<label><input type="radio" name="scope" value="${key}" ${item.scope===key?'checked':''}>${name}</label>`).join('')}</div>${P.shareViewerOptions(item.viewers)}<p class="caption">仅“指定家人”使用下方勾选名单；“当前家庭”以保存时成员范围为准，不自动授予未来加入的家人。</p><button class="btn full" type="submit">确认分享范围</button></form>`);
+    P.modal('这段故事分享给谁',`<p>${e(item.title)}</p><form id="share-form"><div class="privacy-options">${[['private','仅自己'],['selected','指定家人，按下方名单选择'],['family','当前家庭的家人']].map(([key,name])=>`<label><input type="radio" name="scope" value="${key}" ${item.scope===key?'checked':''}>${name}</label>`).join('')}</div>${P.shareViewerOptions(item.viewers)}<p class="caption">仅“指定家人”使用下方勾选名单；“当前家庭”以保存时成员范围为准，不自动授予未来加入的家人。</p><button class="btn full" type="submit">确认分享范围</button></form>`,'sheet');
   }
   /** 对当前家庭的分享固定到本次成员名单，新增成员不会悄悄扩大访问。 */
   function applyShare(form) {
@@ -273,6 +273,7 @@
   /** 统一派发按钮动作；新增动作应保持与其界面文案一致。 */
   function act(action,el) {
     const s=P.state;
+    if(P.FamilyHomeEditor.handleAction(action,el))return;
     if(P.FamilyContext.handleAction(action,el)||P.FamilyMemories.handleAction(action,el))return;
     if(P.BillingViews.handleAction(action,el))return;
     if(P.KeepsakeBooks.handleAction(action,el))return;
@@ -314,8 +315,6 @@
     if (action==='approve-access' || action==='deny-access') return decideAccess(el.dataset.id,action==='approve-access');
     if (action==='toggle-font') return P.toggleFont();
     if (action==='clear-chat-context') {s.chatContext=null;return P.render();}
-    // 首页自由聊天结束旧资料话题；跨人物时清空旧对话，输入草稿仍由数字人模块按账号保存。
-    if (action==='home-chat') {if(s.chatTarget!==P.FamilyContext.current())s.chatMessages=[];s.chatTarget=P.FamilyContext.current();s.chatContext=null;return P.navigate('chat');}
     if (action==='choose-person') return P.modal('选择交流的人物',`<div class="family-selector"><button data-action="close-modal">${a('father')}<span>爸爸的数字人<small>陈远山 · 已获授权</small></span>${i('check')}</button><button data-action="unavailable-person">${a('mother')}<span>妈妈 · 林慧<small>尚未建立或开放数字人</small></span>${i('lock')}</button></div>`);
     if (action==='unavailable-person') return P.toast('这位家人尚未建立或向你开放数字人服务。');
     if (action==='close-modal') return P.closeModal();
@@ -324,6 +323,7 @@
   function submit(event) {
     event.preventDefault();
     const form=event.target;
+    if(P.FamilyHomeEditor.submit(form))return;
     if(P.FamilyContext.submit(form)||P.FamilyMemories.submit(form))return;
     if(P.BillingViews.submit(form))return;
     if(P.KeepsakeBooks.submit(form))return;

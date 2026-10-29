@@ -1,74 +1,135 @@
-/* 首次体验独占手机视口；原有应用导航在完成模拟登录后恢复。 */
+/* 下载登录独立还原已确认的入口UI；主导航和授权仍由原入口状态机控制。 */
 .entry-mode #app-header,.entry-mode #bottom-nav{display:none}
-.entry-mode{background:#fcfbf7}
-.entry-page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.entry-page{padding:20px 20px 32px;font-size:calc(14px * var(--unit));line-height:1.7}
-.entry-page h1{font-size:calc(26px * var(--unit))}
-.entry-page button{min-height:44px}
-.entry-logo{width:76px;height:76px;flex-shrink:0;border-radius:19px}
-.market-heading>span{font-size:12px;color:var(--secondary)}
-.market-heading h1{margin:4px 0 20px}
-.market-search{display:flex;align-items:center;gap:7px;padding:5px 8px 5px 12px;background:#eeefe9;border-radius:14px}
-.market-search input{width:0;flex:1;border:0;background:transparent;min-height:40px;min-width:0;font-size:14px}
-.market-search button{font-size:14px;background:none;color:var(--green);font-weight:700;padding:0 5px}
-.market-feature{margin:24px 0;padding:27px 22px;border-radius:20px;background:linear-gradient(135deg,#e0e9df,#f2e6cf);color:var(--green)}
-.market-feature>span{font-size:12px;letter-spacing:2px}
-.market-feature h2{font:28px/1.6 SimSun,serif;margin:12px 0 18px}
-.market-suggest,.market-chip{background:#fffaf0;border-radius:24px;padding:8px 17px;color:var(--green)}
-.entry-section-title{font-size:calc(18px * var(--unit));margin:24px 0 14px}
-.entry-caption{font-size:12px;color:var(--secondary);margin-top:20px}
-.market-result{display:flex;align-items:center;gap:8px;margin:20px 0}
+.entry-mode{background:var(--canvas)}
+.entry-page{position:relative;isolation:isolate;min-height:100%;padding:16px 16px 32px;font-size:calc(14px * var(--unit));line-height:1.5;background:var(--canvas)}
+.entry-page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.entry-page button{min-height:48px}
+.entry-page h1{font-size:calc(36px * var(--unit));line-height:1.1112}
+.entry-logo{width:88px;height:88px;flex-shrink:0;border-radius:16px;object-fit:cover}
+.entry-caption{font-size:calc(12px * var(--unit));color:var(--subtle);margin-top:24px;line-height:1.5}
+.entry-section-title{font-size:calc(24px * var(--unit));line-height:1.333;margin:32px 0 16px}
+
+/* 应用市场：门庭梅枝铺在页角，宣传卡为浅色纸面，搜索框直接容纳原生输入。 */
+.market-page{display:flex;flex-direction:column;padding-top:88px}
+.market-page:before{content:"";position:absolute;z-index:-1;right:0;top:0;width:240px;height:184px;background:url("assets/zhumen/entry-market-corner.png") right top/contain no-repeat;pointer-events:none}
+.market-heading h1{margin:8px 0 24px;font-weight:600}
+.market-search{display:flex;align-items:center;gap:12px;padding:4px 4px 4px 12px;background:#FFFDFA;border:1px solid var(--brand);border-radius:12px}
+.market-search>.icon{width:24px;height:24px}
+.phone.entry-mode .market-search input[type=search]{width:0;flex:1;border:0;background:transparent;padding:8px 0;min-height:40px;min-width:0;border-radius:0;font-size:calc(18px * var(--unit));line-height:1.5556}
+.phone.entry-mode .market-search input[type=search]:focus-visible{outline:0}
+.market-search:focus-within{outline:2px solid var(--brand);outline-offset:4px}
+.market-search button{font-size:calc(18px * var(--unit));background:var(--brand);border-radius:8px;color:#FFFDFA;padding:8px 16px;flex-shrink:0}
+.market-feature{position:relative;isolation:isolate;margin:24px 0 0;padding:48px 24px 32px;min-height:224px;border-radius:12px;background:#FCF0DE;overflow:hidden}
+.market-feature:after{content:"";position:absolute;z-index:-1;top:0;right:0;bottom:0;width:36%;background:url("assets/zhumen/entry-market-door.png") right center/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 55%);pointer-events:none}
+.market-feature h2{font-size:calc(30px * var(--unit));line-height:1.2;color:#A91613;font-weight:600;white-space:nowrap;margin:0 0 12px}
+.market-feature p{font-size:calc(16px * var(--unit));line-height:1.5;color:var(--ink);padding-left:24px;position:relative}
+.market-feature p:before{content:"";position:absolute;left:0;top:0;width:20px;height:32px;background:url("assets/zhumen/chinese-knot-transparent.png") center/cover no-repeat}
+.market-suggest{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand);border-radius:999px;padding:8px 24px;color:#FFFDFA;margin-top:24px;font-size:calc(18px * var(--unit));line-height:1.5556}
+.market-page>.entry-section-title{padding:0}
+.market-page>.entry-section-title:before{content:none}
+.market-chip{display:inline-flex;align-items:center;align-self:flex-start;gap:8px;background:var(--soft);border:1px solid #F3D5C8;border-radius:999px;padding:8px 16px;color:var(--ink);font-size:calc(18px * var(--unit))}
+.market-disclaimer{margin-top:auto;padding-top:64px;text-align:center}
+.market-results-page{padding-top:0;background:var(--canvas) url("assets/zhumen/paper-wall.png") left bottom/100% auto no-repeat}
+.market-results-page:before{content:none}
+.entry-search-header{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;margin:0 -16px 24px;padding:8px;background:var(--brand) url("assets/zhumen/header-roof.png") right center/128px auto no-repeat;color:white;min-height:56px}
+.entry-search-header h1{font-size:calc(20px * var(--unit));line-height:1.4;text-align:center}
+.entry-search-header .entry-back{margin:0;color:white}
+.market-results-page .market-result{border:0;border-radius:8px;padding:12px;background:#FFFDFA}
+.market-result{display:flex;align-items:center;gap:8px;margin:16px 0;padding:16px 0;border-bottom:1px solid var(--line)}
 .market-result-info{min-width:0;display:flex;align-items:center;gap:12px;text-align:left;flex:1;background:transparent;padding:0}
-.market-result-info .entry-logo{width:62px;height:62px;border-radius:15px}
-.market-result-info strong{font-size:18px;display:block}
-.market-result-info small{display:block;font-size:11px;color:var(--secondary)}
-.market-get{background:var(--soft);color:var(--green);border-radius:22px;font-weight:700;padding:0 16px}
-.entry-empty{padding:35px 0;text-align:center;color:var(--secondary)}
-.entry-empty p{font-size:13px;margin-top:10px}
-.entry-back{background:transparent;padding:0;color:var(--green);margin-bottom:18px}
-.store-identity{display:flex;gap:15px;align-items:center;margin-bottom:22px}
-.store-identity h1{font-size:26px}
-.store-identity p{font-size:13px;color:var(--secondary);margin:3px 0}
-.store-identity span{font-size:11px;color:var(--copper)}
-.entry-primary{display:block;background:var(--green);color:white;border-radius:13px;min-height:50px!important;width:100%;font-weight:700;padding:12px 14px;font-size:calc(15px * var(--unit))}
-.store-facts{display:grid;grid-template-columns:1fr 1fr;border-block:1px solid var(--line);padding:16px 0;margin-top:24px;text-align:center}
-.store-facts>div+div{border-left:1px solid var(--line)}
-.store-facts strong,.store-facts span{display:block}
-.store-facts span{font-size:11px;color:var(--secondary)}
-/* 预览统一画布与顶部对齐，避免聊天气泡和文案长度改变各张卡片尺寸。 */
-.store-previews{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
-.preview-button{display:flex;align-items:flex-start;padding:0;border-radius:16px;text-align:left;flex:0 0 218px;background:none;scroll-snap-align:start}
-.store-preview{display:flex;flex-direction:column;width:100%;height:440px;padding:20px 15px 0;background:#e3e9dc;border:1px solid #d4dccd;border-radius:16px;overflow:hidden;color:var(--green)}
-.store-preview>span{font-size:11px;letter-spacing:2px}
-.store-preview h3{font:22px/1.5 SimSun,serif;margin:8px 0 20px;height:66px;flex-shrink:0}
-.preview-screen{flex:1;min-height:0;border:4px solid #fffcf3;border-bottom:0;border-radius:17px 17px 0 0;background:#fcf9f0;padding-bottom:17px;overflow:hidden;color:var(--ink)}
-.preview-screen>img{width:100%;height:116px;object-fit:cover;display:block}
-.preview-screen>strong{display:block;font-size:12px;padding:12px 10px 4px}
-.preview-screen>p{font-size:11px;padding:0 10px;color:var(--secondary)}
-.preview-bubble{background:#e3eadf;margin:10px;border-radius:10px;padding:8px;font-size:11px}
-.preview-1{background:#e9e1d2}.preview-1 .preview-screen>img{object-fit:contain;background:#e9dfcc}
-.preview-2{background:#e5e9e6}.preview-3{background:#e7decb}
-/* 放大阅读按内容自然延展，不沿用横向列表的固定画布。 */
-.modal .store-preview{max-width:300px;margin:auto;height:auto;min-height:420px}.modal .preview-screen{flex:none}.modal .preview-screen>img{height:210px}
-.store-description{margin-top:24px;font-size:13px}.store-description h2{font-size:18px;margin-bottom:12px}
-.store-description ul{padding-left:20px;margin:14px 0}.store-description li{margin:8px 0}
-.install-progress{margin-top:14px}.install-progress>span{display:block;height:4px;background:var(--soft);overflow:hidden;border-radius:4px}
-.install-progress>span:after{content:'';display:block;width:55%;height:100%;background:var(--green);animation:entry-install 1.5s ease-in-out infinite}
-.install-progress p{font-size:12px;color:var(--secondary);margin-top:6px}
+.market-result-info .entry-logo{width:64px;height:64px}
+.market-result-info strong{font-size:calc(24px * var(--unit));display:block}
+.market-result-info small{display:block;font-size:calc(12px * var(--unit));color:var(--secondary);margin-top:4px}
+.market-get{background:var(--brand);color:white;border-radius:999px;padding:8px 16px;flex-shrink:0}
+.entry-empty{padding:40px 0;text-align:center;color:var(--secondary)}
+.entry-empty p{font-size:calc(14px * var(--unit));margin-top:12px}
+.entry-back{background:transparent;padding:0;color:var(--brand);margin-bottom:16px}
+
+/* 应用详情：红色标题栏、品牌封面及两列图文功能卡；不把整张UI作为页面背景。 */
+.entry-detail-header{display:flex;align-items:center;justify-content:space-between;margin:-16px -16px 0;padding:8px 16px;background:var(--brand);color:white}
+.entry-detail-header .entry-back{display:flex;align-items:center;gap:12px;color:white;margin:0;font-size:calc(20px * var(--unit))}
+.entry-detail-header>span{font-size:calc(12px * var(--unit));border:1px solid #FFFFFF80;border-radius:999px;padding:8px 12px}
+.store-hero{position:relative;isolation:isolate;margin:0 -16px;padding:24px 16px;overflow:hidden}
+.store-hero:after{content:"";position:absolute;z-index:-1;right:0;top:0;bottom:0;width:40%;background:url("assets/zhumen/entry-market-door.png") right center/cover no-repeat;opacity:.65;mask-image:linear-gradient(90deg,transparent,#000);pointer-events:none}
+.store-identity{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.store-identity>div{min-width:0}
+.store-identity h1{font-size:calc(36px * var(--unit));line-height:1.1112;margin-bottom:8px}
+.store-identity p{font-size:calc(18px * var(--unit));line-height:1.5556;margin:0 0 8px}
+.store-identity span{font-size:calc(14px * var(--unit));color:var(--secondary);line-height:1.5}
+.entry-primary{display:block;background:var(--brand);color:white;border-radius:8px;min-height:48px;width:100%;font-weight:600;padding:8px 12px;font-size:calc(18px * var(--unit));line-height:1.5556}
+.entry-primary.store-get{width:calc(100% - 104px);margin-left:104px}
+.store-availability{margin:8px 0 0 104px;font-size:calc(12px * var(--unit));color:var(--secondary)}
+.store-previews{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.preview-button{display:flex;align-items:stretch;padding:0;border-radius:8px;text-align:left;min-width:0;background:none}
+.store-preview{display:flex;flex-direction:column;width:100%;padding:12px 8px 4px;background:#FFFDFA;border:1px solid var(--line);border-radius:8px;overflow:hidden;color:var(--ink)}
+.store-preview-heading{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.store-preview-heading .icon{width:24px;height:24px;color:var(--brand)}
+.store-preview h3{font-size:calc(16px * var(--unit));line-height:1.5;margin:0;font-weight:600}
+.store-preview>p{font-size:calc(14px * var(--unit));line-height:1.5;margin:0 0 12px}
+.store-preview>img{display:block;width:100%;aspect-ratio:1.75;object-fit:cover;border-radius:4px;margin-top:auto}
+.modal .store-preview{max-width:360px;margin:auto;padding:16px;min-height:0}
+.modal .store-preview>img{margin-top:16px}
+.store-description{margin-top:32px;font-size:calc(14px * var(--unit));line-height:1.75}
+.store-description h2{font-size:calc(24px * var(--unit));line-height:1.333;margin-bottom:16px;padding-left:32px;background:url("assets/zhumen/chinese-knot-mark.svg") left center/24px no-repeat}
+.store-description ul{padding-left:20px;margin:16px 0}.store-description li{margin:8px 0}
+.install-progress{margin:12px 0 0 104px}
+.install-progress>span{display:block;height:4px;background:var(--soft);overflow:hidden;border-radius:4px}
+.install-progress>span:after{content:'';display:block;width:55%;height:100%;background:var(--brand);animation:entry-install 1500ms cubic-bezier(.22,1,.36,1) infinite}
+.install-progress p{font-size:calc(12px * var(--unit));color:var(--secondary);margin-top:8px}
 @keyframes entry-install{from{transform:translateX(-100%)}to{transform:translateX(185%)}}
+
+/* 登录按原稿采用紧凑封面和单一表单；演示填号降为字段旁辅助动作。 */
+.login-page{padding:0 24px 24px}
+.login-page>.entry-back{position:absolute;top:8px;right:8px;z-index:2;color:white;width:32px;min-height:32px;background:#63231F66;border-radius:50%;display:grid;place-items:center}
+.login-brand{position:relative;isolation:isolate;text-align:left;margin:0 -24px 16px;padding:16px 24px 16px;background:#AB2420;color:#FFFCF5;overflow:hidden}
+.login-brand:after{content:"";position:absolute;z-index:-1;top:0;right:0;bottom:0;width:54%;background:url("assets/zhumen/entry-login-door.png") right center/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 32%);pointer-events:none}
+.login-seal{display:inline-block;border:1px solid #FFF1D8;border-radius:4px;padding:2px 4px;font-size:calc(12px * var(--unit));line-height:1;margin-bottom:8px}
+.login-brand h1{font-size:calc(36px * var(--unit));line-height:1.1112;margin-bottom:8px;font-weight:400;max-width:65%;color:inherit}
+.login-brand p{font-size:calc(14px * var(--unit));line-height:1.5;max-width:60%}
+.login-phone-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.phone .entry-fill{min-height:24px;padding:0;border:0;background:transparent;color:var(--brand);font-size:calc(12px * var(--unit));white-space:nowrap}
+.login-phone-heading>label,.entry-login>label:not(.entry-consent),.entry-login legend{display:block;margin:0;padding-left:28px;font-size:calc(16px * var(--unit));line-height:1.5;font-weight:600;background:url("assets/zhumen/chinese-knot-mark.svg") left center/20px no-repeat}
+.entry-login>label:not(.entry-consent){margin:24px 0 8px}
+.phone.entry-mode .entry-login :is(input[type=tel],input[name=code]){width:100%;min-width:0;min-height:48px;border:1px solid #C9BEB3;border-radius:6px;padding:8px 12px;background:#FFFDFA;font-size:calc(16px * var(--unit));line-height:1.5}
+.entry-code-row{display:flex;gap:4px;padding:4px;border:1px solid #C9BEB3;border-radius:6px;background:#FFFDFA}
+.phone.entry-mode .entry-code-row input[name=code]{flex:1;width:0!important;border:0;padding:8px;min-height:40px;background:transparent}
+.phone.entry-mode .entry-send{min-height:40px;color:var(--brand);background:transparent;border:1px solid var(--brand);border-radius:6px;padding:8px 12px;font-size:calc(14px * var(--unit))}
+.entry-login fieldset{border:0;padding:0;margin:24px 0 16px}
+.entry-login legend{margin:0 0 8px}
+.entry-login fieldset label{display:flex;align-items:center;gap:12px;font-size:calc(18px * var(--unit));padding:4px 12px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px;background:#FFFDFA;min-height:72px}
+.entry-login fieldset label:last-child{margin-bottom:0}
+.entry-login fieldset label:has(input:checked){border-color:var(--brand);background:#FFF2EA;color:var(--brand)}
+.entry-login fieldset label>span:not(.avatar){flex:1;min-width:0}
+.login-person-portrait{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.entry-login input[type=radio],.entry-consent input{accent-color:var(--brand);width:20px;height:20px;flex-shrink:0}
+.entry-consent{display:flex;gap:8px;align-items:center;font-size:calc(14px * var(--unit));line-height:1.5}
+.entry-consent input{appearance:none;position:relative;margin:0;border:1px solid #817267;border-radius:50%;background:transparent}
+.entry-consent input:checked{background:var(--brand);border-color:var(--brand)}
+.entry-consent input:checked:after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.entry-text{background:none;color:var(--brand);padding:0;font-size:inherit;min-height:24px!important}
+.entry-error{font-size:calc(14px * var(--unit));color:var(--danger);padding:8px 0}
+.entry-error:empty{display:none}
+.entry-login>.entry-primary{margin-top:24px;font-size:calc(18px * var(--unit));font-weight:400}
+.entry-demo{margin-top:16px;color:var(--secondary);font-size:calc(12px * var(--unit));line-height:1.5;text-align:center}
+
+/* 窄屏与两倍字号以内容自然增高为主，不裁剪搜索、身份或协议操作。 */
+.large-type .market-page{padding-top:88px}
+.large-type .market-feature{padding:32px 16px}
+.large-type .market-feature h2{white-space:normal;font-size:calc(24px * var(--unit))}
+.large-type .market-feature:after{opacity:.2}
+.large-type .market-search{flex-wrap:wrap}
+.large-type .market-search input{flex-basis:calc(100% - 48px)}
+.large-type .market-search button{width:100%}
+.large-type .store-previews{grid-template-columns:1fr}
+.large-type .store-identity{flex-direction:column}
+.large-type :is(.entry-primary.store-get,.store-availability,.install-progress){width:100%;margin-left:0}
+.large-type .entry-detail-header{flex-wrap:wrap}
+.large-type .login-brand h1,.large-type .login-brand p{max-width:100%}
+.large-type .login-brand:after{opacity:.2}
+.large-type .entry-code-row{flex-wrap:wrap}
+.large-type .entry-code-row input{flex-basis:100%}
+.large-type .login-phone-heading{flex-wrap:wrap}
+.phone.large-type .entry-fill{white-space:normal}
+.large-type .entry-consent{align-items:flex-start}
+.large-type .entry-consent input{margin-top:8px}
 @media(prefers-reduced-motion:reduce){.install-progress>span:after{animation:none}}
-.login-brand{text-align:center;margin:6px 0 30px}.login-brand .entry-logo{width:70px;height:70px}
-.login-brand h1{font:26px/1.5 SimSun,serif;margin-top:15px}.login-brand p{font-size:13px;color:var(--secondary);margin-top:7px}
-/* 填号操作紧邻输入区，整行按钮提供至少44px的点击高度。 */
-.entry-fill{display:block;width:100%;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--green);font-size:calc(14px * var(--unit));font-weight:600}
-.entry-login>label:not(.entry-consent){display:block;margin:15px 0 8px;font-weight:600}
-.entry-login input[type=tel],.entry-login input[name=code]{width:100%;min-width:0;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fffefa;font-size:16px}
-.entry-code-row{display:flex;gap:8px}.entry-code-row input{flex:1;width:0!important}
-.entry-send{color:var(--green);background:var(--soft);border-radius:11px;padding:10px;font-size:13px}
-.entry-login fieldset{border:1px solid var(--line);border-radius:11px;padding:12px;margin:22px 0 16px}
-.entry-login legend{font-size:12px;color:var(--secondary)}.entry-login fieldset label{display:block;font-size:13px;padding:5px 0}
-.entry-login input[type=radio],.entry-consent input{accent-color:var(--green);width:18px;height:18px;flex-shrink:0}
-.entry-consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.9}.entry-consent input{margin-top:4px}
-.entry-text{background:none;color:var(--green);padding:0 3px;text-decoration:underline;font-size:inherit;min-height:32px!important}
-.entry-error{min-height:26px;font-size:12px;color:var(--danger);padding:6px 0}
-.entry-demo{margin-top:24px;border-top:1px solid var(--line);padding-top:16px;color:var(--secondary);font-size:12px}.entry-demo strong{color:var(--green)}

@@ -61,7 +61,7 @@
   }
   /** 已归档资料只读取档案唯一实例，已完成的提交快照不再重复列出。 */
   function archivedCard(item) {
-    return `<article class="card"><h3>${e(item.title)}</h3><p class="caption">${e(P.PEOPLE[item.subject].name)} · ${item.inArchive===false?'原稿保留，已移出档案':'已归档'}</p>${b('查看资料','archive-open','text-link',`data-id="${item.id}" data-person="${item.subject}"`)} ${b('更正资料','material-edit-existing','text-link',`data-id="${item.id}"`)} ${b('撤回分享','material-withdraw','text-link',`data-id="${item.id}"`)}</article>`;
+    return `<article class="card">${item.kind==='photo'&&item.poster?`<img class="material-card-photo" src="${e(item.poster)}" alt="${e(item.title)}资料缩略图">`:''}<h3>${e(item.title)}</h3><p class="caption">${e(P.PEOPLE[item.subject].name)} · ${item.inArchive===false?'原稿保留，已移出档案':'已归档'}</p>${b('查看资料','archive-open','text-link',`data-id="${item.id}" data-person="${item.subject}"`)} ${b('更正资料','material-edit-existing','text-link',`data-id="${item.id}"`)} ${b('撤回分享','material-withdraw','text-link',`data-id="${item.id}"`)}</article>`;
   }
   /** 三组互斥分类，退回任务正在编辑时只展示当前草稿，已归档快照不与资料重复。 */
   function collections() {
@@ -121,7 +121,9 @@
   /** 待本人审核的材料仅向提供者与归档本人展示，不提前进入家人的资料列表。 */
   function submissionCard(item) {
     const canReview=item.subject===P.state.actor&&item.status==='pending';
-    return `<article class="card"><h3>${e(item.title)}</h3><p>${t(item.status==='pending'?'等待本人核对':item.status==='returned'?'已退回更正':'已归档',item.status==='pending'?'warm':'gray')}</p><p class="caption">${e(P.PEOPLE[item.author].name)}提供 → ${e(P.PEOPLE[item.subject].name)}</p>${item.feedback?`<p>${e(item.feedback)}</p>`:''}${canReview?b('核对这份资料','material-inspect','btn secondary compact',`data-id="${item.id}"`):item.status==='returned'&&item.author===P.state.actor?b('按意见更正','material-revise','text-link',`data-id="${item.id}"`):''}</article>`;
+    // 缩略图只来自本次待核对快照，不能借展示卡把它发布到人物正式档案。
+    const photo=item.asset?.kind==='photo'?item.asset.poster:'';
+    return `<article class="card">${photo?`<img class="material-card-photo" src="${e(photo)}" alt="待核对资料缩略图">`:''}<h3>${e(item.title)}</h3><p>${t(item.status==='pending'?'等待本人核对':item.status==='returned'?'已退回更正':'已归档',item.status==='pending'?'warm':'gray')}</p><p class="caption">${e(P.PEOPLE[item.author].name)}提供 → ${e(P.PEOPLE[item.subject].name)}</p>${item.feedback?`<p>${e(item.feedback)}</p>`:''}${canReview?b('核对这份资料','material-inspect','btn secondary compact',`data-id="${item.id}"`):item.status==='returned'&&item.author===P.state.actor?b('按意见更正','material-revise','text-link',`data-id="${item.id}"`):''}</article>`;
   }
   /** 分类添加固定入口人物与类型；编辑原资料仍保留既有归属，时间可暂不确定。 */
   function edit() {

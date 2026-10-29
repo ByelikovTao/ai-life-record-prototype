@@ -1,0 +1,363 @@
+/* 逐页还原二级页面与状态；装饰来自原设计切图，数据和交互仍由业务模块维护。 */
+.phone .avatar img,.phone .avatar.father img,.phone .avatar.daughter img{object-position:center}
+.phone:not(.entry-mode):not([data-route=home]):not([data-route=chat]) .app-header:before{content:"";position:absolute;inset:0 0 0 auto;z-index:-1;width:144px;background:url("assets/zhumen/header-roof.png") right top/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 38%);pointer-events:none}
+.phone:not(.entry-mode) .page{position:relative;isolation:isolate}
+.phone .page-title{font-size:calc(24px * var(--unit));line-height:1.333;font-weight:600;letter-spacing:0}
+.phone .page>.page-title{margin-bottom:12px}
+.phone .card-title,.phone .card h2,.phone .feature-item h3{font-size:calc(18px * var(--unit));line-height:1.5556}
+.phone .note{background:#F8EFE5;border-color:#ECD7C8}
+.phone .feature-page>.page-subtitle{margin-bottom:16px}
+.phone .form-field>label,.phone .feature-page form>label:not(.check-row),.phone .keepsake-page form>label:not(.book-consent){position:relative;padding-left:28px;font-size:calc(16px * var(--unit));line-height:1.5;font-weight:600}
+.phone .form-field>label:before,.phone .feature-page form>label:not(.check-row):before,.phone .keepsake-page form>label:not(.book-consent):before{content:"";position:absolute;left:0;top:0;width:20px;height:24px;background:url("assets/zhumen/chinese-knot-mark.svg") center/contain no-repeat;pointer-events:none}
+.phone .feature-page form>label:not(.check-row) :is(input:not([type=checkbox]):not([type=radio]),textarea,select),.phone .keepsake-page form>label:not(.book-consent) :is(input:not([type=checkbox]):not([type=radio]),textarea){margin-left:-28px;width:calc(100% + 28px)}
+.phone:not(.entry-mode) :is(input:not([type=checkbox]):not([type=radio]),textarea,select){border-color:#CBBEB1;background:#FFFDFA;border-radius:6px}
+.phone .form-field{margin:16px 0}
+.phone .form-field>label{margin-bottom:8px}
+.phone .tabs{padding:0;background:transparent;border:1px solid #D7B2A1;border-radius:999px;overflow:hidden}
+.phone .tabs button{flex:1;background:transparent;border-radius:999px;font-size:calc(16px * var(--unit));line-height:1.5;padding:8px 12px}
+.phone .tabs button.active{background:var(--brand);color:#FFFDFA}
+.phone .material-stage-tabs{background:transparent;border-radius:0;padding:0;gap:0}
+.phone .material-stage-tabs>button{border-radius:0;border-bottom:2px solid var(--line);background:transparent;box-shadow:none}
+.phone .material-stage-tabs>button.active{border-color:var(--brand);background:transparent}
+.phone .feature-item{background:#FFFDFA;border:1px solid var(--line);border-radius:8px;padding:16px}
+.phone .feature-item>h2,.phone .feature-item>h3{color:var(--ink)}
+.phone :is(.check-row,.book-consent){font-size:calc(14px * var(--unit));line-height:1.5}
+.phone :is(.share-viewers,.feature-choices){background:#FFFDFA;border-color:var(--line);border-radius:6px}
+.phone .notice{font-size:calc(14px * var(--unit));line-height:1.5;background:#FAEEE6;border-color:#E8CDBD}
+
+/* 档案分类是独立阅读页，封面与四分类只留在总览，避免每次进入都重复占满首屏。 */
+.phone .person-archive-page:has(.archive-content:not([data-archive-tab=overview])) :is(.archive-shortcuts,.archive-secondary-tabs,.keepsake-entry){display:none}
+.phone .person-archive-page:has(.archive-content:is([data-archive-tab=video],[data-archive-tab=photo],[data-archive-tab=work],[data-archive-tab=place])) .archive-cover-heading{display:none}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .archive-cover-heading{min-height:96px;padding:0 0 16px}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .archive-cover-heading:after{content:none}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .archive-cover-heading .family-focus{display:none}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .person-heading>.avatar{display:flex;width:64px;height:64px}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .archive-cover-heading .page-title{font-size:calc(20px * var(--unit));line-height:1.4}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .archive-cover-heading .person-heading>div{max-width:100%}
+.phone .person-archive-page:has(.archive-content[data-archive-tab=biography]) .archive-cover-heading>.page-subtitle{max-width:100%}
+.phone .archive-content[data-archive-tab=video] .archive-grid{grid-template-columns:1fr;gap:12px}
+.phone .archive-content[data-archive-tab=video] .archive-media-card{display:grid;grid-template-columns:42% minmax(0,1fr);align-items:center;border:0;background:#FFFDFA}
+.phone .archive-content[data-archive-tab=video] .archive-cover{aspect-ratio:1.4;border-radius:6px}
+.phone .archive-content[data-archive-tab=video] .archive-card-copy{padding:8px}
+.phone .archive-content[data-archive-tab=video] .archive-card-copy strong{margin:4px 0;font-size:calc(16px * var(--unit))}
+.phone .archive-content[data-archive-tab=video] .archive-card-copy :is(small,em){font-size:calc(12px * var(--unit))}
+.phone .archive-content[data-archive-tab=photo] .archive-grid{grid-template-columns:1fr}
+.phone .archive-content[data-archive-tab=photo] .archive-media-card{border:0;background:transparent}
+.phone .archive-content[data-archive-tab=photo] .archive-cover{aspect-ratio:2;border-radius:6px}
+.phone .archive-content[data-archive-tab=photo] .archive-card-copy{padding:8px 0}
+.phone .archive-content[data-archive-tab=photo] .archive-card-copy strong{font-size:calc(18px * var(--unit))}
+.phone .archive-place-card{border:0;border-radius:0;padding:0;margin:16px 0 24px;background:transparent}
+.phone .archive-place-card>img{width:100%;height:144px;object-fit:cover;border-radius:6px;margin-bottom:12px}
+.phone .archive-place-card>p{font-size:calc(14px * var(--unit));line-height:1.5}
+.phone .video-type-filters{gap:4px}
+.phone .video-type-filters button{font-size:calc(12px * var(--unit));padding:4px 8px;min-height:40px}
+.phone .archive-chapter{border:1px solid var(--line);border-radius:6px;padding:12px;margin-bottom:12px;background:#FFFDFA}
+.phone .archive-chapter summary{font-size:calc(18px * var(--unit));color:var(--brand)}
+.phone .story-illustration{margin:0;padding:0 16px}
+.phone .story-illustration img{display:block;width:100%;height:176px;object-fit:cover;border-radius:6px}
+.phone .story-illustration figcaption{font-size:calc(12px * var(--unit));line-height:1.5;color:var(--secondary);padding-top:4px}
+.phone .question-card>.row>strong{flex:1;min-width:0;font-size:calc(16px * var(--unit))}
+.phone .question-card>.row>.avatar{width:40px;height:40px}
+.phone .question-card .story-paragraph{font-size:calc(16px * var(--unit));line-height:1.75}
+.phone .question-card [type=submit],.phone #question-form [type=submit]{width:100%}
+.phone .archive-meta{border:1px solid var(--line);border-radius:6px;padding:12px;background:#FFFDFA}
+.phone .archive-meta>div{font-size:calc(14px * var(--unit));line-height:1.5}
+.phone .material-card-photo{display:block;width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px}
+.phone .common-memory-photo{display:block;width:100%;height:144px;object-fit:cover;border-radius:6px;margin-bottom:12px}
+.phone .book-source>img{width:80px;height:56px;object-fit:cover;border-radius:4px;flex-shrink:0}
+.phone .book-source>span{flex:1;min-width:0}
+.phone[data-route=common-memories] .card[data-common-memory]{padding:8px;border:0}
+.phone[data-route=common-memories] .card[data-common-memory] h2{font-size:calc(18px * var(--unit));line-height:1.5556}
+.phone[data-route=common-memories] .card[data-common-memory] p{font-size:calc(14px * var(--unit));line-height:1.5}
+.phone.large-type .book-source{flex-wrap:wrap}
+.phone.large-type .book-source>img{width:100%;height:112px}
+
+/* 二级个人中心与家庭管理使用原稿的图文入口，标题与副说明保持完整可读。 */
+.phone:is([data-route=profile-family],[data-route=profile-materials],[data-route=profile-keepsakes],[data-route=profile-services]) .page{min-height:100%;padding-bottom:96px}
+.phone:is([data-route=profile-family],[data-route=profile-materials],[data-route=profile-keepsakes],[data-route=profile-services]) .page:after{content:"";position:absolute;z-index:-1;bottom:0;left:0;right:0;height:144px;background:url("assets/zhumen/paper-wall.png") left bottom/cover no-repeat;opacity:.75;pointer-events:none}
+.phone:is([data-route=profile-family],[data-route=profile-materials],[data-route=profile-keepsakes],[data-route=profile-services]) .profile-menu{display:grid;gap:12px;margin-top:24px}
+.phone:is([data-route=profile-family],[data-route=profile-materials],[data-route=profile-keepsakes]) .profile-menu>.menu-row{position:relative;isolation:isolate;min-height:112px;padding:16px;border:1px solid #D37769;border-radius:8px;background:#FFFDFA;overflow:hidden}
+.phone:is([data-route=profile-family],[data-route=profile-materials],[data-route=profile-keepsakes]) .profile-menu>.menu-row>.icon:first-child{display:none}
+.phone .profile-menu-copy{flex:1;min-width:0}
+.phone .profile-menu-copy small{display:block;margin-top:8px;font-size:calc(14px * var(--unit));line-height:1.5;color:var(--secondary)}
+.phone[data-route=profile-family] .profile-menu>.menu-row{padding-right:42%}
+.phone[data-route=profile-family] .profile-menu>.menu-row:after{content:"";position:absolute;inset:0 0 0 auto;z-index:-1;width:48%;background:url("assets/zhumen/entry-preview-family.png") center/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 35%);pointer-events:none}
+.phone[data-route=profile-family] .menu-row[data-nav=home-manage]:after{background-image:url("assets/zhumen/record-writing-corner.png")}
+.phone[data-route=profile-family] .menu-row[data-nav=family-permissions]:after{background-image:url("assets/zhumen/entry-preview-life.png")}
+.phone[data-route=profile-family] .menu-row[data-nav=common-memories]:after{background-image:url("assets/zhumen/entry-preview-home.png")}
+.phone:is([data-route=profile-materials],[data-route=profile-keepsakes]) .profile-menu>.menu-row{padding-left:43%}
+.phone:is([data-route=profile-materials],[data-route=profile-keepsakes]) .profile-menu>.menu-row:before{content:"";position:absolute;inset:4px auto 4px 4px;width:37%;border-radius:4px;background:url("assets/zhumen/entry-preview-home.png") center/cover no-repeat;pointer-events:none}
+.phone[data-route=profile-materials] .menu-row[data-nav=materials]:before{background-image:url("assets/zhumen/record-writing-corner.png")}
+.phone[data-route=profile-keepsakes] .menu-row[data-nav=books]:before{background-image:url("assets/zhumen/book-cover-texture.png")}
+.phone[data-route=profile-services] .menu-row{border:1px solid var(--line);background:#FFFDFA;border-radius:8px;padding:16px;min-height:80px}
+.phone[data-route=profile-services] .menu-row>.icon:first-child{width:32px;height:32px;padding:4px;border-radius:50%;background:var(--soft)}
+.phone[data-route=profile] .profile-heading .avatar.father img{object-position:center}
+.phone[data-route=profile] .profile-service-summary{background:#FFF9F2 url("assets/zhumen/page-roof.png") right center/100px auto no-repeat}
+.phone[data-route=profile] .profile-service-summary>span{padding-right:48px}
+.phone[data-route=profile][data-actor=father] .profile-main-menu>.menu-row{position:relative;padding-left:112px;min-height:88px}
+.phone[data-route=profile][data-actor=father] .profile-main-menu>.menu-row>.icon:first-child{display:none}
+.phone[data-route=profile][data-actor=father] .profile-main-menu>.menu-row:before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:88px;background:url("assets/zhumen/record-writing-corner.png") center/cover no-repeat;border-radius:6px;pointer-events:none}
+.phone[data-route=profile][data-actor=father] .menu-row[data-nav=profile-family]:before{background-image:url("assets/zhumen/entry-preview-family.png")}
+.phone[data-route=profile][data-actor=father] .menu-row[data-nav=profile-keepsakes]:before{background-image:url("assets/zhumen/entry-preview-home.png")}
+.phone[data-route=profile][data-actor=father] .menu-row[data-nav=profile-services]:before{background-image:url("assets/zhumen/service-album-corner.png")}
+
+/* 家人列表及关系树共用独立人像；亲缘、未认领与未知父母仍由原业务文字说明。 */
+.phone[data-route=family] .page>.page-title{color:var(--brand);padding-top:8px}
+.phone[data-route=family] .page:after{content:"";position:absolute;z-index:-1;right:0;top:0;width:120px;height:104px;background:url("assets/zhumen/page-roof.png") right top/contain no-repeat;opacity:.6;pointer-events:none}
+.phone[data-route=family] .member-list{display:flex;flex-direction:column;margin-top:16px}
+.phone[data-route=family] .page{display:flex;flex-direction:column}
+.phone[data-route=family] .page>.tabs{order:1;margin-top:16px}
+.phone[data-route=family] .page>.member-list,.phone[data-route=family] .page>.family-tree{order:2}
+.phone[data-route=family] .page>.family-summary{order:3;margin:16px 0;text-align:center}
+.phone[data-route=family] .page>.family-actions{order:4}
+.phone[data-route=family] .page>.feature-entry{order:5}
+.phone[data-route=family] .page>.notice{order:6;margin-top:24px}
+.phone[data-route=family] .page>.section{order:7}
+.phone[data-route=family] .member-row{padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:#FFFDFA;gap:12px;min-height:72px}
+.phone[data-route=family] .member-row[data-id=grandpa]{order:-1}
+.phone[data-route=family] .member-row .avatar{width:88px;height:64px;border-radius:6px}
+.phone[data-route=family] .member-row strong{font-size:calc(18px * var(--unit));line-height:1.5556}
+.phone[data-route=family] .member-row small{font-size:calc(14px * var(--unit))}
+.phone[data-route=family] .member-row .badge{display:none}
+.phone[data-route=family] .member-row em{font-size:calc(14px * var(--unit));line-height:1.5}
+.phone[data-route=family] .family-summary .avatar-stack{display:none}
+.phone .lineage-focus,.phone .lineage-branch{background:#FFFDFA;border-color:#D99585;border-radius:8px;padding:12px}
+.phone .lineage-members .tree-person{border:0;background:transparent}
+.phone .tree-person .avatar{width:64px;height:64px;border-radius:6px}
+.phone .lineage-focus h3,.phone .lineage-branch h3{font-size:calc(16px * var(--unit));text-align:left;padding-left:24px;background:url("assets/zhumen/chinese-knot-mark.svg") left center/20px no-repeat}
+.phone .lineage-indirect{border-style:dashed}
+.phone[data-route=family-permissions] .card{border-color:#CE7D70;margin-top:16px}
+.phone #family-permissions-form fieldset{border:1px solid #D68E7B;border-radius:8px;padding:12px;margin:16px 0;background:#FFFDFA}
+.phone #family-permissions-form legend{font-size:calc(18px * var(--unit));font-weight:600;padding-left:24px;background:url("assets/zhumen/chinese-knot-mark.svg") left center/20px no-repeat}
+.phone #family-permissions-form .check-row{gap:8px;min-height:40px}
+.phone #family-permissions-form .avatar{width:32px;height:32px}
+.phone[data-route=common-memories] .feature-item{border:0;padding:8px 0;background:transparent}
+.phone[data-route=common-memories] .feature-item h3{font-size:calc(20px * var(--unit))}
+
+/* 记录页还原紧凑横向录音卡，输入区沿用资料整理共用的中国结标题。 */
+.phone[data-route=record] .page:after{content:"";position:absolute;z-index:-1;right:0;top:0;width:52%;height:144px;background:url("assets/zhumen/record-writing-corner.png") right top/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 45%);pointer-events:none}
+.phone[data-route=record] .page>.page-title{color:var(--brand);font-size:calc(30px * var(--unit));line-height:1.2;padding:0;max-width:80%}
+.phone[data-route=record] .page>.page-title:before{content:none}
+.phone[data-route=record] .page>.page-subtitle{max-width:68%;font-size:calc(14px * var(--unit))}
+.phone[data-route=record] .page>.page-subtitle{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.phone .recording-card{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:12px;border:1px solid #C8493A;border-radius:8px;margin:16px 0 24px;background:#FFFBF6}
+.phone .recording-card .record-orbit{justify-self:end;align-self:center;width:56px;height:56px;margin:0;background:var(--brand);color:white;border:8px solid #F3CFC4}
+.phone .recording-card .record-time{justify-self:start;align-self:center;font-size:calc(36px * var(--unit));line-height:1.1112;color:var(--ink);margin:0}
+.phone .recording-card :is(#record-status,.record-controls,.demo-note){grid-column:1/-1}
+.phone .record-controls{margin:0;display:flex;gap:8px}
+.phone .record-controls>.btn{flex:1;min-height:48px;font-size:calc(16px * var(--unit))}
+.phone .recording-card .demo-note{max-width:none;font-size:calc(12px * var(--unit));line-height:1.5}
+.phone .recording-card #record-status{font-size:calc(14px * var(--unit));line-height:1.5}
+.phone[data-route=review] .review-story{border-color:#D8917D;background:#FFFDFA}
+.phone[data-route=material-review] .feature-page>.card{border-color:#D8917D}
+.phone .feature-item img,.phone .review-story img{max-width:100%;border-radius:6px}
+
+/* 年度服务、推荐与订单复用相册页角；方案以原稿四段价格卡展示，数值取领域规则。 */
+.phone[data-route=membership] .page>.page-title,.phone[data-route=rewards] .page>.page-title{color:var(--brand);padding-left:0;max-width:86%;min-height:64px}
+.phone:is([data-route=membership],[data-route=rewards]) .page>.page-title:before{content:none}
+.phone:is([data-route=membership],[data-route=rewards]) .page:after{content:"";position:absolute;z-index:-1;top:0;right:0;width:44%;height:120px;background:url("assets/zhumen/service-album-corner.png") right top/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000);pointer-events:none}
+.phone .membership-page #billing-person{display:block;width:100%;padding:12px;margin-top:8px}
+.phone .plan-card.featured{background:#FFF7F1;border:1px solid var(--brand);padding:16px}
+.phone .plan-card.featured>h2{font-size:calc(20px * var(--unit));line-height:1.4}
+.phone .plan-price{font-size:calc(18px * var(--unit));margin:12px 0;color:var(--brand)}
+.phone .plan-price strong{font-size:calc(48px * var(--unit));line-height:1}
+.phone .plan-price span{font-size:calc(16px * var(--unit))}
+.phone .quota-grid{gap:8px;background:#FFFDF9;border-radius:8px;padding:12px}
+.phone .quota-grid>div{border:1px solid #E9CEC0;border-radius:6px;padding:12px}
+.phone .quota-grid strong{font-size:calc(24px * var(--unit));line-height:1.333;color:var(--brand)}
+.phone .quota-grid span{font-size:calc(12px * var(--unit))}
+.phone[data-route=membership] .note{background:#FFFDFA;border-color:var(--line)}
+.phone .pricing-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:16px;background:#FFFDFA;border:1px solid var(--line);border-radius:8px}
+.phone .pricing-item h2{font-size:calc(18px * var(--unit));line-height:1.5556}
+.phone .pricing-item p{grid-column:1/-1;font-size:calc(14px * var(--unit));line-height:1.5;color:var(--secondary)}
+.phone .pricing-item strong{font-size:calc(24px * var(--unit));line-height:1.333;color:var(--brand)}
+.phone .pricing-item h2:before{content:"";display:inline-block;width:20px;height:24px;background:url("assets/zhumen/chinese-knot-mark.svg") center/contain no-repeat;vertical-align:middle;margin-right:8px}
+.phone .pricing-item{position:relative;min-height:128px}
+.phone .pricing-item h2{font-size:calc(16px * var(--unit));line-height:1.5}
+.phone .pricing-item strong{font-size:calc(20px * var(--unit));line-height:1.4}
+.phone .pricing-item:nth-child(-n+3) p{padding-right:32%}
+.phone .pricing-item:nth-child(-n+3):after{content:"";position:absolute;right:16px;bottom:16px;width:28%;height:64px;background:url("assets/zhumen/entry-preview-family.png") center/cover no-repeat;border-radius:6px;pointer-events:none}
+.phone .pricing-item:nth-child(2):after{background-image:url("assets/zhumen/entry-preview-life.png")}
+.phone .pricing-item:nth-child(3):after{background-image:url("assets/zhumen/record-writing-corner.png")}
+.phone .plan-card.featured>ul,.phone .plan-card.featured>.caption{font-size:calc(12px * var(--unit));line-height:1.5}
+.phone[data-route=service-orders] .card{padding:16px 16px 16px 80px;background:#FFFDFA url("assets/zhumen/portrait-father.png") 12px 16px/56px auto no-repeat;border-radius:8px}
+.phone[data-route=service-orders] .card h2{font-size:calc(18px * var(--unit))}
+.phone[data-route=service-orders] .card p{font-size:calc(14px * var(--unit));line-height:1.5;margin-top:8px}
+
+/* 纪念书使用可变标题的原生封面和独立照片，不能把固定书名截图当作用户书稿。 */
+.phone[data-route=books] .page:after{content:"";position:absolute;z-index:-1;right:0;top:0;width:128px;height:112px;background:url("assets/zhumen/page-roof.png") right top/contain no-repeat;pointer-events:none}
+.phone[data-route=books] .page>.page-title{color:var(--brand);font-size:calc(30px * var(--unit));line-height:1.2;padding-left:0;max-width:75%}
+.phone[data-route=books] .page>.page-title:before{content:none}
+.phone .book-display{position:relative;min-height:192px;padding:24px 40% 24px 24px;background:#A72A20 url("assets/zhumen/book-cover-texture.png") left bottom/65% auto no-repeat;border-radius:4px 8px 8px 4px;box-shadow:inset 6px 0 #751B14,4px 4px 0 #E0D5C6;color:#FFF7E8}
+.phone .book-display[data-book-person=father]:after{content:"";position:absolute;right:16px;top:24px;bottom:24px;width:33%;background:url("assets/zhumen/book-cover-photo.png") center/cover no-repeat;border:2px solid #E7D3AD;pointer-events:none}
+.phone .book-display h2{font-size:calc(24px * var(--unit));line-height:1.333;font-weight:400}
+.phone .book-display p{font-size:calc(12px * var(--unit));line-height:1.5;margin-top:12px}
+.phone .book-display+.caption{margin-top:16px}
+.phone .book-source{padding:12px;border:1px solid var(--line);border-radius:6px;background:#FFFDFA;margin:8px 0}
+.phone .book-source input{order:2;margin-left:auto}
+.phone .book-source strong{font-size:calc(16px * var(--unit))}
+.phone .book-source-summary{padding:12px;border:1px solid var(--line);border-radius:6px;background:#FFFDFA}
+.phone .book-cover{position:relative;isolation:isolate;min-height:216px;gap:12px;text-align:left;border-radius:4px;padding:24px 40% 24px 24px;color:var(--brand);background:#FFF7E8 url("assets/zhumen/page-roof.png") right bottom/48% auto no-repeat;box-shadow:inset 6px 0 #C8B99F,4px 4px 0 #D9CDB9}
+.phone .book-cover h1{font-size:calc(24px * var(--unit));line-height:1.333;color:var(--brand)}
+.phone .book-cover p,.phone .book-cover small,.phone .book-cover span{color:var(--secondary)}
+.phone .book-page{padding:16px;background:#FFFAEF;box-shadow:4px 4px 0 #DFD4C2}
+.phone .book-page h2{font-size:calc(20px * var(--unit));line-height:1.4;color:var(--brand);padding-left:28px;background:url("assets/zhumen/chinese-knot-mark.svg") left center/20px no-repeat}
+.phone .book-page>p:not(.eyebrow){font-size:calc(16px * var(--unit));line-height:1.75}
+.phone .book-progress{margin:24px 0;font-size:calc(12px * var(--unit))}
+.phone .book-fees dd{color:var(--brand);font-size:calc(18px * var(--unit))}
+
+/* 弹层与空态共用参考稿的短结、纸面和独立动作，长表单仍可在弹层内滚动。 */
+.modal{padding:24px;background:#FFFBF4;border-color:#E0D0BB;border-radius:12px}
+.modal-header{border:0;padding-bottom:16px;position:relative}
+.modal-header h2{color:var(--ink);font-size:calc(20px * var(--unit));line-height:1.4;padding-left:28px;background:url("assets/zhumen/chinese-knot-mark.svg") left center/20px no-repeat}
+.modal :is(p,.caption){font-size:calc(14px * var(--unit));line-height:1.75}
+.modal .btn{font-size:calc(16px * var(--unit));line-height:1.5}
+.modal :is(input:not([type=checkbox]):not([type=radio]),textarea,select){padding:12px;border-color:#CBBEB1;background:#FFFDFA}
+.modal .form-field>label{font-size:calc(16px * var(--unit));line-height:1.5}
+.modal .member-row{border:1px solid var(--line);padding:8px;border-radius:6px;margin-bottom:8px}
+.modal .member-row .avatar{width:64px;height:64px;border-radius:6px}
+.modal[data-presentation=sheet]{inset:auto auto var(--sheet-bottom) var(--sheet-left);margin:0;width:var(--sheet-width);max-width:420px;max-height:min(85dvh,var(--sheet-height));border-radius:16px 16px 0 0}
+.modal:has(.person-modal-top) .person-modal-top{display:flex;flex-direction:column;text-align:center;gap:12px}
+.modal:has(.person-modal-top) .person-modal-top .avatar{width:96px;height:112px;border-radius:6px}
+.modal:has(.person-modal-top) .person-modal-top h3{font-size:calc(24px * var(--unit));line-height:1.333}
+.modal:has(.person-modal-top) .modal-header h2{font-size:0;background:none}
+.modal:has(#invite-form){background:#FFFBF4 url("assets/zhumen/page-roof.png") right top/112px auto no-repeat}
+.phone[data-route=chat-messages] .page{min-height:100%;background:url("assets/zhumen/page-roof.png") right top/120px auto no-repeat}
+.phone[data-route=chat-messages] .page>.page-title{font-size:calc(24px * var(--unit));line-height:1.333;color:var(--brand);padding-left:0;margin-top:32px;max-width:78%}
+.phone[data-route=chat-messages] .page>.page-title:before{content:none}
+.phone[data-route=chat-messages] .menu-row{border:1px solid #CE6E61;border-radius:8px;margin:16px 0;padding:16px;min-height:88px;background:#FFFBF5;font-size:calc(20px * var(--unit))}
+.phone[data-route=chat-messages] .menu-row>.icon:first-child{width:32px;height:32px}
+.phone[data-route=chat-messages] .page>.page-subtitle{max-width:78%}
+.phone .avatar-page:has(.content-chat-context) .avatar-stage{min-height:224px;flex-basis:224px}
+.phone .avatar-page:has(.content-chat-context) .avatar-body{overflow:visible;flex:none}
+.phone .avatar-page:has(.content-chat-context){height:auto;min-height:100%;overflow:visible}
+.phone .avatar-stage[data-call-state=paused]:after{content:"Ⅱ 画面已暂停";position:absolute;z-index:4;left:50%;top:45%;transform:translateX(-50%);background:#302722C9;color:#FFFDFA;border-radius:999px;padding:8px 16px;font-size:calc(14px * var(--unit));pointer-events:none}
+.phone[data-route=welcome] .app-header{display:none}
+.phone .welcome-brand{position:relative;isolation:isolate;background:#AB2420;color:#FFF7E5;padding:24px;min-height:224px;overflow:hidden}
+.phone .welcome-brand:after{content:"";position:absolute;z-index:-1;right:0;top:0;bottom:0;width:52%;background:url("assets/zhumen/entry-login-door.png") right center/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 40%);pointer-events:none}
+.phone .welcome-brand>strong{font-size:calc(24px * var(--unit));line-height:1.333}
+.phone .welcome-brand>h1{font-size:calc(30px * var(--unit));line-height:1.2;margin:16px 0;max-width:75%}
+.phone .welcome-brand>p{font-size:calc(14px * var(--unit));line-height:1.5;max-width:70%}
+.phone .welcome-identities{display:grid;gap:12px}
+.phone .welcome-identity{display:flex;align-items:center;gap:16px;background:#FFFDFA;border:1px solid #D58F7C;border-radius:8px;padding:8px;text-align:left}
+.phone .welcome-identity>.avatar{width:88px;height:88px;border-radius:6px}
+.phone .welcome-identity>span:not(.avatar){flex:1;min-width:0}
+.phone .welcome-identity strong{display:block;font-size:calc(18px * var(--unit));line-height:1.5556;color:var(--brand)}
+.phone .welcome-identity small{display:block;font-size:calc(14px * var(--unit));line-height:1.5;color:var(--secondary);margin-top:8px}
+.modal::backdrop{backdrop-filter:blur(4px)}
+.phone .avatar-quota-panel .avatar{width:72px;height:72px}
+.phone .avatar-quota-panel .row h2{font-size:calc(20px * var(--unit));line-height:1.4}
+.phone .quota-warning{border:1px solid #D17B68;border-radius:8px;background:#FFF9F1;text-align:center;padding:24px 16px;margin:16px 0}
+.phone .quota-warning h2{font-size:calc(20px * var(--unit));line-height:1.4;color:var(--brand)}
+.phone .quota-warning strong{display:block;font-size:calc(30px * var(--unit));line-height:1.2;color:var(--brand);margin:24px 0}
+.phone .quota-warning p{font-size:calc(14px * var(--unit));line-height:1.5;margin:16px 0}
+.phone .quota-warning .row{flex-wrap:wrap;justify-content:center}
+.phone .quota-exhausted .avatar-stage,.phone .quota-exhausted .avatar-live-status,.phone .quota-exhausted .billing-chat-quota,.phone .quota-exhausted .avatar-quick-actions,.phone .quota-exhausted .avatar-call-controls{display:none}
+.phone .quota-exhausted .avatar-body{flex:1}
+.phone .person-unavailable .empty{padding-top:24px;background:none;min-height:480px}
+.phone .person-unavailable .avatar{width:112px;height:112px;margin-bottom:16px}
+.phone .person-unavailable h3{font-size:calc(18px * var(--unit));line-height:1.5556;margin-bottom:32px}
+.phone[data-route=chat]:has(.person-unavailable) .app-header{background:var(--brand);color:#FFFDFA}
+.phone .order-book-preview{padding:12px}
+.phone .order-book-preview .book-display{min-height:160px}
+.phone .story-detail .page>p.page.caption{padding:8px 0}
+.phone.large-type .quota-warning{padding:16px}
+.phone .empty{min-height:360px;padding:192px 24px 32px;text-align:center;background:url("assets/zhumen/page-roof.png") center 56px/176px auto no-repeat}
+.phone .empty h2{font-size:calc(20px * var(--unit));line-height:1.4;margin-bottom:12px}
+.phone .empty p{font-size:calc(14px * var(--unit));line-height:1.5}
+.phone .empty>.btn{margin-top:24px}
+/* 三维失败时按稿保留明示的静态老屋，成功状态仍由实时渲染器接管。 */
+.phone .memory-3d[data-render-state=error]{padding:16px 12px;background:#FBF7EE}
+.phone .memory-3d[data-render-state=error] .memory-top{order:2}
+.phone .memory-3d[data-render-state=error] :is(.scene-title,.memory-toolbar,.memory-bottom-tools){display:none}
+.phone .memory-3d[data-render-state=error] .memory-viewport{border-radius:12px;background:linear-gradient(#21140D70,#21140D70),url("assets/room-portrait.png") center/cover no-repeat}
+.phone .memory-3d[data-render-state=error] .memory-error{padding:48px 24px 16px;background:transparent;color:#FFF9EE;min-height:360px}
+.phone .memory-3d[data-render-state=error] .memory-error:before{content:"!";display:block;font:36px/1 Georgia,serif;width:48px;height:48px;border:2px solid #FFF9EE;border-radius:50%;margin:0 auto 24px}
+.phone .memory-error h2{font-size:calc(24px * var(--unit));line-height:1.333}
+.phone .memory-error p{font-size:calc(14px * var(--unit));line-height:1.5;margin:16px 0}
+.phone .memory-error small{display:block;text-align:left;font-size:calc(12px * var(--unit));line-height:1.333;margin-top:32px}
+.phone .era-picker{border-radius:999px;background:#FFFAF1;padding:4px;border:1px solid #E0D0C0}
+.phone .era-picker button{border-radius:999px}
+.phone .era-picker button.active{background:var(--brand);color:#FFFDFA}
+.phone .memory-view-switch{border-color:#DFCEC0;background:#FFFAF1;border-radius:8px}
+
+/* 大字号把图文入口改回自然堆叠，不以裁切文字换取普通字号的固定构图。 */
+.phone.large-type :is(.page>.page-title,.membership-page>.page-title){max-width:100%}
+.phone.large-type .profile-menu>.menu-row{min-height:112px}
+.phone.large-type:is([data-route=profile-family],[data-route=profile-materials],[data-route=profile-keepsakes]) .profile-menu>.menu-row{padding:16px}
+.phone.large-type .profile-menu>.menu-row:before,.phone.large-type .profile-menu>.menu-row:after{opacity:.12;z-index:-1}
+.phone.large-type[data-route=record] .page>.page-title,.phone.large-type[data-route=record] .page>.page-subtitle{max-width:100%}
+.phone.large-type .recording-card{grid-template-columns:1fr}
+.phone.large-type .recording-card .record-orbit,.phone.large-type .recording-card .record-time{justify-self:center}
+.phone.large-type .book-display{padding:24px 24px 168px}
+.phone.large-type .book-display:after{top:auto;height:128px;width:96px}
+.phone.large-type .book-cover{padding:24px;min-height:240px;background-size:32% auto}
+.phone.large-type .pricing-item{grid-template-columns:1fr}
+.phone.large-type .book-source input{order:0;margin-left:0}
+.phone.large-type[data-route=family] .member-row{flex-wrap:wrap}
+.phone.large-type[data-route=family] .member-row .grow{flex-basis:60%}
+.phone.large-type[data-route=profile][data-actor=father] .profile-main-menu>.menu-row{padding:16px}
+.phone.large-type[data-route=profile][data-actor=father] .profile-main-menu>.menu-row:before{opacity:.15;z-index:-1}
+
+/* 资料语境的回答离开人物画幅，材料、人物与原文按阅读顺序展开。 */
+.phone .avatar-page>.content-chat-context{flex:none}
+.phone .avatar-page:has(.content-chat-context) .avatar-body>.avatar-dialogue{position:static}
+.phone .avatar-page:has(.content-chat-context) .avatar-conversation{max-height:none;overflow:visible}
+.phone .avatar-page:has(.content-chat-context) .avatar-greeting{display:none}
+.phone .avatar-page:has(.content-chat-context) .avatar-conversation .message{background:#FFFCF7;border:1px solid var(--line)}
+.phone .avatar-page:has(.content-chat-context) .avatar-conversation .message.user{background:var(--brand);color:#FFFDFA}
+.modal .family-person-choice{width:100%;display:flex;align-items:center;gap:12px;padding:8px;border:1px solid #D8B3A0;border-radius:6px;background:#FFFDF9;text-align:left}
+.modal .family-person-choice>.avatar{width:64px;height:64px;border-radius:6px;flex-shrink:0}
+.modal .family-person-choice>span:not(.avatar):not(.selection-dot){flex:1;min-width:0}
+.modal .family-person-choice strong{font-size:calc(16px * var(--unit));line-height:1.5}
+.modal .family-person-choice small{display:block;font-size:calc(12px * var(--unit));line-height:1.333;color:var(--secondary);margin-top:8px}
+.modal .family-person-choice[aria-pressed=true]{background:#FCF0E7;border-color:var(--brand)}
+.modal .selection-dot{width:16px;height:16px;border:1px solid #B8A496;border-radius:50%;flex-shrink:0}
+.modal .family-person-choice[aria-pressed=true] .selection-dot{border-color:var(--brand);background:var(--brand);box-shadow:inset 0 0 0 3px #FFFDF8}
+
+/* 到期状态先解释保管，再呈现年度方案；结算双方肖像不改变付款与访问权限。 */
+.phone .membership-expired>.note:first-of-type{margin-top:16px}
+.phone .membership-expired>.page-title{min-height:96px}
+.modal .checkout-people{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.modal .checkout-people>div{display:flex;align-items:center;gap:8px;min-width:0;font-size:calc(14px * var(--unit));line-height:1.5}
+.modal .checkout-people .avatar{width:48px;height:48px;border-radius:6px;flex-shrink:0}
+
+/* 我的家复用首页淡墨画卷；功能卡透出纸底，背景层不拦截按钮点击。 */
+.phone[data-route=profile] .profile-page{position:relative;isolation:isolate;min-height:100%;background:#FBF7EF}
+.phone[data-route=profile] .profile-page:before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('assets/zhumen/home-ink-landscape.png') center top/100% 1600px repeat-y;opacity:.32}
+.phone[data-route=profile] .profile-page:after{content:none}
+.phone[data-route=profile] .profile-main-menu>.menu-row{background:#FFF8E880}
+.phone[data-route=profile] .profile-service-summary{background-color:#FFF8E880}
+
+/* 四个主栏目沿用归家的山水纸底、楷体标题和细框纸笺；路由、资料与场景渲染不变。 */
+.phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]){--surface:#FFF9ED;--canvas:#FBF7EF;--line:#D6BFA3}
+.phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .app-header{background:#FBF7EF;color:#483629;border-bottom:3px double #D6BFA3;padding:8px 16px}
+.phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .app-header h1{font-family:KaiTi,STKaiti,serif;font-size:calc(24px * var(--unit));line-height:1.3333;letter-spacing:4px}
+.phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .app-header:before{content:'';position:absolute;inset:0 0 0 auto;width:120px;z-index:-1;background:url('assets/zhumen/header-roof.png') right top/cover no-repeat;opacity:.18;mask-image:linear-gradient(90deg,transparent,#000);pointer-events:none}
+.phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .app-header :is(.icon-button,.my-button,.chat-message-trigger){color:#9B3428}
+.phone:is([data-route=life],[data-route=chat],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .app-content>.page{position:relative;isolation:isolate;background:#FBF7EF;min-height:100%}
+.phone:is([data-route=life],[data-route=chat],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .app-content>.page:before{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/zhumen/home-ink-landscape.png') center top/100% 1600px repeat-y;opacity:.32;pointer-events:none}
+.phone:is([data-route=life],[data-route=chat],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .page :is(h1,h2,h3){font-family:KaiTi,STKaiti,serif;color:#49372B}
+.phone:is([data-route=life],[data-route=profile]) :is(.archive-shortcut,.archive-media-card,.archive-place-card,.keepsake-entry,.profile-main-menu>.menu-row,.profile-service-summary){border:1px solid #D4BFA4;border-radius:0;box-shadow:none;background-color:#FFF8E880}
+.phone[data-route=life] :is(.archive-bio-preview>p,.event-card,.archive-profile-note){border:1px solid #D4BFA4;border-radius:0;background:#FFF8E880}
+.phone[data-route=life] .archive-shortcut.active{border:3px double #A43B2B;background:#F8E8D5}
+.phone[data-route=life] :is(.archive-secondary-tabs button,.video-type-filters button){border-radius:0;border:1px solid #CBB18E;background:#FFF8E880}
+.phone[data-route=life] :is(.archive-secondary-tabs button.active,.video-type-filters button.active){background:#A53425;color:#FFF8E8;border-color:#A53425}
+.phone[data-route=life] .archive-cover{border-radius:0}
+.phone[data-route=life] .archive-bio-preview>p{line-height:1.75}
+/* 叙话保留人像及对话功能，使用相册画框与纸笺式气泡、输入区。 */
+.phone[data-route=chat] .avatar-stage{border:3px double #B58E66;border-radius:0;box-shadow:none}
+.phone[data-route=chat] :is(.avatar-greeting,.avatar-conversation .message:not(.user)){border:1px solid #D4BFA4;border-radius:4px;background:#FFF8EBF2;box-shadow:none}
+.phone[data-route=chat] .avatar-conversation .message.user{border-radius:4px;background:#A53425;color:#FFF8E8}
+.phone[data-route=chat] :is(.avatar-topic,.avatar-page .chat-form,.avatar-about-button,.avatar-call-action){border:1px solid #BDA181;border-radius:4px;background:#FFF8E8CC;box-shadow:none}
+.phone[data-route=chat] .avatar-page .chat-form input{background:transparent}
+.phone[data-route=chat] .avatar-call-action.end{background:#A53425;color:#FFF8E8}
+/* 故里仅统一画面上方的控件与故事纸笺，保持三维画布、相机和全屏尺寸。 */
+.phone[data-route=space] .scene-title{padding:8px;background:#FFF8E8DC;border:3px double #C7AA87;border-radius:0}
+.phone[data-route=space] .scene-title h1{font-family:KaiTi,STKaiti,serif;color:#49372B;letter-spacing:4px}
+.phone[data-route=space] :is(.memory-mode-picker,.memory-3d .era-picker,.memory-icon-button,.memory-story-dock){border:1px solid #BDA181;border-radius:4px;box-shadow:none;background-color:#FFF8EBF2}
+.phone[data-route=space] .memory-story-dock{background-image:url('assets/zhumen/ivory-rice-paper.png');background-size:400px auto}
+.phone[data-route=space] :is(.memory-mode-picker button,.era-picker button){border-radius:0}
+.phone[data-route=space] .memory-mode-picker button.active{background:#A53425;color:#FFF8E8}
+.phone[data-route=space] .era-picker button.active{background:#EEDBC1;color:#913829}
+.phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .bottom-nav{background:#FBF7EF;border-top:3px double #D6BFA3}

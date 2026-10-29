@@ -62,7 +62,7 @@
   }
   /** 退回意见绑定这一版校样或样书；修改后必须再次由本人确认。 */
   function revise(book) {
-    P.modal('提出修改意见',`<p>编辑会依据本次意见修改为下一版，重新交你确认；超出原报价的新增内容先另行沟通。</p><form id="book-revision-form" data-id="${book.id}"><label>哪里需要修改？<textarea name="reason" required maxlength="500" placeholder="例如：第二章年份需要核对，封面照片换一张"></textarea></label><button class="btn full section" type="submit">交给编辑修改</button></form>`);
+    P.modal('提出修改意见',`<p>编辑会依据本次意见修改为下一版，重新交你确认；超出原报价的新增内容先另行沟通。</p><form id="book-revision-form" data-id="${book.id}"><label>哪里需要修改？<textarea name="reason" required maxlength="500" placeholder="例如：第二章年份需要核对，封面照片换一张"></textarea></label><button class="btn full section" type="submit">交给编辑修改</button></form>`,'sheet');
     const form=document.getElementById('book-revision-form');form.bookState=P.state;form.dataset.actor=P.state.actor;
   }
   /** 制作卡片仅展示在已建档本人的档案中，家人查看他人档案时不显示。 */

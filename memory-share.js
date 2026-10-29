@@ -1,0 +1,69 @@
+/** 故人分享演示唯一状态所有者；真实预约、跨设备撤回和AI修复需服务端接入。 */
+'use strict';
+{
+  const P=window.App;
+  /** 草稿绑定登录账号，切换账号不会继承他人的待发布内容。 */
+  function state() {return P.state.memoryShare ||= {drafts:{},published:[],gifts:[],restore:null};}
+  function draft() {return state().drafts[P.state.actor] ||= {assetId:'',caption:'',confirmed:false,url:'',restored:false};}
+  /** 分享仅由资料归属本人确认，资料自身和人物档案须同时可读。 */
+  function candidates() {return [...P.PersonArchive.assets(P.state.actor,'photo'),...P.PersonArchive.videos(P.state.actor)].filter(item=>item.subject===P.state.actor&&['photo','film','clip'].includes(item.kind)&&/^assets\//.test(item.poster));}
+  function selected() {return candidates().find(item=>item.id===draft().assetId);}
+  /** 仅当前本人已保留的预制修复结果可以进入分享，原素材仍用于授权核验。 */
+  function poster(item) {const r=state().restore;return draft().restored&&r?.actor===P.state.actor&&r.id===item.id&&r.saved&&item.id==='father-photo-youth'?'assets/zhumen/life-youth-restored-demo.png':item.poster;}
+  /** 仅确认后制作公开快照；不把整个影片库或家庭授权转成公开权限。 */
+  function publish() {
+    const value=draft(),item=selected();
+    if(!item||!value.confirmed)return P.toast('请核对选中的内容，并确认愿意分享给朋友。');
+    const snapshot={v:1,ref:P.nextId('memory'),owner:P.state.actor,name:P.PEOPLE[P.state.actor].name,kind:item.kind==='photo'?'photo':'video',title:item.title+(value.restored?' · 修复示例':''),caption:value.caption,poster:poster(item),src:value.restored?poster(item):item.src||item.poster,year:item.year};
+    const url=new URL('memory.html',location.href);url.searchParams.set('s',MemoryShareCodec.encode(snapshot));
+    value.url=url.href;state().published.push({actor:P.state.actor,ref:snapshot.ref,url:value.url,title:item.title});P.render();
+  }
+  /** 原生分享由本人触发；不支持时提供可复制链接，不自动向任何联系人发送。 */
+  async function deliver() {
+    const value=draft();if(!value.url||!selected())return P.toast('内容已变化，请重新核对生成链接。');
+    try {
+      if(navigator.share&&location.protocol==='https:')await navigator.share({title:'与故人说旧事',text:value.caption,url:value.url});
+      else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value.url);P.toast('链接已复制，可以自己选择发给哪位朋友。');}
+      else P.toast('请选中下方链接复制，再发给朋友。');
+    }catch(error){if(error.name!=='AbortError')P.toast('未能完成分享，链接仍在下方，可以复制。');}
+  }
+  /** 修复结果仅为预制示例；其他照片的请求不伪装成已调用真实AI。 */
+  function restore(id) {
+    const item=P.PersonArchive.getItem(id);
+    if(!item||item.kind!=='photo'||item.subject!==P.state.actor)return P.toast('请由照片归属本人打开这项服务。');
+    state().restore={actor:P.state.actor,id,ready:false,saved:false};P.navigate('photo-restore');
+  }
+  /** 只有演示的已确认预约在完成拍摄后产生双向服务礼，不记现金与积分。 */
+  function advanceGift() {
+    const rows=state().gifts,actor=P.state.actor;
+    let row=rows.find(item=>item.actor===actor);
+    if(!row){rows.push({actor,phase:'预约沟通',ref:state().published.find(item=>item.actor===actor)?.ref||'演示来源',mine:false,friend:false});}
+    else if(row.phase==='预约沟通')row.phase='拍摄已完成';
+    else {row.mine=true;row.friend=true;row.phase='心意已送达';}
+    P.render();
+  }
+  /** 所有新动作独立命名，避免和原档案、订单及全局表单动作混用。 */
+  document.addEventListener('click',event=>{
+    const el=event.target.closest('[data-memory]');if(!el)return;
+    event.preventDefault();const action=el.dataset.memory;
+    if(action==='open'){if(el.dataset.id)draft().assetId=el.dataset.id;draft().restored=el.dataset.restored==='1';draft().url='';draft().confirmed=false;P.navigate('share-memory');}
+    if(action==='preview'){if(!selected())return P.toast('先选一张照片或一段影片。');P.navigate('share-preview');}
+    if(action==='publish')publish();
+    if(action==='deliver')deliver();
+    if(action==='restore')restore(el.dataset.id);
+    if(action==='restore-result'){const r=state().restore;if(r?.actor===P.state.actor){r.ready=true;P.render();}}
+    if(action==='restore-save'){const r=state().restore;if(r?.actor===P.state.actor&&r.ready){r.saved=true;P.render();}}
+    if(action==='gift-demo')advanceGift();
+    if(action==='owner-demo'){P.changeActor('father');P.navigate('share-memory');}
+  });
+  /** 输入即时保留，字号切换不丢文案；修改素材后旧链接不再作为当前结果。 */
+  document.addEventListener('input',event=>{
+    const el=event.target;
+    if(!el.closest('#memory-compose'))return;
+    const value=draft();
+    if(el.name==='asset'){value.assetId=el.value;value.restored=false;value.confirmed=false;value.url='';}
+    if(el.name==='caption'){value.caption=el.value.slice(0,180);value.confirmed=false;value.url='';}
+  });
+  document.addEventListener('change',event=>{if(event.target.id==='memory-confirm')draft().confirmed=event.target.checked;});
+  P.MemoryShare={state,draft,candidates,selected,restore,poster};
+}

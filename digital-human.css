@@ -1,6 +1,6 @@
 /* 家人会面式页面：二维视频主画面、字幕式对话、稳定输入区；不加载三维人物。 */
 /* 标题栏只保留一个轻量消息入口，红点同时用于本人待办与家人未读结果。 */
-.chat-message-trigger{position:relative;display:flex;align-items:center;gap:4px;flex-shrink:0;min-height:44px;padding:6px 10px;background:none;color:var(--green);font-size:calc(13px * var(--unit))}
+.chat-message-trigger{position:relative;display:flex;align-items:center;gap:4px;flex-shrink:0;min-height:44px;padding:6px 10px;background:none;color:var(--brand);font-size:calc(13px * var(--unit))}
 .chat-message-trigger>.icon{width:18px;height:18px}
 .chat-task-dot{position:absolute;top:6px;right:4px;width:8px;height:8px;border-radius:50%;background:#C7463F;pointer-events:none}
 .chat-message-list>.menu-row{position:relative;padding-right:20px}
@@ -11,44 +11,44 @@
 .avatar-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:auto;scrollbar-width:thin}
 .avatar-page-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding:0 2px 2px}
 .avatar-page-heading .avatar-eyebrow{font-size:calc(11px * var(--unit));letter-spacing:1px;color:var(--copper);margin:0 0 3px}
-.avatar-page-heading h1{font:600 calc(25px * var(--unit))/1.45 SimSun,serif;letter-spacing:.5px;margin:0;color:#294A40}
+.avatar-page-heading h1{font:600 calc(25px * var(--unit))/1.45 SimSun,serif;letter-spacing:.5px;margin:0;color:#702023}
 .avatar-page-heading p{font-size:calc(12px * var(--unit));line-height:1.6;color:var(--secondary);margin:4px 0 0}
-.avatar-about-button{display:flex;align-items:center;justify-content:center;flex:0 0 40px;height:40px;border:1px solid #D8DFD3;border-radius:50%;background:#FFFEFA;color:var(--green)}
+.avatar-about-button{display:flex;align-items:center;justify-content:center;flex:0 0 40px;height:40px;border:1px solid #E8D9C9;border-radius:50%;background:#FFFEFA;color:var(--brand)}
 .avatar-about-button .icon{width:17px;height:17px}
 .avatar-stage{position:relative;isolation:isolate;min-height:350px;flex:1 0 350px;border-radius:23px;overflow:hidden;background:#DDD7CA;box-shadow:0 7px 24px #45382410}
 .avatar-portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 31%;z-index:0}
-.avatar-image-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#2E281017,transparent 32%,transparent 48%,#242E213D 100%)}
-.avatar-preview-label{position:absolute;top:13px;left:13px;z-index:3;border:1px solid #FFFFFF70;background:#FFFDF2CE;backdrop-filter:blur(12px);border-radius:20px;padding:5px 9px;font-size:11px;line-height:1.5;color:#405348;pointer-events:none}
+.avatar-image-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#2E281017,transparent 32%,transparent 48%,#7020233D 100%)}
+.avatar-preview-label{position:absolute;top:13px;left:13px;z-index:3;border:1px solid #FFFFFF70;background:#FFFDF2CE;backdrop-filter:blur(12px);border-radius:20px;padding:5px 9px;font-size:11px;line-height:1.5;color:#702023;pointer-events:none}
 .avatar-dialogue{position:absolute;bottom:14px;left:12px;right:12px;z-index:3}
-.avatar-conversation{max-height:182px;min-height:0;overflow:auto;display:grid;align-content:start;gap:9px;padding:1px 3px;scrollbar-width:thin;scrollbar-color:#E0E2D5 transparent}
-.avatar-greeting{background:#FFFEFAF0;border:1px solid #FFFFFFB0;border-radius:17px;padding:12px 14px;box-shadow:0 3px 15px #243D3010;backdrop-filter:blur(16px)}
-.avatar-greeting>span{display:flex;align-items:center;gap:7px;font-size:calc(13px * var(--unit));color:var(--green);font-weight:600}
-.avatar-greeting>span small{font-size:calc(10px * var(--unit));font-weight:400;letter-spacing:.5px;color:#8A8B7D}
-.avatar-greeting p{font-size:calc(15px * var(--unit));line-height:1.75;margin:5px 0 0;color:#304238;overflow-wrap:anywhere}
+.avatar-conversation{max-height:182px;min-height:0;overflow:auto;display:grid;align-content:start;gap:9px;padding:1px 3px;scrollbar-width:thin;scrollbar-color:#E8D9C9 transparent}
+.avatar-greeting{background:#FFFEFAF0;border:1px solid #FFFFFFB0;border-radius:17px;padding:12px 14px;box-shadow:0 3px 15px #70202310;backdrop-filter:blur(16px)}
+.avatar-greeting>span{display:flex;align-items:center;gap:7px;font-size:calc(13px * var(--unit));color:var(--brand);font-weight:600}
+.avatar-greeting>span small{font-size:calc(10px * var(--unit));font-weight:400;letter-spacing:.5px;color:#92665D}
+.avatar-greeting p{font-size:calc(15px * var(--unit));line-height:1.75;margin:5px 0 0;color:#702023;overflow-wrap:anywhere}
 .avatar-conversation .message{margin:0;padding:11px 13px;border-radius:15px;font-size:calc(14px * var(--unit));background:#FFFEFAF5;backdrop-filter:blur(16px);max-width:100%;width:auto}
-.avatar-conversation .message.user{justify-self:end;max-width:90%;background:#31594EF0;color:#FFFDF7;border-color:#31594E}
+.avatar-conversation .message.user{justify-self:end;max-width:90%;background:#702023F0;color:#FFFDF7;border-color:#702023}
 .avatar-conversation .message-label{font-size:calc(11px * var(--unit));line-height:1.6}
 .avatar-conversation .message p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75}
 .avatar-conversation .message.user p{color:inherit}
 .avatar-conversation .content-chat-links{flex-wrap:wrap}
 .avatar-conversation .text-link{font-size:calc(12px * var(--unit))}
 .avatar-live-status{display:flex;align-items:center;justify-content:center;gap:5px;flex-shrink:0}
-.avatar-live-status>span{width:5px;height:5px;border-radius:50%;background:#A3AC99;flex-shrink:0}
+.avatar-live-status>span{width:5px;height:5px;border-radius:50%;background:#92665D;flex-shrink:0}
 .avatar-live-status p{font-size:10px;line-height:1.5;margin:0;color:var(--subtle);text-align:center}
 .avatar-context{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 10px;background:#ECE9DF;border-radius:10px;font-size:calc(12px * var(--unit));flex-shrink:0}
 .avatar-context span{min-width:0;overflow-wrap:anywhere}
 .avatar-context .text-link{flex-shrink:0}
 .avatar-footer{flex-shrink:0;display:flex;flex-direction:column;gap:9px;padding-top:2px;background:var(--canvas)}
 .avatar-quick-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.avatar-topic{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:36px;padding:7px 12px;border-radius:20px;border:1px solid #D9DFD2;background:#FFFEF8;color:#496353;font-size:calc(12px * var(--unit));line-height:1.5;max-width:100%;text-align:left}
+.avatar-topic{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:36px;padding:7px 12px;border-radius:20px;border:1px solid #E8D9C9;background:#FFFEF8;color:#A62124;font-size:calc(12px * var(--unit));line-height:1.5;max-width:100%;text-align:left}
 .avatar-topic .icon{width:13px;height:13px;flex-shrink:0}
-.avatar-page .chat-form{margin:0;padding:6px 6px 6px 15px;gap:8px;min-height:58px;flex-shrink:0;border:1px solid #D5DDCE;border-radius:30px;background:#FFFEFA;box-shadow:0 4px 16px #233B3005}
+.avatar-page .chat-form{margin:0;padding:6px 6px 6px 15px;gap:8px;min-height:58px;flex-shrink:0;border:1px solid #E8D9C9;border-radius:30px;background:#FFFEFA;box-shadow:0 4px 16px #70202305}
 .avatar-page .chat-form input{min-width:0;padding:6px 0;border:0;border-radius:0;background:none;box-shadow:none;font-size:calc(14px * var(--unit));line-height:1.6}
 .avatar-page .chat-form input:focus{outline:0}
-.avatar-page .chat-form:focus-within{border-color:#6F927B;box-shadow:0 0 0 3px #6F927B17}
-.avatar-page .chat-form button{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;border-radius:50%;background:var(--green);color:#FFFDF7;box-shadow:0 3px 8px #234E4317}
+.avatar-page .chat-form:focus-within{border-color:#92665D;box-shadow:0 0 0 3px #92665D17}
+.avatar-page .chat-form button{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;border-radius:50%;background:var(--brand);color:#FFFDF7;box-shadow:0 3px 8px #70202317}
 .avatar-page .chat-form button .icon{width:20px;height:20px}
-.avatar-service-note{font-size:10px;color:#999C8E;line-height:1.5;text-align:center;margin:0;flex-shrink:0;letter-spacing:.5px}
+.avatar-service-note{font-size:10px;color:#92665D;line-height:1.5;text-align:center;margin:0;flex-shrink:0;letter-spacing:.5px}
 /* 两倍字号使用外层滚动，问候放到图像下方，避免文字盖住人物的脸。 */
 .large-type .avatar-page{height:auto;min-height:100%;overflow:visible}
 .large-type .avatar-body{overflow:visible;flex:none}
@@ -61,21 +61,21 @@
 .large-type .avatar-live-status p,.large-type .avatar-service-note{font-size:14px}
 .large-type .avatar-page .chat-form{border-radius:22px;align-items:center}
 /* 回应指示和气泡只负责反馈；人物动作由本地二维视频提供。 */
-.avatar-live-status[data-phase="replying"]>span{background:#547E61;animation:reply-pulse 1s ease-in-out infinite}
+.avatar-live-status[data-phase="replying"]>span{background:#A62124;animation:reply-pulse 1s ease-in-out infinite}
 .avatar-conversation .message:last-child{animation:dialogue-arrive .35s ease-out}
 @keyframes reply-pulse{50%{opacity:.35}}
 @keyframes dialogue-arrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.avatar-live-status>span,.avatar-conversation .message:last-child{animation:none}}
 /* 视频会面式构图：人物占满画面，姓名和演示时长轻叠在顶部。 */
 .avatar-page-heading{position:absolute;top:17px;left:17px;right:14px;z-index:3;align-items:flex-start}
-.avatar-page-heading h1{color:#FFFDF7;text-shadow:0 1px 8px #1A2B2650}
+.avatar-page-heading h1{color:#FFFDF7;text-shadow:0 1px 8px #70202350}
 .avatar-page-heading p,.avatar-page-heading .avatar-eyebrow{color:#FFFDF5D9}
 .avatar-eyebrow span{display:inline-block;margin-left:9px;font-family:Arial,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:1px}
 .avatar-about-button{color:white;background:#FFFFFF1F;border-color:#FFFFFF55;backdrop-filter:blur(12px)}
-.avatar-preview-label{left:auto;right:14px;top:77px;color:#FFFEF9;background:#243A3266;border-color:#FFFFFF55}
-.avatar-image-shade{background:linear-gradient(180deg,#162A20AD,transparent 38%,transparent 49%,#26372F4D)}
+.avatar-preview-label{left:auto;right:14px;top:77px;color:#FFFEF9;background:#70202366;border-color:#FFFFFF55}
+.avatar-image-shade{background:linear-gradient(180deg,#702023AD,transparent 38%,transparent 49%,#7020234D)}
 .avatar-call-controls{display:flex;justify-content:center;gap:10px}
-.avatar-call-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 15px;border:1px solid #DCE1D6;border-radius:22px;background:#ECEFE5;color:#506254;font-size:calc(12px * var(--unit));line-height:1.5;flex:1;min-width:0}
+.avatar-call-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 15px;border:1px solid #E8D9C9;border-radius:22px;background:#F7F1E5;color:#A62124;font-size:calc(12px * var(--unit));line-height:1.5;flex:1;min-width:0}
 .avatar-call-action .icon{width:16px;height:16px;flex-shrink:0}
 .avatar-call-action.end{background:#B86B5B;color:#FFFEF7;border-color:#B86B5B}
 /* 共享额度独立排在视频下方，不覆盖人物，长文案与大字号由普通文档流承接。 */
@@ -84,7 +84,7 @@
 .portrait-motion,.portrait-clips{position:absolute;inset:0;z-index:1}
 .portrait-clips video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 31%;opacity:0;transition:opacity .18s ease;pointer-events:none}
 .portrait-motion[data-mode="idle"] video[data-kind="idle"],.portrait-motion[data-mode="speaking"] video[data-kind="speaking"],.portrait-motion[data-mode="settling"] video[data-kind="settling"]{opacity:1}
-.portrait-motion-retry{position:absolute;left:50%;top:44%;transform:translateX(-50%);z-index:4;background:#FFFEFAED;color:var(--green);padding:10px 15px;border:1px solid #D5DECE;border-radius:20px;font-size:14px}
+.portrait-motion-retry{position:absolute;left:50%;top:44%;transform:translateX(-50%);z-index:4;background:#FFFEFAED;color:var(--brand);padding:10px 15px;border:1px solid #E8D9C9;border-radius:20px;font-size:14px}
 .portrait-motion-retry[hidden]{display:none}
 .large-type .portrait-motion{height:350px;bottom:auto}
 @media(prefers-reduced-motion:reduce){.portrait-clips video{transition:none}}

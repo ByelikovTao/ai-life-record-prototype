@@ -1,0 +1,50 @@
+/* 故人分享与预约沿用中式纸笺；独立访客页不依赖原型应用布局。 */
+.memory-home-entry{margin-top:32px;padding:24px 16px;border:3px double #C9AB84;background:#FFF8E880}
+.memory-home-entry p{margin:8px 0 16px;font-size:calc(14px * var(--unit));line-height:1.5}
+.memory-home-entry .text-link{margin-left:16px}
+.memory-page{background:#FBF7EF;min-height:100%;padding:24px 16px!important}
+.memory-page .page-title,.memory-page h2,.memory-page h3{font-family:KaiTi,STKaiti,serif}
+.memory-options{padding:0;border:0;display:grid;gap:12px}
+.memory-options legend{margin-bottom:12px}
+.memory-option{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #CDB594;background:#FFF9ED;cursor:pointer;min-width:0}
+.memory-option:has(input:checked){border:3px double #A53425}
+.memory-option img{width:72px;height:64px;object-fit:cover;flex-shrink:0}
+.memory-option span{min-width:0;overflow-wrap:anywhere}
+.memory-option strong,.memory-option small{display:block;line-height:1.5}
+.memory-option small{color:#8B7158;font-size:calc(12px * var(--unit))}
+.memory-share-card{border:3px double #C5A27E;background:#FFF9EDF0;padding:16px;margin:16px 0}
+.memory-share-card h2{font-size:calc(20px * var(--unit,1));line-height:1.4;margin:16px 0 8px}
+.memory-feature-photo,.memory-page video,.memory-guest video{display:block;width:100%;height:auto;max-height:480px;object-fit:contain}
+.memory-share-card small{display:block;color:#957759;margin-top:16px}
+.memory-handwriting{font-family:KaiTi,STKaiti,serif;font-size:calc(20px * var(--unit,1));line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.memory-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.memory-page .btn{white-space:normal;max-width:100%}
+.memory-page .form-field textarea{display:block;width:100%;min-height:112px;margin-top:8px}
+.memory-page .note input{width:100%;margin-top:8px}
+.memory-comparison{display:grid;gap:16px;margin:24px 0}
+.memory-comparison img{display:block;width:100%;height:auto}
+.memory-comparison figcaption{font-size:calc(14px * var(--unit));color:#947458;margin-top:8px}
+.memory-empty{padding:24px 16px;border:1px solid #D3B897;color:#826B54}
+.memory-guest{margin:0;background:#FBF7EF;font:16px/1.75 SimSun,"Noto Serif SC",serif;color:#49372B}
+.memory-guest *{box-sizing:border-box}
+.memory-guest-main{max-width:600px;margin:auto;padding:32px 20px 48px;background:#FBF7EF url('assets/zhumen/ivory-rice-paper.png') center/600px auto}
+.memory-guest h1,.memory-guest h2{font-family:KaiTi,STKaiti,serif;font-weight:600;line-height:1.4}
+.memory-guest h1{font-size:30px;margin:8px 0 16px}
+.memory-guest h2{font-size:24px}
+.memory-eyebrow,.memory-fine{font-size:12px;color:#8F745B}
+.memory-guest-invitation{margin-top:32px;border:3px double #C5A27E;padding:24px 16px;background:#FFF9EBCD}
+.memory-primary{display:inline-block;border:1px solid #A53425;background:#A53425;color:#FFF8E8;padding:12px 16px;font:inherit;cursor:pointer;border-radius:4px;max-width:100%}
+.memory-guest #guest-service{margin-top:32px}
+.memory-guest label:not(.memory-consent){display:block;margin:16px 0}
+.memory-guest :is(input:not([type=checkbox]),select){display:block;width:100%;font:inherit;padding:12px;background:#FFFCF6;border:1px solid #C3A887;border-radius:4px;margin-top:8px}
+.memory-guest .memory-consent{display:flex;align-items:flex-start;gap:8px;margin:24px 0}
+.memory-guest .memory-consent input{margin-top:8px;flex-shrink:0}
+.memory-guest input[type=checkbox]{accent-color:#A53425}
+.memory-guest :focus-visible{outline:2px solid #A53425;outline-offset:4px}
+.memory-guest footer{font-size:12px;text-align:center;color:#987A5C;margin-top:48px}
+.memory-skip{position:absolute;left:16px;top:-100px;background:#FFF8E8;color:#A53425;padding:8px}
+.memory-skip:focus{top:8px}
+.memory-guest [hidden]{display:none!important}
+.large-type .memory-option{flex-wrap:wrap}
+.large-type .memory-option img{width:100%;height:160px;object-fit:contain}
+.large-type .memory-home-entry .text-link{display:block;margin-left:0}

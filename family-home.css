@@ -1,0 +1,113 @@
+/* 精简首页只保留阅读层级，管理表单和既有业务页面继续使用原有组件。 */
+.heritage-home{--home-paper:var(--canvas);--home-surface:var(--surface);--home-tea:var(--brand);--home-ink:var(--ink);--home-muted:var(--secondary);--home-line:var(--line);padding:0 16px 32px;background:var(--home-paper);color:var(--home-ink);font-family:inherit;font-size:calc(16px * var(--unit));line-height:1.5}
+.heritage-home :is(h1,h2,h3,p){text-wrap:pretty;overflow-wrap:anywhere}
+.heritage-home :is(h1,h2,h3){text-wrap:balance;font-family:inherit;font-style:normal}
+.heritage-home>section+section{margin-top:24px}
+.heritage-home h2{font-size:calc(20px * var(--unit));line-height:1.4;font-weight:600}
+.heritage-home h3{font-size:calc(16px * var(--unit));line-height:1.5;font-weight:600}
+.heritage-home button{font-family:inherit}
+.heritage-viewing{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.heritage-family-photo{margin:16px 0;position:relative;border:1px solid var(--home-line);border-radius:12px;padding:4px;background:var(--home-surface)}
+.heritage-family-photo img{display:block;width:100%;aspect-ratio:2.4;object-fit:cover;border-radius:8px}
+.heritage-family-photo figcaption{padding:4px;font-size:calc(12px * var(--unit));color:var(--home-muted);text-align:right}
+.heritage-section-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.heritage-origin .heritage-section-head{margin-top:16px}
+.heritage-text-button{display:inline-flex;align-items:center;justify-content:center;gap:4px;background:transparent;color:var(--home-tea,#80583D);padding:8px 0;font-size:calc(14px * var(--unit));line-height:1.4;text-align:left;min-height:48px;border-radius:4px}
+.heritage-text-button .icon{width:16px;height:16px}
+.heritage-text-button:hover{background:#EDE3D4}
+.heritage-home button:focus-visible{outline:2px solid var(--home-tea);outline-offset:4px}
+.heritage-home button:active{transform:scale(.98)}
+.heritage-kinship{padding:12px;margin-top:12px;border:1px solid var(--home-line,#DED1BF);border-radius:8px;background:#F1E9DC}
+.heritage-caption{font-size:calc(12px * var(--unit));line-height:1.5;color:var(--home-muted,#796E62);overflow-wrap:anywhere}
+.heritage-preface{padding:16px;background:var(--home-surface);border:1px solid var(--home-line);border-radius:12px}
+.heritage-preface-copy{font-size:calc(16px * var(--unit));line-height:1.5;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.heritage-reading-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;font-size:calc(14px * var(--unit));color:var(--home-tea)}
+.heritage-motto{padding:16px;border:1px solid #C8AE8F;border-radius:12px;background:#F1E6D5}
+.heritage-home .heritage-motto-text{text-wrap:balance;white-space:pre-line;font-size:calc(24px * var(--unit));line-height:1.4;font-weight:600;margin:12px 0;color:var(--home-ink)}
+.heritage-empty{margin:12px 0;font-size:calc(14px * var(--unit));line-height:1.5;color:var(--home-muted,#796E62)}
+.heritage-event{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px;margin-bottom:16px}
+.heritage-event-year{font-size:calc(16px * var(--unit));line-height:1.5;color:var(--home-tea);font-weight:600;padding-top:12px}
+.heritage-event-year span{display:block;font-size:calc(12px * var(--unit));font-weight:400}
+.heritage-event-button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;background:var(--home-surface);border:1px solid var(--home-line);border-radius:8px;color:var(--home-ink)}
+.heritage-event-copy{min-width:0;flex:1}
+.heritage-event h3{margin-bottom:8px}
+.heritage-event p{font-size:calc(14px * var(--unit));line-height:1.5;color:var(--home-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.heritage-event small{display:block;font-size:calc(12px * var(--unit));color:var(--home-muted);margin-top:8px}
+.heritage-event-button>img{display:block;width:64px;height:64px;flex-shrink:0;object-fit:cover;border-radius:4px}
+.heritage-complete{display:flex;width:100%;align-items:center;justify-content:center;gap:8px;padding:8px 12px;border:1px solid var(--home-line);border-radius:8px;background:var(--home-surface);color:var(--home-tea);font-size:calc(16px * var(--unit));font-weight:600}
+/* 整理入口统一在我的家庭；原生弹层仍负责焦点约束和私有草稿。 */
+.heritage-manage .menu-row span{min-width:0;flex:1}
+.heritage-manage .menu-row strong{display:block;font-size:calc(16px * var(--unit));font-weight:600}
+.heritage-manage .menu-row small{display:block;font-size:calc(12px * var(--unit));line-height:1.5;color:var(--secondary);margin-top:4px}
+.heritage-editor{display:grid;gap:12px;margin-top:16px;font-size:calc(16px * var(--unit))}
+.heritage-editor :is(input:not([type=checkbox]),textarea,select){display:block;width:100%;min-width:0;padding:12px;border:1px solid #C8AE8F;border-radius:8px;background:#FFFCF5;color:#342B25;font:inherit}
+.heritage-editor textarea{resize:vertical;min-height:160px}
+.heritage-editor-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.heritage-editor-actions>*{flex:1;min-width:0;padding:8px 12px;font-size:calc(16px * var(--unit));font-weight:600}
+.heritage-reader{font-size:calc(16px * var(--unit));line-height:1.5;white-space:pre-line}
+.heritage-reader h3{margin:24px 0 12px}
+.heritage-reader p{margin:12px 0}
+.heritage-review-copy{padding:16px;background:#F7F3E9;border:1px solid #DED1BF;border-radius:8px;white-space:pre-line;overflow-wrap:anywhere;font-size:calc(16px * var(--unit));margin-bottom:16px}
+.heritage-form-error{color:#A13E3E;font-size:calc(14px * var(--unit))}
+.heritage-select-story{display:flex;gap:12px;align-items:flex-start;border:1px solid #DED1BF;border-radius:8px;padding:12px}
+.heritage-select-story input{margin-top:4px;flex-shrink:0;accent-color:#80583D}
+.heritage-select-story strong{display:block;font-size:calc(16px * var(--unit));font-weight:600}
+.heritage-select-story small{display:block;font-size:calc(12px * var(--unit));margin-top:8px;color:#796E62;overflow-wrap:anywhere}
+.heritage-suggestion{margin-top:16px;padding:16px;border:1px solid #DED1BF;border-radius:8px;white-space:pre-line}
+.heritage-suggestion p{margin:12px 0}
+/* 大字号改用堆叠，保留姓名、故事及管理按钮的完整触达范围。 */
+.large-type .heritage-viewing{align-items:flex-start;flex-direction:column}
+.large-type .heritage-event{grid-template-columns:minmax(0,1fr)}
+.large-type .heritage-event-button{flex-direction:column;align-items:stretch}
+.large-type .heritage-event-button>img{width:100%;height:auto;aspect-ratio:2;object-fit:cover}
+.large-type .heritage-editor-actions{flex-direction:column}
+@media(prefers-reduced-motion:no-preference){.heritage-home button{transition:background-color 300ms cubic-bezier(.22,1,.36,1),transform 300ms cubic-bezier(.22,1,.36,1)}}
+
+/* 世系摘要按电子族谱纵向排布；宽家系在局部滚动，不撑开整页或弹层。 */
+.heritage-pedigree-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+.heritage-pedigree-heading h3{font:600 calc(20px * var(--unit))/1.4 KaiTi,STKaiti,serif;color:#7E2D24}
+.heritage-pedigree-heading>span,.heritage-pedigree-legend{font-size:calc(12px * var(--unit));line-height:1.5;color:#94735A}
+.heritage-pedigree-viewport{max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.heritage-pedigree-canvas{position:relative;width:var(--pedigree-width);min-width:var(--pedigree-width);height:264px;margin:0 auto}
+.heritage-pedigree-canvas>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.heritage-pedigree-canvas path{fill:none;stroke:#B49272;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.heritage-pedigree-canvas path.is-couple{stroke:#A63D31}
+.heritage-pedigree-node{position:absolute;transform:translateX(-50%);display:flex;align-items:center;gap:8px;width:112px;height:64px;padding:8px;background:#FFFCF6;border:1px solid #CCB294;border-radius:4px;text-align:left;color:#49372B}
+.heritage-pedigree-node>.avatar{width:32px;height:40px;border-radius:2px;flex-shrink:0}
+.heritage-pedigree-node>span:not(.avatar){min-width:0}
+.heritage-pedigree-node strong{display:block;font:600 16px/24px SimSun,serif;white-space:nowrap}
+.heritage-pedigree-node small{display:block;font-size:12px;line-height:18px;color:#92735C;white-space:nowrap}
+.heritage-pedigree-node.is-focus{border:3px double #AD382C;background:#FFF0DF;padding:6px}
+.heritage-pedigree-node.is-focus strong{color:#B3261E;font-weight:700}
+.heritage-pedigree-node.is-focus small{color:#A0392D}
+.heritage-pedigree-node:hover{background:#FAEBDC}
+.heritage-pedigree-node:focus-visible{outline:2px solid #A0392D;outline-offset:2px}
+.heritage-pedigree-legend{margin:8px 0 12px}
+/* 大字号按原辈分顺序纵向展开人物卡，不压缩姓名或以错误连线维持双列。 */
+.large-type .heritage-pedigree-canvas{display:grid;gap:16px;width:100%;min-width:0;height:auto}
+.large-type .heritage-pedigree-canvas>svg,.large-type .heritage-pedigree-legend{display:none}
+.large-type .heritage-pedigree-node{position:static;transform:none;width:100%;height:auto;min-height:96px;padding:16px;gap:16px}
+.large-type .heritage-pedigree-node>.avatar{width:56px;height:64px}
+.large-type .heritage-pedigree-node strong{font-size:32px;line-height:48px;white-space:normal;overflow-wrap:anywhere}
+.large-type .heritage-pedigree-node small{font-size:24px;line-height:36px;white-space:normal}
+.large-type .heritage-pedigree-heading{align-items:flex-start;flex-direction:column}
+
+/* 以谱牒题签、朱印与回纹角框承载世系；纹样不占用人物交互区域。 */
+.heritage-pedigree-heading{justify-content:flex-start;align-items:center;gap:12px;padding:12px 16px;border:3px double #BD9A74;background:#F8F0E2}
+.heritage-pedigree-heading h3{font-size:calc(24px * var(--unit));line-height:1.3333;letter-spacing:4px;color:#65372B}
+.heritage-pedigree-heading p{font-size:calc(12px * var(--unit));line-height:1.3333;color:#937255;margin-top:4px}
+.heritage-pedigree-heading>.heritage-pedigree-seal{display:block;flex-shrink:0;border:3px double #FFF3DE;outline:1px solid #A53425;padding:4px 8px;background:#A53425;color:#FFF3DE;font:600 20px/24px KaiTi,STKaiti,serif;text-align:center}
+.heritage-pedigree-heading>.heritage-pedigree-inscription{margin-left:auto;writing-mode:vertical-rl;font:14px/20px KaiTi,STKaiti,serif;letter-spacing:4px;color:#9B6045}
+.heritage-pedigree-viewport{padding:16px 0;background:#FAF4E9 url('assets/zhumen/pedigree-frame.svg') center/100% 100% no-repeat;border:1px solid #D2B99C}
+.heritage-pedigree-node{border:3px double #B18A61;border-radius:0;background:#FFF9EC;padding:6px}
+.heritage-pedigree-node>.avatar{border-radius:0;outline:1px solid #C9AE8D;outline-offset:2px}
+.heritage-pedigree-node.is-focus{background:#FFF1DA;border-color:#A53425}
+.heritage-pedigree-node:active{transform:translateX(-50%) scale(.98)}
+.large-type .heritage-pedigree-heading{flex-direction:row;flex-wrap:wrap;align-items:center}
+.large-type .heritage-pedigree-heading>.heritage-pedigree-inscription{display:none}
+.large-type .heritage-pedigree-heading>div{flex:1;min-width:0}
+.large-type .heritage-pedigree-viewport{padding:16px}
+.large-type .heritage-pedigree-node:active{transform:scale(.98)}
+
+/* 人生阶段用朱红小题签提示，正文与原故事共享同一份年代资料。 */
+.heritage-event-stage{display:inline-block;font-size:calc(12px * var(--unit));line-height:1.3333;color:#9B3A2B;border:1px solid #D4B391;padding:4px 8px;margin-bottom:8px;background:#FAF0E0}

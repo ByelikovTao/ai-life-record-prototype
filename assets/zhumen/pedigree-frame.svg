@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="300" viewBox="0 0 360 300" fill="none">
+<!-- 回纹角框为装饰，不表达世代、数量或人物关系。 -->
+<defs><g id="corner" stroke="#BA8A5E" stroke-width="1"><path d="M8 44V8h36M13 32V13h19v13H20v-7h6M8 50h5M50 8v5"/><path d="M18 39V35h17V18h4"/></g></defs>
+<use href="#corner"/><use href="#corner" transform="translate(360 0) scale(-1 1)"/><use href="#corner" transform="translate(0 300) scale(1 -1)"/><use href="#corner" transform="translate(360 300) scale(-1 -1)"/>
+</svg>

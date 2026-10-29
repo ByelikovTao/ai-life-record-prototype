@@ -1,6 +1,8 @@
 /** 演示数据与共用视图工具；所有变更只保留在当前页面内存中。 */
 'use strict';
 {
+  /** 家庭空间以“灯火传家”表达温暖与传承，首页与邀请共用展示名称。 */
+  const HOME_NAME='灯火传家';
   const ICONS = {
     home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
     book: '<path d="M4 3h13a2 2 0 0 1 2 2v16H6a3 3 0 0 1-3-3V4a1 1 0 0 1 1-1Z"/><path d="M3 17h16M8 7h7M8 11h5"/>',
@@ -45,10 +47,18 @@
   };
   /** 固定的演示人物种子仅用于重置；运行时仍由 PEOPLE 同一个对象提供人物事实。 */
   const PERSON_SEEDS=structuredClone(PEOPLE);
+  /** 虚构人生样例覆盖青年至当下；新经历只用文字，不补造历史照片或荣誉。 */
   const STORIES = [
-    {id:'first-order', title:'第一笔订单来的那天', year:'1998', date:'1998年秋', recorded:'2026年10月12日', category:'创业', image:'family', author:'father', scope:'family', text:['那时候，办公室只有一张桌子和一部电话。第一笔订单来的时候，我反复看了好几遍，才敢告诉你妈妈。','晚上回到家，我们没有去饭店。你妈妈煮了一碗面，我们坐在饭桌旁，把接下来要做的事写在纸上。','今天再回头看，我记住的不是订单上的数字，而是有人愿意相信我，还有家人始终陪着我。'], quote:'我记住的不是订单上的数字，而是有人愿意相信我。', source:'创业经历访谈 · 片段 03', duration:'03:26'},
-    {id:'old-home', title:'那张一直没换的书桌', year:'1986', date:'1986年夏', recorded:'2026年10月14日', category:'童年与家', image:'room', author:'father', scope:'family', text:['老家的窗边一直放着一张书桌。桌面不大，靠窗的一角晒得发白。','后来离开家工作，我写给家里的第一封信，也是在这张桌子上起的稿。每次回去，总会在那里坐一会儿。'], quote:'很多故事，就从这扇窗边开始。', source:'老宅口述记录 · 片段 02', duration:'01:28'},
-    {id:'spring', title:'今年春节，全家又坐在一起', year:'2026', date:'2026年春节', recorded:'2026年2月20日', category:'家庭日常', image:'family', author:'xia', scope:'family', text:['爸爸说，团圆并不需要安排很多事。一家人围着桌子吃饭，就已经很好。','我这次才知道，那道每年都会做的菜，最早是奶奶教给妈妈的。下次，我也想学会。'], quote:'一家人围着桌子吃饭，就已经很好。', source:'陈知夏的家庭记录', duration:'02:15'},
+    {"id":"school-days","title":"那年，我也有过发亮的梦想","year":"1979","date":"1979年","recorded":"2026年10月29日","category":"青春求学","image":"room","author":"father","scope":"family","text":["第一次在全班面前读自己的作文，手心都是汗。老师说，远山，你写得有自己的想法。","那本练习册已经找不到了，可老师那句话，我一直记到今天。那时候家里条件普通，我也不知道将来会走多远，只想着把眼前的书读好。","现在回头看，我很想对十六岁的自己说一句：别着急，你后来走过的路，比当时想象的还远。"],"quote":"那个不太敢开口的少年，也有了自己的天地。","source":"陈远山示例口述 · 虚构演示","duration":"02:30"},
+    {"id":"wedding-day","title":"日子从两个人的一张饭桌开始","year":"1989","date":"1989年","recorded":"2026年10月29日","category":"相伴成家","image":"room","author":"father","scope":"family","text":["结婚时没有多大的排场。林慧和我把新买的碗放进柜子，又为窗帘的颜色商量了半天。","第一晚我们坐在小饭桌前，菜很简单，却觉得以后什么都能一起慢慢来。那时我就想，往后要让她少操一点心。","这些年我们也有争执，有忙得顾不上说话的时候。如今再坐在一张桌前，还是她最知道我的口味。"],"quote":"后来住过更大的房子，最难忘的还是最初那张饭桌。","source":"陈远山示例口述 · 虚构演示","duration":"02:30"},
+    {"id":"daughter-born","title":"第一次抱起女儿，我忽然懂了父亲","year":"1992","date":"1992年","recorded":"2026年10月29日","category":"初为人父","image":"room","author":"father","scope":"family","text":["知夏出生那天，我在走廊来回走了好多趟。护士把她交到我手里时，我僵着胳膊，连呼吸都放轻了。","那么小的一个人，握住了我的一根手指。我忽然明白父亲为什么总把家里的事放在前头。","后来工作再忙，我也尽量赶回去看她一眼。现在她有自己的生活了，我依然记得那只握住我的小手。"],"quote":"那一刻，我不只是自己，也成了一个人的依靠。","source":"陈远山示例口述 · 虚构演示","duration":"02:30"},
+    {"id":"old-partner","title":"老伙伴说，跟着你做事，心里踏实","year":"2008","date":"2008年","recorded":"2026年10月29日","category":"守信立业","image":"room","author":"father","scope":"family","text":["那一年交付赶得紧，几位一起打拼的老伙伴陪我熬了不少夜。最后一批货发走，我们就在办公室吃了一顿迟来的晚饭。","有人端着茶说，远山，跟着你做事，心里踏实。我没有说什么，心里却热了很久。","做生意这些年，数字记不全了。可谁在困难的时候搭过手，答应别人的事有没有做到，我一直放在心上。"],"quote":"比起做成多少生意，我更珍惜别人说我这个人靠得住。","source":"陈远山示例口述 · 虚构演示","duration":"02:30"},
+    {"id":"journey-together","title":"终于有空，陪她慢慢看一回山水","year":"2018","date":"2018年","recorded":"2026年10月29日","category":"山河同行","image":"room","author":"father","scope":"family","text":["那次出门，我们没有排满行程。走累了就在湖边坐下，林慧给我拍照，我总不知道手该往哪里放。","年轻时总说，等忙完这一阵就去。后来才发现，总有下一阵要忙。那天我们约好，往后每年都给自己留一点时间。","回家后我把其中一张照片洗出来，放在书房。看到它就想起那天的风，也提醒自己，日子可以过得慢一些。"],"quote":"这一路为家奔忙，也该陪身边的人好好看看世界。","source":"陈远山示例口述 · 虚构演示","duration":"02:30"},
+    {"id":"new-hobby","title":"六十岁，我又做了一回学生","year":"2023","date":"2023年","recorded":"2026年10月29日","category":"自在新篇","image":"room","author":"father","scope":"family","text":["第一次去书画班，我挑了靠后的位置。老师从握笔教起，我写得歪歪扭扭，却很久没有这样专心过了。","现在每周有两天下午留给自己。和同学聊聊字、喝喝茶，回家再把练过的纸摊开，看看哪一笔比上周稳一点。","过去习惯把时间安排给工作和家人。如今才发现，认真做一件自己喜欢的小事，也让人心里很充实。"],"quote":"现在学喜欢的事，不为赶上谁，只为自己高兴。","source":"陈远山示例口述 · 虚构演示","duration":"02:30"},
+
+    {id:'first-order', title:'第一笔订单来的那天', year:'1998', date:'1998年秋', recorded:'2026年10月12日', category:'事业初成', image:'family', author:'father', scope:'family', text:['那时候，办公室只有一张桌子和一部电话。第一笔订单来的时候，我反复看了好几遍，才敢告诉你妈妈。','晚上回到家，我们没有去饭店。你妈妈煮了一碗面，我们坐在饭桌旁，把接下来要做的事写在纸上。','今天再回头看，我记住的不是订单上的数字，而是有人愿意相信我，还有家人始终陪着我。'], quote:'我记住的不是订单上的数字，而是有人愿意相信我。', source:'创业经历访谈 · 片段 03', duration:'03:26'},
+    {id:'old-home', title:'那张一直没换的书桌', year:'1986', date:'1986年夏', recorded:'2026年10月14日', category:'离家起步', image:'room', author:'father', scope:'family', text:['老家的窗边一直放着一张书桌。桌面不大，靠窗的一角晒得发白。','后来离开家工作，我写给家里的第一封信，也是在这张桌子上起的稿。每次回去，总会在那里坐一会儿。'], quote:'很多故事，就从这扇窗边开始。', source:'老宅口述记录 · 片段 02', duration:'01:28'},
+    {id:'spring', title:'今年春节，全家又坐在一起', year:'2026', date:'2026年春节', recorded:'2026年2月20日', category:'天伦时光', image:'family', author:'xia', scope:'family', text:['爸爸说，团圆并不需要安排很多事。一家人围着桌子吃饭，就已经很好。','我这次才知道，那道每年都会做的菜，最早是奶奶教给妈妈的。下次，我也想学会。'], quote:'一家人围着桌子吃饭，就已经很好。', source:'陈知夏的家庭记录', duration:'02:15'},
     {id:'private', title:'留给自己的几句话', year:'2026', date:'2026年10月', recorded:'2026年10月18日', category:'个人记录', image:'room', author:'father', scope:'private', text:['有些话，我想先留给自己。等准备好了，再慢慢讲给家人听。'], quote:'有些话，想先留给自己。', source:'本人文字记录', duration:'01:00'}
   ];
   /** 草稿同时记录对象和类型，自己的记录、补充与共同回忆各自保存，不随人物切换改归属。 */
@@ -82,13 +92,13 @@
     ];
     return samples.map(([key,author,title,year,text,confirmed])=>({id:'demo-common-'+key,author,subject:author,commonWith:'father',inclusions:confirmed?{father:{active:true,reviewed:true,viewers:['father'],ai:false}}:{},title:'【演示】'+title,text:[text],year,date:year+'年 · 演示回忆',recorded:'演示数据',scope:'selected',viewers:['father'],category:'共同回忆',image:'family',source:PEOPLE[author].name+'的共同回忆演示',confirmedBy:author,quote:text.slice(0,52)}));
   }
-  /** 创建隔离初始状态；首页固定采用影片后交流，不再保存布局选择。 */
+  /** 创建隔离初始状态；家庭首页内容由独立模块按需创建。 */
   function initialState() {
     const members=['father','mother','xia','grandpa','nian'];
     const tasks=demoTasks();
     const stories=structuredClone(STORIES).map(story=>({...story,subject:'father',confirmedBy:'father',aiAllowed:true,viewers:story.scope==='family'?[...members]:[]}));
     stories.push(...demoCommonMemories());
-    return {billingSeedDate:new Date().toISOString().slice(0,10),billingToday:new Date().toISOString().slice(0,10),personServices:{},billingOrders:[],usageReceipts:[],referrals:[],rewardLedger:[],billingPeople:{},familyFocus:{xia:'father',nian:'father'},familyInvitations:{xia:['father','mother'],nian:['father']},familyAccess:{father:{archive:['xia','nian'],digital:['xia','nian'],space:['xia','nian']},mother:{archive:['xia'],digital:[],space:[]}},familyRequests:[],keepsakeBooks:[],keepsakeBookId:'',actor:'xia',route:'home',lifeTab:'overview',videoFilter:'all',archivePerson:'father',archiveAssets:null,archiveProfiles:null,archiveItemId:'',archiveChapterId:'',biographyMode:'read',archiveReturn:null,archivePlayback:{},familyTab:'列表',year:'1986',hotspot:'desk',guide:false,chatTarget:'father',chatContext:null,chatMessages:[],chatDrafts:{},questionDrafts:{},storyId:'first-order',saved:[],stories,members,invitations:[],pending:[],questions:tasks.questions,accessRequests:[],idSequence:0,materialDrafts:{},materialTabs:{},materialSubmissions:[],answerFeedback:tasks.answerFeedback,feedbackDrafts:{},feedbackReviewDrafts:{},feedbackReviewId:null,relationshipChapters:null,chapterDrafts:{},chapterNoteDrafts:{},chapterId:null,accounts:{father:{...newAccount(),videoDelivered:true,hasDigital:true,setupIncluded:true},xia:newAccount(),nian:newAccount()},record:emptyRecord(),fontLarge:false,modal:null,notice:''};
+    return {billingSeedDate:new Date().toISOString().slice(0,10),billingToday:new Date().toISOString().slice(0,10),personServices:{},familyHome:null,billingOrders:[],usageReceipts:[],referrals:[],rewardLedger:[],billingPeople:{},familyFocus:{xia:'father',nian:'father'},familyInvitations:{xia:['father','mother'],nian:['father']},familyAccess:{father:{archive:['xia','nian'],digital:['xia','nian'],space:['xia','nian']},mother:{archive:['xia'],digital:[],space:[]}},familyRequests:[],keepsakeBooks:[],keepsakeBookId:'',actor:'xia',route:'home',lifeTab:'overview',videoFilter:'all',archivePerson:'father',archiveAssets:null,archiveProfiles:null,archiveItemId:'',archiveChapterId:'',biographyMode:'read',archiveReturn:null,archivePlayback:{},familyTab:'列表',year:'1986',hotspot:'desk',guide:false,chatTarget:'father',chatContext:null,chatMessages:[],chatDrafts:{},questionDrafts:{},storyId:'first-order',saved:[],stories,members,invitations:[],pending:[],questions:tasks.questions,accessRequests:[],idSequence:0,materialDrafts:{},materialTabs:{},materialSubmissions:[],answerFeedback:tasks.answerFeedback,feedbackDrafts:{},feedbackReviewDrafts:{},feedbackReviewId:null,relationshipChapters:null,chapterDrafts:{},chapterNoteDrafts:{},chapterId:null,accounts:{father:{...newAccount(),videoDelivered:true,hasDigital:true,setupIncluded:true},xia:newAccount(),nian:newAccount()},record:emptyRecord(),fontLarge:false,modal:null,notice:''};
   }
   /** 两个还原入口同时清除动态人物与业务状态，保留头像等消费者持有的对象引用。 */
   function resetDemoState() {
@@ -103,11 +113,12 @@
   function button(label, action, cls='btn', extra='') { return `<button type="button" class="${cls}" data-action="${action}" ${extra}>${label}</button>`; }
   /** 生成站内导航按钮，保持静态文件也可进行页面切换。 */
   function link(label, route, cls='text-link') { return `<button type="button" class="${cls}" data-nav="${route}">${label}</button>`; }
-  /** 显示示例人物头像，缺少照片的人物使用清楚的姓名缩写。 */
+  /** 五位示例家人复用设计稿独立头像，避免从合照裁错人物；新增人物使用姓名缩写。 */
   function avatar(id, size='') {
     const p=PEOPLE[id];
     if (!p) return `<span class="avatar ${size}">家</span>`;
-    return p.photo ? `<span class="avatar ${size} ${p.photo}"><img src="assets/family.png" alt="${p.name}，示例人物"></span>` : `<span class="avatar ${size} ${p.color || ''}">${p.short}</span>`;
+    const hasPortrait=['grandpa','father','mother','xia','nian'].includes(id);
+    return hasPortrait ? `<span class="avatar ${size} ${id}"><img src="assets/zhumen/portrait-${id}.png" alt="${p.name}，设计稿中的示例人物"></span>` : `<span class="avatar ${size} ${p.color || ''}">${p.short}</span>`;
   }
   /** 内容标记同时使用文字，避免仅靠颜色传达意义。 */
   function badge(label, cls='') { return `<span class="badge ${cls}">${label}</span>`; }
@@ -119,7 +130,7 @@
   function nextId(prefix) {App.state.idSequence++;return `${prefix}-${App.state.idSequence}`;}
   /** 按秒转换为录制时间显示。 */
   function duration(seconds) { return `${Math.floor(seconds/60).toString().padStart(2,'0')}:${(seconds%60).toString().padStart(2,'0')}`; }
-  window.App={state:initialState(),initialState,resetDemoState,emptyRecord,newAccount,nextId,PEOPLE,icon,escape,button,link,avatar,badge,account,visibleStories,duration,views:{}};
+  window.App={state:initialState(),initialState,resetDemoState,emptyRecord,newAccount,nextId,PEOPLE,HOME_NAME,icon,escape,button,link,avatar,badge,account,visibleStories,duration,views:{}};
 }
 
 

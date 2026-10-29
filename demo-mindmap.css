@@ -1,12 +1,12 @@
 /* 导图属于原型演示工具，独立滚动，不改变手机画板与业务字号。 */
 .demo-mindmap{width:min(96vw,1600px);height:92dvh;max-width:none;max-height:none;padding:0;border:1px solid var(--line);border-radius:16px;background:var(--canvas);color:var(--ink)}
-.demo-mindmap::backdrop{background:#172C23AA}
+.demo-mindmap::backdrop{background:#702023AA}
 .demo-mindmap[open]{display:flex;flex-direction:column}
 .demo-mindmap-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--surface);flex-shrink:0}
 .demo-mindmap-heading h2{font-size:21px}
 .demo-mindmap-heading>div{display:flex;gap:10px}
-.demo-mindmap-heading button{padding:9px 14px;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--green);font-size:15px;min-height:44px}
-#close-demo-mindmap{background:var(--green);color:var(--surface)}
+.demo-mindmap-heading button{padding:9px 14px;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--brand);font-size:15px;min-height:44px}
+#close-demo-mindmap{background:var(--brand);color:var(--surface)}
 .demo-mindmap-canvas{overflow:auto;flex:1;min-height:0;padding:12px}
 .demo-mindmap-canvas img{display:block;width:100%;max-width:1400px;height:100%;object-fit:contain;margin:auto}
 .demo-mindmap-canvas.is-zoomed img{width:1800px;max-width:none;height:auto;margin:0}

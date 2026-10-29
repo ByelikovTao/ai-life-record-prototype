@@ -96,14 +96,14 @@
   }
   /** 遮挡或背向相机的物件不显示悬浮标记。 */
   function visible(object) {for(let node=object;node;node=node.parent)if(!node.visible)return false;return true;}
-  /** 将故事标签投影到家具位置，视角变化时标签跟随三维物件。 */
+  /** 标签跟随三维物件投影，并按标签自身宽高留边，防止窄屏和大字号时裁掉操作。 */
   function projectHotspots(ctx) {
     const anchors=ctx.settings.mode==='tour'?ctx.tour.anchors:ctx.world.anchors;
     for(const [id,point]of Object.entries(anchors)){
       const label=ctx.host.querySelector(`.hotspot[data-value="${id}"]`),projected=point.clone().project(ctx.camera);
       const inside=(ctx.settings.mode==='tour'?ctx.tour.ready:visible(ctx.world.objects[id])) && projected.z>-1 && projected.z<1 && Math.abs(projected.x)<.83 && Math.abs(projected.y)<.92;
       label.hidden=!inside;
-      if(inside){label.style.left=((projected.x+1)*ctx.width/2)+'px';label.style.top=((1-projected.y)*ctx.height/2)+'px';}
+      if(inside){const halfWidth=label.offsetWidth/2+8,halfHeight=label.offsetHeight/2+8;label.style.left=T.MathUtils.clamp((projected.x+1)*ctx.width/2,halfWidth,ctx.width-halfWidth)+'px';label.style.top=T.MathUtils.clamp((1-projected.y)*ctx.height/2,halfHeight,ctx.height-halfHeight)+'px';}
     }
     const needle=ctx.host.querySelector('#memory-compass-needle');
     needle.style.transform=`rotate(${-T.MathUtils.radToDeg(ctx.settings[ctx.settings.mode].yaw)}deg)`;
@@ -250,7 +250,8 @@
       const current=request===mountRequest&&host.isConnected;if(active===ctx)active=null;
       disposeResources(ctx || {assets,renderer,scene,world,environment,tour,pipeline});
       if(!current)return;
-      host.dataset.renderState='error';viewport.innerHTML=`<div class="memory-error"><h2>三维空间暂时无法打开</h2><p>物件故事仍可阅读、查看来源和提问。相机控件暂不可用，可以重试加载，或使用支持 WebGL 的 Chrome／Edge。</p>${b('重新载入空间','space-retry','btn secondary compact')}</div>`;
+      // 失败只展示标明示意的静态老屋和重试入口，物件阅读仍走既有授权链路。
+      host.dataset.renderState='error';viewport.innerHTML=`<div class="memory-error"><h2>三维空间暂时无法打开</h2><p>物件故事仍可阅读、查看来源和提问。相机控件暂不可用，可以重试加载，或使用支持 WebGL 的 Chrome／Edge。</p>${b('重新载入空间','space-retry','btn full')}${b('阅读老家的故事','space-objects','btn secondary full section')}<small>示意复原，并非客户实景</small></div>`;
       syncControls();console.error('三维记忆空间初始化失败',error);
     }
   }

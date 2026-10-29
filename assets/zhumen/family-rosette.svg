@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <title>团花笺纹</title>
+  <desc>八瓣团花与双圆线构成的笺纸装饰，不表示家族徽记。</desc>
+  <defs><path id="petal" d="M40 34C28 25 28 12 40 7C52 12 52 25 40 34Z"/></defs>
+  <g fill="none" stroke="#AA5840" stroke-width="1">
+    <use href="#petal"/><use href="#petal" transform="rotate(45 40 40)"/>
+    <use href="#petal" transform="rotate(90 40 40)"/><use href="#petal" transform="rotate(135 40 40)"/>
+    <use href="#petal" transform="rotate(180 40 40)"/><use href="#petal" transform="rotate(225 40 40)"/>
+    <use href="#petal" transform="rotate(270 40 40)"/><use href="#petal" transform="rotate(315 40 40)"/>
+    <circle cx="40" cy="40" r="5"/><circle cx="40" cy="40" r="32" stroke="#C7A16D"/>
+    <circle cx="40" cy="40" r="35" stroke="#C7A16D" stroke-dasharray="2 4"/>
+  </g>
+</svg>

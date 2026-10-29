@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 420" preserveAspectRatio="none">
+  <title>家谱回纹角饰</title>
+  <desc>本地绘制的四角回纹装饰，不包含正文或交互。</desc>
+  <defs><g id="corner" fill="none" stroke="#A2402C" stroke-width="1.2">
+    <path vector-effect="non-scaling-stroke" d="M0 30V0h30M5 25V5h20v15H10V10h10M0 35h10v-5h20V0"/>
+  </g></defs>
+  <use href="#corner" transform="translate(8 8) scale(.7)"/>
+  <use href="#corner" transform="translate(352 8) rotate(90) scale(.7)"/>
+  <use href="#corner" transform="translate(352 412) rotate(180) scale(.7)"/>
+  <use href="#corner" transform="translate(8 412) rotate(270) scale(.7)"/>
+</svg>

@@ -13,18 +13,20 @@
     const s=P.state,items=s.stories.filter(item=>item.commonWith===s.actor&&item.scope!=='private'&&item.viewers.includes(s.actor)||item.author===s.actor&&item.commonWith);
     return `<div class="page"><h1 class="page-title">我们的共同回忆</h1><p class="page-subtitle">一起经历的事，随时记一段；想留成完整故事时，再把已有内容整理成故事集。</p>${s.actor!=='father'?b('记下一段共同回忆','family-common-new','btn full'):''}<h2 class="section">一起经历的事</h2>${items.map(memoryCard).join('')||'<p class="section">还没有共同回忆，可以从最近一起经历的一件小事开始。</p>'}${P.RelationshipChapters.overview()}<details class="section"><summary>我的授权申请</summary>${s.familyRequests.filter(item=>item.actor===s.actor).map(item=>`<p>${e(P.PEOPLE[item.person].name)} · ${{archive:'档案',digital:'交流',space:'场景'}[item.kind]} · ${{pending:'等待开放',accepted:'已同意',declined:'暂未开放'}[item.status]}</p>`).join('')||'<p>暂无申请。</p>'}</details>${l('返回我的','profile','text-link full')}</div>`;
   }
-  /** 用明确状态区分待确认与已确认，仍以原纳入记录判断，不额外存放确认标记。 */
+  /** 封面复用原记录的示例影像，确认状态仍由纳入记录判断，不新增分享或确认标记。 */
   function memoryCard(item){
     const included=P.FamilyContext.inArchive(item,item.commonWith),reviewed=item.inclusions?.[item.commonWith]?.reviewed;
     const status=included?'已确认':item.scope==='private'?'仅自己保存':reviewed?'暂未纳入':'待确认';
-    return `<article class="card section" data-common-memory="${e(item.id)}"><div class="tags">${t(status,included?'':'warm')}</div><h2>${e(item.title)}</h2><p>${e(P.PEOPLE[item.author].name)}讲述 · 与${e(P.PEOPLE[item.commonWith].name)}共同经历</p><p class="caption">${included?'已纳入对方传记':'尚未纳入对方传记'} · ${item.inclusions?.[item.commonWith]?.ai?'已允许数字人引用':'未用于数字人问答'}</p>${item.author===P.state.actor?l('查看原始回忆','story/'+item.id,'text-link'):b('核对内容与范围','family-consent','btn secondary',`data-id="${item.id}"`)}</article>`;
+    const cover=['family','room'].includes(item.image)?`<img class="common-memory-photo" src="assets/${item.image}.png" alt="原记录使用的AI生成家庭场景示例">`:'';
+    return `<article class="card section" data-common-memory="${e(item.id)}">${cover}<div class="tags">${t(status,included?'':'warm')}</div><h2>${e(item.title)}</h2><p>${e(P.PEOPLE[item.author].name)}讲述 · 与${e(P.PEOPLE[item.commonWith].name)}共同经历</p><p class="caption">${included?'已纳入对方传记':'尚未纳入对方传记'} · ${item.inclusions?.[item.commonWith]?.ai?'已允许数字人引用':'未用于数字人问答'}</p>${item.author===P.state.actor?l('查看原始回忆','story/'+item.id,'text-link'):b('核对内容与范围','family-consent','btn secondary',`data-id="${item.id}"`)}</article>`;
   }
-  /** 继续已有草稿时保留自身记录、共同回忆和经历补充的原去向。 */
+  /** 记录标题按语义替换完整标题节点，换行排版不影响原有记录去向。 */
   function record(base) {
     const s=P.state,r=s.record,target=r.subject||P.FamilyContext.current();
+    const titlePattern=/<h1 class="page-title">[\s\S]*?<\/h1>/;
     // 从传记分类添加时固定当前人物，避免切换记录去向后脱离原分类。
-    if(r.archiveAddition)return base.replace('今天，想讲点什么？','补充一段人生经历').replace(/<select id="record-kind" name="kind">[\s\S]*?<\/select>/,`<select id="record-kind" name="kind"><option value="${r.kind}">${e(P.PEOPLE[target].name)}的人生经历${target===s.actor?'':' · 提交本人核对'}</option></select>`);
-    let html=base.replace('今天，想讲点什么？',r.kind==='common'?'留下我们共同经历的一刻':r.kind==='contribution'?'补充我记得的细节':'记录我自己的生活');
+    if(r.archiveAddition)return base.replace(titlePattern,'<h1 class="page-title">补充一段人生经历</h1>').replace(/<select id="record-kind" name="kind">[\s\S]*?<\/select>/,`<select id="record-kind" name="kind"><option value="${r.kind}">${e(P.PEOPLE[target].name)}的人生经历${target===s.actor?'':' · 提交本人核对'}</option></select>`);
+    let html=base.replace(titlePattern,`<h1 class="page-title">${r.kind==='common'?'留下我们共同经历的一刻':r.kind==='contribution'?'补充我记得的细节':'记录我自己的生活'}</h1>`);
     const options=r.kind==='own'?'<option value="own">记录我自己的人生</option>':`<option value="common" ${r.kind==='common'?'selected':''}>我们的共同回忆 · ${e(P.PEOPLE[target]?.name||'家人')}</option><option value="contribution" ${r.kind==='contribution'?'selected':''}>补充对方经历，提交本人核对</option>`;
     html=html.replace(/<select id="record-kind" name="kind">[\s\S]*?<\/select>/,`<select id="record-kind" name="kind">${options}</select>`);
     return html.replace('自己的记录由你确认；补充他人的经历，会保留你的讲述者身份。','共同回忆先保存为你的原稿；对方确认后才纳入其传记，数字人引用需另外授权。');

@@ -1,0 +1,9 @@
+<!-- 章节专用盘长结线稿；短形轮廓与长流苏挂饰分工，避免缩小后无法辨认。 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="#B51E1B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path id="loop" d="M16 16C8 12 4 9 6 5C10 1 14 7 16 16Z"/>
+  <use href="#loop" transform="rotate(90 16 16)"/>
+  <use href="#loop" transform="rotate(180 16 16)"/>
+  <use href="#loop" transform="rotate(270 16 16)"/>
+  <path d="m16 8 8 8-8 8-8-8Z"/>
+  <path d="m12 12 8 8m0-8-8 8M16 2v5M2 16h5m18 0h5M16 25v5"/>
+</svg>
