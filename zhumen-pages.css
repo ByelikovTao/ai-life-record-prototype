@@ -361,3 +361,10 @@
 .phone[data-route=space] .memory-mode-picker button.active{background:#A53425;color:#FFF8E8}
 .phone[data-route=space] .era-picker button.active{background:#EEDBC1;color:#913829}
 .phone:is([data-route=life],[data-route=chat],[data-route=space],[data-route=profile],[data-route=share-memory],[data-route=share-preview],[data-route=share-gifts],[data-route=photo-restore]) .bottom-nav{background:#FBF7EF;border-top:3px double #D6BFA3}
+
+/* 人物切换作为封面左侧轻量工具，保留原生选择与读屏标签，不横跨人物肖像。 */
+.phone .archive-cover-heading .archive-person-picker{position:relative;width:176px;max-width:54%;margin:0 0 16px}
+.phone .archive-person-picker>label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;padding:0;margin:0}
+.phone .archive-person-picker>label:before{content:none}
+.phone .archive-cover-heading .archive-person-picker select{display:block;width:100%;min-width:0;min-height:44px;padding:8px 24px 8px 12px;font-size:calc(14px * var(--unit));line-height:1.5;border:1px solid #C8AE8B;border-radius:4px;background-color:#FFF8E8CC;color:#8D3428;text-overflow:ellipsis}
+.phone.large-type .archive-cover-heading .archive-person-picker{width:100%;max-width:100%}
