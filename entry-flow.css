@@ -78,27 +78,28 @@
 .install-progress p{font-size:calc(12px * var(--unit));color:var(--secondary);margin-top:8px}
 @keyframes entry-install{from{transform:translateX(-100%)}to{transform:translateX(185%)}}
 
-/* 登录按原稿采用紧凑封面和单一表单；演示填号降为字段旁辅助动作。 */
-.login-page{padding:0 24px 24px}
-.login-page>.entry-back{position:absolute;top:8px;right:8px;z-index:2;color:white;width:32px;min-height:32px;background:#63231F66;border-radius:50%;display:grid;place-items:center}
-.login-brand{position:relative;isolation:isolate;text-align:left;margin:0 -24px 16px;padding:16px 24px 16px;background:#AB2420;color:#FFFCF5;overflow:hidden}
-.login-brand:after{content:"";position:absolute;z-index:-1;top:0;right:0;bottom:0;width:54%;background:url("assets/zhumen/entry-login-door.png") right center/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 32%);pointer-events:none}
-.login-seal{display:inline-block;border:1px solid #FFF1D8;border-radius:4px;padding:2px 4px;font-size:calc(12px * var(--unit));line-height:1;margin-bottom:8px}
-.login-brand h1{font-size:calc(36px * var(--unit));line-height:1.1112;margin-bottom:8px;font-weight:400;max-width:65%;color:inherit}
-.login-brand p{font-size:calc(14px * var(--unit));line-height:1.5;max-width:60%}
+/* 登录沿用归家封面的纸色、屋檐与淡山水；背景连续铺满，表单保持原有操作。 */
+.login-page{padding:0 24px 24px;background:#FBF7EF;color:#49372B}
+.login-page:before{content:"";position:absolute;inset:0;z-index:-1;background:url("assets/zhumen/home-ink-landscape.png") center top/100% 1600px repeat-y;opacity:.28;pointer-events:none}
+.login-page>.entry-back{position:absolute;top:8px;right:8px;z-index:2;color:#96382C;width:44px;min-height:44px;background:#FBF7EFCC;border-radius:4px;display:grid;place-items:center}
+.login-brand{position:relative;isolation:isolate;text-align:left;margin:0 -24px 16px;padding:16px 24px 24px;background:transparent;color:#49372B;overflow:hidden}
+.login-brand:after{content:"";position:absolute;z-index:-1;inset:0;background:url("assets/zhumen/entry-market-corner.png") right top/auto 100% no-repeat;mask-image:linear-gradient(to bottom,#000 65%,transparent);opacity:.72;pointer-events:none}
+.login-seal{display:inline-block;border:3px double #FFF3DB;outline:1px solid #A53425;border-radius:0;background:#A53425;color:#FFF3DB;padding:2px 4px;font:12px/1 KaiTi,STKaiti,serif;margin-bottom:8px}
+.login-brand h1{font-family:KaiTi,STKaiti,serif;font-size:calc(30px * var(--unit));line-height:1.2;margin-bottom:8px;font-weight:600;max-width:65%;color:inherit}
+.login-brand p{font-size:calc(14px * var(--unit));line-height:1.5;max-width:60%;color:#705D49}
 .login-phone-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .phone .entry-fill{min-height:24px;padding:0;border:0;background:transparent;color:var(--brand);font-size:calc(12px * var(--unit));white-space:nowrap}
 .login-phone-heading>label,.entry-login>label:not(.entry-consent),.entry-login legend{display:block;margin:0;padding-left:28px;font-size:calc(16px * var(--unit));line-height:1.5;font-weight:600;background:url("assets/zhumen/chinese-knot-mark.svg") left center/20px no-repeat}
 .entry-login>label:not(.entry-consent){margin:24px 0 8px}
-.phone.entry-mode .entry-login :is(input[type=tel],input[name=code]){width:100%;min-width:0;min-height:48px;border:1px solid #C9BEB3;border-radius:6px;padding:8px 12px;background:#FFFDFA;font-size:calc(16px * var(--unit));line-height:1.5}
-.entry-code-row{display:flex;gap:4px;padding:4px;border:1px solid #C9BEB3;border-radius:6px;background:#FFFDFA}
+.phone.entry-mode .entry-login :is(input[type=tel],input[name=code]){width:100%;min-width:0;min-height:48px;border:1px solid #CBB697;border-radius:4px;padding:8px 12px;background:#FFFDFA;font-size:calc(16px * var(--unit));line-height:1.5}
+.entry-code-row{display:flex;gap:4px;padding:4px;border:1px solid #CBB697;border-radius:4px;background:#FFFDFA}
 .phone.entry-mode .entry-code-row input[name=code]{flex:1;width:0!important;border:0;padding:8px;min-height:40px;background:transparent}
 .phone.entry-mode .entry-send{min-height:40px;color:var(--brand);background:transparent;border:1px solid var(--brand);border-radius:6px;padding:8px 12px;font-size:calc(14px * var(--unit))}
 .entry-login fieldset{border:0;padding:0;margin:24px 0 16px}
 .entry-login legend{margin:0 0 8px}
-.entry-login fieldset label{display:flex;align-items:center;gap:12px;font-size:calc(18px * var(--unit));padding:4px 12px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px;background:#FFFDFA;min-height:72px}
+.entry-login fieldset label{display:flex;align-items:center;gap:12px;font-size:calc(18px * var(--unit));padding:4px 12px;border:1px solid #D4BFA4;border-radius:4px;margin-bottom:8px;background:#FFFAF1E6;min-height:72px}
 .entry-login fieldset label:last-child{margin-bottom:0}
-.entry-login fieldset label:has(input:checked){border-color:var(--brand);background:#FFF2EA;color:var(--brand)}
+.entry-login fieldset label:has(input:checked){border-color:#A53425;background:#F4E8D7;color:#8D3428}
 .entry-login fieldset label>span:not(.avatar){flex:1;min-width:0}
 .login-person-portrait{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0}
 .entry-login input[type=radio],.entry-consent input{accent-color:var(--brand);width:20px;height:20px;flex-shrink:0}
@@ -109,7 +110,7 @@
 .entry-text{background:none;color:var(--brand);padding:0;font-size:inherit;min-height:24px!important}
 .entry-error{font-size:calc(14px * var(--unit));color:var(--danger);padding:8px 0}
 .entry-error:empty{display:none}
-.entry-login>.entry-primary{margin-top:24px;font-size:calc(18px * var(--unit));font-weight:400}
+.entry-login>.entry-primary{margin-top:24px;font-size:calc(18px * var(--unit));font-weight:400;background:#A53425;border-radius:4px}
 .entry-demo{margin-top:16px;color:var(--secondary);font-size:calc(12px * var(--unit));line-height:1.5;text-align:center}
 
 /* 窄屏与两倍字号以内容自然增高为主，不裁剪搜索、身份或协议操作。 */
