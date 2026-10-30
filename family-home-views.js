@@ -49,11 +49,10 @@
     const doc=P.FamilyHome.document('preface',person);
     return `<section class="heritage-preface" data-home-section="preface">${heading('建谱致谢')}${doc?`<p class="heritage-preface-copy">${e(doc.text)}</p>`:'<p class="heritage-empty">建谱致谢尚待本人补充。</p>'}</section>`;
   }
-  /** 家训按原句读分组换行，保留正文与确认人；管理与家人建议在首页内容页处理。 */
+  /** 家训保留正文与确认人；管理、来源和家人建议在首页内容页处理。 */
   function motto(person) {
     const home=P.FamilyHome.ensure(),doc=P.FamilyHome.document('motto',person),owner=home.family.mottoOwner;
-    const text=doc?doc.text.split('\n').map(line=>`<span class="heritage-motto-line">${line.split(/(?<=[，。！？；])/u).filter(Boolean).map(phrase=>`<span class="heritage-motto-phrase">${e(phrase)}</span>`).join('')}</span>`).join('\n'):'';
-    return `<section class="heritage-motto" data-home-section="motto">${heading('家训')}${doc?`<p class="heritage-motto-text">${text}</p><p class="heritage-caption">${doc.kind==='new'?'新立家训':'家族传承'} · <strong class="heritage-owner-name">${e(P.PEOPLE[owner]?.name||'家庭指定本人')}</strong>${doc.kind==='new'?'立':'整理确认'}</p>`:'<p class="heritage-empty">家训尚未建立，等待指定的档案本人确认。</p>'}</section>`;
+    return `<section class="heritage-motto" data-home-section="motto">${heading('家训')}${doc?`<p class="heritage-motto-text">${e(doc.text)}</p><p class="heritage-caption">${doc.kind==='new'?'新立家训':'家族传承'} · <strong class="heritage-owner-name">${e(P.PEOPLE[owner]?.name||'家庭指定本人')}</strong>${doc.kind==='new'?'立':'整理确认'}</p>`:'<p class="heritage-empty">家训尚未建立，等待指定的档案本人确认。</p>'}</section>`;
   }
   /** 卡片仅呈现年份、经历摘要与已关联的照片，口述经历无需补造封面。 */
   function eventCard(story,person) {

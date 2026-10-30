@@ -307,21 +307,8 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-banner .heritage-preface{grid-template-columns:20px minmax(0,1fr);column-gap:10px}
 .phone .heritage-banner .heritage-section-head h2{font-size:calc(18px * var(--unit));line-height:1.333;letter-spacing:3px}
 .phone .heritage-banner .heritage-preface-copy{font-size:calc(14px * var(--unit));line-height:1.7143}
-/* 家训采用朱红题签与完整双线笺框，正文优先于确认人，窄列按原句均衡换行。 */
-.phone .heritage-banner .heritage-motto{grid-template-columns:40px minmax(0,1fr);gap:12px;margin-top:24px;padding:16px 12px;border:3px double #AF7055;background:#FFF8EAF2}
-.phone .heritage-banner .heritage-motto .heritage-section-head{grid-row:1;align-self:start;justify-self:start}
-.phone .heritage-banner .heritage-motto .heritage-section-head h2{padding:8px 4px;border:3px double #FFF3DB;outline:1px solid #A53425;background:#A53425;color:#FFF3DB;font-size:calc(18px * var(--unit));line-height:1.3333;letter-spacing:4px}
-.phone .heritage-banner .heritage-motto-text{min-width:0;font-size:calc(24px * var(--unit));line-height:1.6667;font-weight:600;color:#762C23;letter-spacing:0;text-align:center;white-space:normal;text-wrap:balance;margin:0}
-.phone .heritage-banner .heritage-motto-line{display:block}
-.phone .heritage-banner .heritage-motto-line+.heritage-motto-line{margin-top:8px}
-.phone .heritage-banner .heritage-motto-phrase{display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere}
-.phone .heritage-banner .heritage-motto .heritage-caption{grid-column:1/-1;color:#8A725B;margin:4px 0 0}
-.phone .heritage-banner .heritage-motto:before{top:-14px;background-color:#FFF8EA}
-/* 大字号将题签与正文上下排列，避免纵向印签挤占正文宽度。 */
-.phone.large-type .heritage-banner .heritage-motto{display:block}
-.phone.large-type .heritage-banner .heritage-motto .heritage-section-head h2{display:inline-block;writing-mode:horizontal-tb;letter-spacing:4px;margin:0}
-.phone.large-type .heritage-banner .heritage-motto-text{margin:16px 0}
-
+.phone .heritage-banner .heritage-motto{grid-template-columns:20px minmax(0,1fr);column-gap:8px;margin-top:24px;padding-top:24px;border-color:#B48B69}
+.phone .heritage-banner .heritage-motto-text{font-size:calc(20px * var(--unit));line-height:1.6;letter-spacing:0;text-align:left}
 .phone .heritage-banner .heritage-caption{line-height:1.5}
 .phone .heritage-banner .heritage-preface:has(.heritage-preface-copy):after{position:absolute;right:8px;top:32px;width:56px;height:56px;margin:0;opacity:.12;z-index:-1}
 .phone .heritage-banner:after{content:"";position:absolute;inset:0;z-index:-1;background:url("assets/zhumen/family-meander-frame.svg") center/100% 100% no-repeat;opacity:.25;pointer-events:none}
