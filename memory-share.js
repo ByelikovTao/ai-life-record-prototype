@@ -3,18 +3,19 @@
 {
   const P=window.App;
   /** 草稿绑定登录账号，切换账号不会继承他人的待发布内容。 */
-  function state() {return P.state.memoryShare ||= {drafts:{},published:[],gifts:[],restore:null};}
-  function draft() {return state().drafts[P.state.actor] ||= {assetId:'',caption:'',confirmed:false,url:'',restored:false};}
+  function state() {return P.state.memoryShare ||= {drafts:{},published:[],gifts:[],effect:null};}
+  function draft() {return state().drafts[P.state.actor] ||= {assetId:'',caption:'',confirmed:false,url:'',variant:'original'};}
   /** 分享仅由资料归属本人确认，资料自身和人物档案须同时可读。 */
   function candidates() {return [...P.PersonArchive.assets(P.state.actor,'photo'),...P.PersonArchive.videos(P.state.actor)].filter(item=>item.subject===P.state.actor&&['photo','film','clip'].includes(item.kind)&&/^assets\//.test(item.poster));}
   function selected() {return candidates().find(item=>item.id===draft().assetId);}
-  /** 仅当前本人已保留的预制修复结果可以进入分享，原素材仍用于授权核验。 */
-  function poster(item) {const r=state().restore;return draft().restored&&r?.actor===P.state.actor&&r.id===item.id&&r.saved&&item.id==='father-photo-youth'?'assets/zhumen/life-youth-restored-demo.png':item.poster;}
+  /** 预览与访客快照共用同一效果目录，原档案照片不被改写。 */
+  function poster(item) {return item.kind==='photo'?P.MemoryImageEffects.presentation(item).src:item.poster;}
   /** 仅确认后制作公开快照；不把整个影片库或家庭授权转成公开权限。 */
   function publish() {
     const value=draft(),item=selected();
     if(!item||!value.confirmed)return P.toast('请核对选中的内容，并确认愿意分享给朋友。');
-    const snapshot={v:1,ref:P.nextId('memory'),owner:P.state.actor,name:P.PEOPLE[P.state.actor].name,kind:item.kind==='photo'?'photo':'video',title:item.title+(value.restored?' · 修复示例':''),caption:value.caption,poster:poster(item),src:value.restored?poster(item):item.src||item.poster,year:item.year};
+    const media=P.MemoryImageEffects.presentation(item);
+    const snapshot={v:1,ref:P.nextId('memory'),owner:P.state.actor,name:P.PEOPLE[P.state.actor].name,kind:item.kind==='photo'?'photo':'video',title:media.title,caption:value.caption,poster:item.kind==='photo'?media.src:item.poster,src:media.src,year:media.year};
     const url=new URL('memory.html',location.href);url.searchParams.set('s',MemoryShareCodec.encode(snapshot));
     value.url=url.href;state().published.push({actor:P.state.actor,ref:snapshot.ref,url:value.url,title:item.title});P.render();
   }
@@ -26,12 +27,6 @@
       else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value.url);P.toast('链接已复制，可以自己选择发给哪位朋友。');}
       else P.toast('请选中下方链接复制，再发给朋友。');
     }catch(error){if(error.name!=='AbortError')P.toast('未能完成分享，链接仍在下方，可以复制。');}
-  }
-  /** 修复结果仅为预制示例；其他照片的请求不伪装成已调用真实AI。 */
-  function restore(id) {
-    const item=P.PersonArchive.getItem(id);
-    if(!item||item.kind!=='photo'||item.subject!==P.state.actor)return P.toast('请由照片归属本人打开这项服务。');
-    state().restore={actor:P.state.actor,id,ready:false,saved:false};P.navigate('photo-restore');
   }
   /** 只有演示的已确认预约在完成拍摄后产生双向服务礼，不记现金与积分。 */
   function advanceGift() {
@@ -46,13 +41,15 @@
   document.addEventListener('click',event=>{
     const el=event.target.closest('[data-memory]');if(!el)return;
     event.preventDefault();const action=el.dataset.memory;
-    if(action==='open'){if(el.dataset.id)draft().assetId=el.dataset.id;draft().restored=el.dataset.restored==='1';draft().url='';draft().confirmed=false;P.navigate('share-memory');}
+    if(action==='open'){if(el.dataset.id)draft().assetId=el.dataset.id;draft().variant='original';draft().url='';draft().confirmed=false;P.navigate('share-memory');}
     if(action==='preview'){if(!selected())return P.toast('先选一张照片或一段影片。');P.navigate('share-preview');}
     if(action==='publish')publish();
     if(action==='deliver')deliver();
-    if(action==='restore')restore(el.dataset.id);
-    if(action==='restore-result'){const r=state().restore;if(r?.actor===P.state.actor){r.ready=true;P.render();}}
-    if(action==='restore-save'){const r=state().restore;if(r?.actor===P.state.actor&&r.ready){r.saved=true;P.render();}}
+    if(action==='restore')P.MemoryImageEffects.open('restore',el.dataset.id);
+    if(action==='effect-open')P.MemoryImageEffects.open(el.dataset.kind);
+    if(action==='effect-result')P.MemoryImageEffects.result();
+    if(action==='effect-use')P.MemoryImageEffects.use();
+    if(action==='effect-original'){draft().variant='original';draft().confirmed=false;draft().url='';P.render();}
     if(action==='gift-demo')advanceGift();
     if(action==='owner-demo'){P.changeActor('father');P.navigate('share-memory');}
   });
@@ -61,9 +58,9 @@
     const el=event.target;
     if(!el.closest('#memory-compose'))return;
     const value=draft();
-    if(el.name==='asset'){value.assetId=el.value;value.restored=false;value.confirmed=false;value.url='';}
+    if(el.name==='asset'){value.assetId=el.value;value.variant='original';value.confirmed=false;value.url='';}
     if(el.name==='caption'){value.caption=el.value.slice(0,180);value.confirmed=false;value.url='';}
   });
   document.addEventListener('change',event=>{if(event.target.id==='memory-confirm')draft().confirmed=event.target.checked;});
-  P.MemoryShare={state,draft,candidates,selected,restore,poster};
+  P.MemoryShare={state,draft,candidates,selected,poster};
 }
