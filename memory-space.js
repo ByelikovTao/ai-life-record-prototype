@@ -1,12 +1,12 @@
-/** 三维记忆空间：模型全览、室内视角和故事物件交互。 */
+/** 故里只提供老家全景、年代对照和故事物件交互。 */
 'use strict';
 {
   const P=window.App,T=window.MemoryThree;
   const {icon:i,button:b,escape:e}=P;
   const ITEMS={desk:{label:'旧书桌',title:'那张一直没换的书桌',text:'很多故事，就从这扇窗边开始。',source:'old-home'},radio:{label:'收音机',title:'晚饭后的收音机',text:'关于这台收音机、晚饭后听过什么节目，现有记录还没有讲清楚。可以先看看同一老宅的相关资料，或把问题留给本人补充。',source:'old-home',sourceLabel:'查看老宅相关记录'},photo:{label:'全家福',title:'墙上的那张全家福',text:'走向不同的城市之后，这个家仍把我们连在一起。',source:'spring'}};
   const STOPS={entry:{x:0,z:2.12,yaw:0,pitch:-.06},desk:{x:.65,z:-.18},radio:{x:-.75,z:-.65},photo:{x:-.3,z:-1.52}};
-  /** 观察方式用日常用语呈现，内部模式与相机操作保持原有契约。 */
-  const MODE_NAMES={tour:'看看老家',model:'屋子全貌',walk:'四处走走'};
+  /** 故里仅保留全景观察入口，不再允许切换模型全览或室内漫游。 */
+  const MODE_NAMES={tour:'看看老家'};
   let active=null;
   let mountRequest=0;
   const CAMERA_ACTIONS=['space-focus','space-step','space-zoom','space-reset'];
@@ -20,6 +20,7 @@
   /** 相机状态保存在原型内存，界面更新不会意外重置观察方向。 */
   function settings() {
     if(!P.state.spaceCamera)P.state.spaceCamera={mode:'tour',dockCollapsed:true,tour:{yaw:.18,pitch:-.04,zoom:1},model:{yaw:-.43,pitch:.68,zoom:1},walk:{...STOPS.entry,zoom:1}};
+    P.state.spaceCamera.mode='tour';
     return P.state.spaceCamera;
   }
   /** 每次从其他页面进入先看场景，同页字号和重试重绘不覆盖用户刚展开的状态。 */

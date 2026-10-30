@@ -368,3 +368,6 @@
 .phone .archive-person-picker>label:before{content:none}
 .phone .archive-cover-heading .archive-person-picker select{display:block;width:100%;min-width:0;min-height:44px;padding:8px 24px 8px 12px;font-size:calc(14px * var(--unit));line-height:1.5;border:1px solid #C8AE8B;border-radius:4px;background-color:#FFF8E8CC;color:#8D3428;text-overflow:ellipsis}
 .phone.large-type .archive-cover-heading .archive-person-picker{width:100%;max-width:100%}
+
+/* 单一观察方式用紧凑题签呈现，不保留空的多选分栏。 */
+.phone[data-route=space] .memory-mode-picker{display:inline-flex;min-width:120px}
