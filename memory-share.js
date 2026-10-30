@@ -10,20 +10,20 @@
   function selected() {return candidates().find(item=>item.id===draft().assetId);}
   /** 预览与访客快照共用同一效果目录，原档案照片不被改写。 */
   function poster(item) {return item.kind==='photo'?P.MemoryImageEffects.presentation(item).src:item.poster;}
-  /** 仅确认后制作公开快照；不把整个影片库或家庭授权转成公开权限。 */
+  /** 确认后只生成一份共忆链接；朋友可只观看或自愿补充，不再另走邀请流程。 */
   function publish() {
     const value=draft(),item=selected();
     if(!item||!value.confirmed)return P.toast('请核对选中的内容，并确认愿意分享给朋友。');
     const media=P.MemoryImageEffects.presentation(item);
-    const snapshot={v:1,ref:P.nextId('memory'),owner:P.state.actor,name:P.PEOPLE[P.state.actor].name,kind:item.kind==='photo'?'photo':'video',title:media.title,caption:value.caption,poster:item.kind==='photo'?media.src:item.poster,src:media.src,year:media.year};
-    const url=new URL('memory.html',location.href);url.searchParams.set('s',MemoryShareCodec.encode(snapshot));
-    value.url=url.href;state().published.push({actor:P.state.actor,ref:snapshot.ref,url:value.url,title:item.title});P.render();
+    const snapshot={v:1,ref:ReunionContract.nextId('reunion'),owner:P.state.actor,name:P.PEOPLE[P.state.actor].name,kind:item.kind==='photo'?'photo':'video',title:media.title,caption:value.caption,poster:item.kind==='photo'?media.src:item.poster,src:media.src,year:media.year};
+    const url=P.Reunion.create(snapshot);if(!url)return;
+    value.url=url;state().published.push({actor:P.state.actor,ref:snapshot.ref,url:value.url,title:item.title});P.render();
   }
   /** 原生分享由本人触发；不支持时提供可复制链接，不自动向任何联系人发送。 */
   async function deliver() {
     const value=draft();if(!value.url||!selected())return P.toast('内容已变化，请重新核对生成链接。');
     try {
-      if(navigator.share&&location.protocol==='https:')await navigator.share({title:'与故人说旧事',text:value.caption,url:value.url});
+      if(navigator.share&&location.protocol==='https:')await navigator.share({title:'故人共忆',text:value.caption,url:value.url});
       else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value.url);P.toast('链接已复制，可以自己选择发给哪位朋友。');}
       else P.toast('请选中下方链接复制，再发给朋友。');
     }catch(error){if(error.name!=='AbortError')P.toast('未能完成分享，链接仍在下方，可以复制。');}
