@@ -44,10 +44,10 @@
   function origin(person) {
     return `<section class="heritage-origin" data-home-section="origin"><div class="heritage-origin-opening"><p class="heritage-chapter-note">留影 · 慢慢回看</p>${heading('家中影像')}${familyVideo(person)}</div>${kinship(person)}${b('阅读源流与族谱 '+i('arrow'),'heritage-origin','heritage-text-button',`data-person="${e(person)}"`)}</section>`;
   }
-  /** 建谱致谢直接呈现感谢与传承的全文及本人署名，不设置折叠入口。 */
+  /** 建谱致谢仅呈现感谢与传承的全文，不另列建档人署名或折叠入口。 */
   function preface(person) {
-    const doc=P.FamilyHome.document('preface',person),name=P.PEOPLE[person]?.name||'家人';
-    return `<section class="heritage-preface" data-home-section="preface">${heading('建谱致谢')}${doc?`<p class="heritage-preface-copy">${e(doc.text)}</p><div class="heritage-reading-footer"><strong class="heritage-owner-name">${e(name)}</strong></div>`:'<p class="heritage-empty">建谱致谢尚待本人补充。</p>'}</section>`;
+    const doc=P.FamilyHome.document('preface',person);
+    return `<section class="heritage-preface" data-home-section="preface">${heading('建谱致谢')}${doc?`<p class="heritage-preface-copy">${e(doc.text)}</p>`:'<p class="heritage-empty">建谱致谢尚待本人补充。</p>'}</section>`;
   }
   /** 家训保留正文与确认人；管理、来源和家人建议在首页内容页处理。 */
   function motto(person) {

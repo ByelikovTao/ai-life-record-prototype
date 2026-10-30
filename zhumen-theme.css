@@ -254,7 +254,6 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-cover .heritage-section-head:before{content:none}
 .phone .heritage-cover .heritage-section-head h2{writing-mode:vertical-rl;text-orientation:upright;color:#992A26;font-family:KaiTi,STKaiti,serif;font-size:calc(20px * var(--unit));line-height:1.2;letter-spacing:4px}
 .phone .heritage-cover .heritage-preface-copy{grid-column:2;color:#514238;font-size:calc(14px * var(--unit));line-height:1.7143;text-shadow:none}
-.phone .heritage-cover .heritage-reading-footer{grid-column:2;font-size:calc(12px * var(--unit));line-height:1.5;color:#8A6550;gap:8px;margin-top:8px;flex-wrap:wrap}
 .phone .heritage-cover .heritage-text-button{color:#A02E27;font-size:calc(12px * var(--unit));line-height:1.5;min-height:32px;padding:4px 0}
 .phone .heritage-cover .heritage-text-button:hover{background:#F6EADF}
 .phone .heritage-cover button:focus-visible{outline-color:#A02E27}
@@ -267,7 +266,6 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-chapter-note{font-size:calc(12px * var(--unit));line-height:1.5;color:#A07859;letter-spacing:2px}
 .phone .heritage-stories-note{font-size:calc(14px * var(--unit));line-height:1.5;color:#8B7665;margin:0 0 16px}
 /* 大字号采用单栏，不用缩字或遮挡正文维持普通字号构图。 */
-.phone.large-type .heritage-cover .heritage-reading-footer{align-items:flex-start}
 
 /* 首页顶部按参考图设置屋檐红梅灯笼，原生文字浮在左侧；横幅进入内容滚动而非固定占屏。 */
 .phone[data-route=home]:has(.heritage-banner) .app-header{display:none}
@@ -293,7 +291,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone.large-type .heritage-cover .heritage-section-head h2{writing-mode:horizontal-tb;letter-spacing:1px;margin-bottom:16px}
 
 /* 笺纸四角回纹、团花与中国结补足传统装饰；全部忽略指针，不遮挡原文和按钮。 */
-.phone .heritage-cover .heritage-preface:has(.heritage-reading-footer):after{content:"";grid-column:2;display:block;justify-self:center;width:56px;height:56px;margin-top:16px;background:url("assets/zhumen/family-rosette.svg") center/contain no-repeat;opacity:.5;pointer-events:none}
+.phone .heritage-cover .heritage-preface:has(.heritage-preface-copy):after{content:"";grid-column:2;display:block;justify-self:center;width:56px;height:56px;margin-top:16px;background:url("assets/zhumen/family-rosette.svg") center/contain no-repeat;opacity:.5;pointer-events:none}
 .phone .heritage-cover .heritage-motto:before{content:"";position:absolute;left:calc(50% - 12px);top:-14px;width:24px;height:24px;background:#F8EFDD url("assets/zhumen/chinese-knot-mark.svg") center/16px 24px no-repeat;pointer-events:none}
 /* 两倍字号保留细框，退让装饰，给原文和确认人留足阅读空间。 */
 .phone.large-type .heritage-cover .heritage-preface:after{display:none}
@@ -312,7 +310,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-banner .heritage-motto{grid-template-columns:20px minmax(0,1fr);column-gap:8px;margin-top:24px;padding-top:24px;border-color:#B48B69}
 .phone .heritage-banner .heritage-motto-text{font-size:calc(20px * var(--unit));line-height:1.6;letter-spacing:0;text-align:left}
 .phone .heritage-banner .heritage-caption{line-height:1.5}
-.phone .heritage-banner .heritage-preface:has(.heritage-reading-footer):after{position:absolute;right:8px;top:32px;width:56px;height:56px;margin:0;opacity:.12;z-index:-1}
+.phone .heritage-banner .heritage-preface:has(.heritage-preface-copy):after{position:absolute;right:8px;top:32px;width:56px;height:56px;margin:0;opacity:.12;z-index:-1}
 .phone .heritage-banner:after{content:"";position:absolute;inset:0;z-index:-1;background:url("assets/zhumen/family-meander-frame.svg") center/100% 100% no-repeat;opacity:.25;pointer-events:none}
 .phone .heritage-banner:before{content:"";position:absolute;right:8px;top:40px;width:20px;height:56px;background:url("assets/zhumen/chinese-knot-transparent.png") center/contain no-repeat;opacity:.7;pointer-events:none}
 /* 大字号把三部分恢复为上下阅读，正文仍属于同一幅背景，不做裁切。 */
