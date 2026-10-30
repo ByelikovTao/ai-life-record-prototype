@@ -41,6 +41,8 @@
   // 首页内容整理集中归属我的家庭，不增加主导航或首页操作。
   Object.assign(ROUTE_NAMES,{'share-memory':'与故人说旧事','share-preview':'分享前核对','photo-restore':'AI影像体验','share-gifts':'收到的心意'});
   Object.assign(TAB_PARENTS,{'share-memory':'home','share-preview':'home','photo-restore':'life','share-gifts':'profile'});
+  Object.assign(ROUTE_NAMES,{'reunion-new':'故人共忆','reunion-album':'故人共忆','reunion-albums':'共忆相册'});
+  Object.assign(TAB_PARENTS,{'reunion-new':'home','reunion-album':'home','reunion-albums':'home'});
   ROUTE_NAMES['home-manage']='首页内容';TAB_PARENTS['home-manage']='profile';
   NOTES['home-manage']=['集中整理，安心阅读','本人管理来源、建谱致谢与个人事迹，家庭指定本人确认家训；家人保留协助建议入口。'];
   let toastTimer;
