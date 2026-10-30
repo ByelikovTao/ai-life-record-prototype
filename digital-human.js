@@ -67,7 +67,7 @@
       <span class="avatar-preview-label">二维人物演示</span>${context?'':conversation(hello,messages)}</div>${context?conversation(hello,messages):''}
       <div class="avatar-live-status" data-phase="${s.phase}"><span aria-hidden="true"></span><p id="avatar-status" role="status">${e(s.status)}</p></div>
       ${P.BillingViews.chatQuota(P.state.chatTarget)}
-      </div><div class="avatar-footer"><div class="avatar-quick-actions" aria-label="可以从这些话题开始">${b(i('chat')+' '+(context?'继续聊这段内容':'聊聊过去'),'avatar-sample','avatar-topic')}${b(context?'还有哪些细节':'说说你的建议','avatar-prompt','avatar-topic',`data-question="${context?'还有哪些已经记录的细节？':'给我一些生活建议。'}"`)}</div>
+      </div><div class="avatar-footer"><div class="avatar-quick-actions" aria-label="可以从这些话题开始">${b(i('chat')+' '+(context?'继续聊这段内容':'聊聊过去'),'avatar-sample','avatar-topic')}${b(i('edit')+' '+(context?'还有哪些细节':'说说你的建议'),'avatar-prompt','avatar-topic',`data-question="${context?'还有哪些已经记录的细节？':'给我一些生活建议。'}"`)}</div>
       <form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">想和家人聊些什么</label><input id="chat-input" name="message" value="${e(P.state.chatDrafts[P.state.actor] || '')}" placeholder="${quotaEnded?'本年度答复额度已用完，可留言本人':'想说什么，慢慢告诉我…'}" autocomplete="off" ${quotaEnded?'disabled':''} required><button type="submit" aria-label="发送消息" ${quotaEnded?'disabled':''}>${i('send')}</button></form>
       <div class="avatar-call-controls">${b(i(s.callState==='paused'?'play':'pause')+' '+(s.callState==='paused'?'继续画面':'暂停画面'),'avatar-call-pause','avatar-call-action',`aria-pressed="${s.callState==='paused'}"`)}${b(i('close')+' 结束对话','avatar-call-end','avatar-call-action end','aria-label="结束视频对话演示"')}</div><p class="avatar-service-note">AI 画面与交流模拟 · 不采集摄像头或麦克风</p></div></section>`;
   }

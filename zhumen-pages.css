@@ -349,9 +349,33 @@
 .phone[data-route=chat] .avatar-stage{border:3px double #B58E66;border-radius:0;box-shadow:none}
 .phone[data-route=chat] :is(.avatar-greeting,.avatar-conversation .message:not(.user)){border:1px solid #D4BFA4;border-radius:4px;background:#FFF8EBF2;box-shadow:none}
 .phone[data-route=chat] .avatar-conversation .message.user{border-radius:4px;background:#A53425;color:#FFF8E8}
-.phone[data-route=chat] :is(.avatar-topic,.avatar-page .chat-form,.avatar-about-button,.avatar-call-action){border:1px solid #BDA181;border-radius:4px;background:#FFF8E8CC;box-shadow:none}
-.phone[data-route=chat] .avatar-page .chat-form input{background:transparent}
-.phone[data-route=chat] .avatar-call-action.end{background:#A53425;color:#FFF8E8}
+/* 操作区以纸笺话题、朱红发送印与轻量会面控制区分层级；不改变按钮动作。 */
+.phone[data-route=chat] .avatar-about-button{border:1px solid #BDA181;border-radius:4px;background:#FFF8E8CC;box-shadow:none}
+.phone[data-route=chat] .avatar-footer{gap:12px;padding-top:8px}
+.phone[data-route=chat] .avatar-quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.phone[data-route=chat] .avatar-topic{gap:8px;min-height:44px;padding:8px 12px;border:1px solid #D9C5A9;border-radius:4px;background:#FFF9EDE6;color:#7E392D;font-size:calc(14px * var(--unit));line-height:1.4286;text-align:center;box-shadow:none}
+.phone[data-route=chat] .avatar-topic .icon{width:16px;height:16px}
+.phone[data-route=chat] .avatar-page .chat-form{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;min-height:64px;padding:8px 8px 8px 16px;border:1px solid #C6A782;border-radius:8px;background:#FFFBF2;box-shadow:none}
+.phone[data-route=chat] .avatar-page .chat-form input{flex:1;flex-basis:auto;min-width:0;padding:8px 0;background:transparent;font-size:calc(16px * var(--unit));line-height:1.5;color:#49372B}
+.phone[data-route=chat] .avatar-page .chat-form input::placeholder{color:#8D7C69}
+.phone[data-route=chat] .avatar-page .chat-form button{flex:0 0 48px;width:48px;min-width:48px;height:48px;min-height:48px;padding:8px;border:3px double #FFF2D9;border-radius:4px;background:#A53425;box-shadow:0 0 0 1px #A53425;color:#FFF9ED}
+.phone[data-route=chat] .avatar-page .chat-form button .icon{width:20px;height:20px}
+/* 结束不使用大面积实色，避免与发送争夺主操作；控制仍保留完整触控高度。 */
+.phone[data-route=chat] .avatar-call-controls{gap:8px;align-items:center}
+.phone[data-route=chat] .avatar-call-action{gap:8px;min-height:44px;padding:8px 12px;border:1px solid transparent;border-radius:4px;background:transparent;color:#6F6050;font-size:calc(14px * var(--unit));line-height:1.4286;box-shadow:none}
+.phone[data-route=chat] .avatar-call-action.end{border-color:#DFC4B5;background:#F8EEE4;color:#963D30}
+.phone[data-route=chat] .avatar-call-action[aria-pressed=true]{border-color:#C6A782;background:#F1E5D1;color:#7E392D}
+.phone[data-route=chat] .avatar-service-note{font-size:12px;line-height:1.3333;color:#8C7A65;letter-spacing:0}
+.phone[data-route=chat] .avatar-footer :is(button,input):focus-visible{outline:2px solid #A53425;outline-offset:4px}
+.phone[data-route=chat] .avatar-page .chat-form:focus-within{border-color:#A53425;box-shadow:0 0 0 2px #A5342514}
+.phone[data-route=chat] .avatar-footer button:disabled{opacity:.45;cursor:not-allowed}
+@media(hover:hover){
+  .phone[data-route=chat] :is(.avatar-topic,.avatar-call-action):hover{background:#EFE1CC}
+  .phone[data-route=chat] .avatar-page .chat-form button:hover{background:#87291E}
+}
+.phone[data-route=chat] .avatar-footer button:active{opacity:.75}
+.phone.large-type[data-route=chat] .avatar-quick-actions{grid-template-columns:1fr}
+.phone.large-type[data-route=chat] .avatar-service-note{font-size:14px;line-height:1.4286}
 /* 故里仅统一画面上方的控件与故事纸笺，保持三维画布、相机和全屏尺寸。 */
 .phone[data-route=space] .scene-title{padding:8px;background:#FFF8E8DC;border:3px double #C7AA87;border-radius:0}
 .phone[data-route=space] .scene-title h1{font-family:KaiTi,STKaiti,serif;color:#49372B;letter-spacing:4px}
