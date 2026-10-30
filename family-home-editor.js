@@ -76,11 +76,11 @@
     delete home.drafts[entry.key];home.review=null;P.closeModal();P.navigate('home');P.toast(kind==='suggestion'?'建议已提交，等待指定的档案本人确认。':'已确认，首页内容已更新。');
   }
   /** 公共文化来源在独立阅读弹层中展示，链接只在用户主动点击时打开。 */
-  function read(kind,person) {
+  function readOrigin(person) {
     if(!F.readable(person))return P.toast('这位家人的档案尚未向你开放。');
-    const doc=F.document(kind,person),culture=F.culture[F.profile(person).surname];
-    const background=kind==='origin'?`<h3>姓氏文化</h3><p>${culture?e(culture.text):'姓氏文化资料尚未整理。'}</p>${culture?`<p class="heritage-caption">出处：<a href="${culture.url}" target="_blank" rel="noopener noreferrer">${e(culture.source)}</a></p>`:''}<h3>这个家的记载</h3>`:'';
-    P.modal(kind==='origin'?'家族源流与族谱':'创建家庭电子族谱的致谢',`<div class="heritage-reader">${background}<p>${doc?e(doc.text):'本人尚未补充确认。'}</p>${doc?.source?`<p class="heritage-caption">${e(doc.source)}</p>`:''}${kind==='origin'?P.FamilyHomeViews.kinship(person,true):''}</div>`);
+    const doc=F.document('origin',person),culture=F.culture[F.profile(person).surname];
+    const background=`<h3>姓氏文化</h3><p>${culture?e(culture.text):'姓氏文化资料尚未整理。'}</p>${culture?`<p class="heritage-caption">出处：<a href="${culture.url}" target="_blank" rel="noopener noreferrer">${e(culture.source)}</a></p>`:''}<h3>这个家的记载</h3>`;
+    P.modal('家族源流与族谱',`<div class="heritage-reader">${background}<p>${doc?e(doc.text):'本人尚未补充确认。'}</p>${doc?.source?`<p class="heritage-caption">${e(doc.source)}</p>`:''}${P.FamilyHomeViews.kinship(person,true)}</div>`);
   }
   /** 家人的建议保留讲述者，只有指定本人可取用到待确认草稿。 */
   function suggestions() {
@@ -94,7 +94,7 @@
     if(action==='heritage-edit')open(element.dataset.kind,person);
     else if(action==='heritage-save'){capture();P.closeModal();P.toast('草稿已保留在本次演示中，仅自己可见。');}
     else if(action==='heritage-publish')publish(element.dataset.review);
-    else if(action==='heritage-origin'||action==='heritage-preface')read(action.slice(9),person);
+    else if(action==='heritage-origin')readOrigin(person);
     else if(action==='heritage-suggest')open('suggestion',person);
     else if(action==='heritage-suggestions')suggestions();
     else if(action==='heritage-use-suggestion'&&F.editable('motto',person)){

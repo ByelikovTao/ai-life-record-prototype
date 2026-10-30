@@ -20,7 +20,8 @@
 .heritage-kinship{padding:12px;margin-top:12px;border:1px solid var(--home-line,#DED1BF);border-radius:8px;background:#F1E9DC}
 .heritage-caption{font-size:calc(12px * var(--unit));line-height:1.5;color:var(--home-muted,#796E62);overflow-wrap:anywhere}
 .heritage-preface{padding:16px;background:var(--home-surface);border:1px solid var(--home-line);border-radius:12px}
-.heritage-preface-copy{font-size:calc(16px * var(--unit));line-height:1.5;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+/* 致谢直接展示全文，内容随字号和屏幕宽度自然延展。 */
+.heritage-preface-copy{font-size:calc(16px * var(--unit));line-height:1.5;white-space:pre-line;display:block}
 .heritage-reading-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;font-size:calc(14px * var(--unit));color:var(--home-tea)}
 .heritage-motto{padding:16px;border:1px solid #C8AE8F;border-radius:12px;background:#F1E6D5}
 .heritage-home .heritage-motto-text{text-wrap:balance;white-space:pre-line;font-size:calc(24px * var(--unit));line-height:1.4;font-weight:600;margin:12px 0;color:var(--home-ink)}

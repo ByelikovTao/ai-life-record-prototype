@@ -253,7 +253,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-cover .heritage-section-head{display:block;grid-column:1;grid-row:1/3;margin:0}
 .phone .heritage-cover .heritage-section-head:before{content:none}
 .phone .heritage-cover .heritage-section-head h2{writing-mode:vertical-rl;text-orientation:upright;color:#992A26;font-family:KaiTi,STKaiti,serif;font-size:calc(20px * var(--unit));line-height:1.2;letter-spacing:4px}
-.phone .heritage-cover .heritage-preface-copy{grid-column:2;color:#514238;font-size:calc(14px * var(--unit));line-height:1.7143;-webkit-line-clamp:4;text-shadow:none}
+.phone .heritage-cover .heritage-preface-copy{grid-column:2;color:#514238;font-size:calc(14px * var(--unit));line-height:1.7143;text-shadow:none}
 .phone .heritage-cover .heritage-reading-footer{grid-column:2;font-size:calc(12px * var(--unit));line-height:1.5;color:#8A6550;gap:8px;margin-top:8px;flex-wrap:wrap}
 .phone .heritage-cover .heritage-text-button{color:#A02E27;font-size:calc(12px * var(--unit));line-height:1.5;min-height:32px;padding:4px 0}
 .phone .heritage-cover .heritage-text-button:hover{background:#F6EADF}
@@ -267,7 +267,6 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-chapter-note{font-size:calc(12px * var(--unit));line-height:1.5;color:#A07859;letter-spacing:2px}
 .phone .heritage-stories-note{font-size:calc(14px * var(--unit));line-height:1.5;color:#8B7665;margin:0 0 16px}
 /* 大字号采用单栏，不用缩字或遮挡正文维持普通字号构图。 */
-.phone.large-type .heritage-cover .heritage-preface-copy{display:block;-webkit-line-clamp:unset}
 .phone.large-type .heritage-cover .heritage-reading-footer{align-items:flex-start}
 
 /* 首页顶部按参考图设置屋檐红梅灯笼，原生文字浮在左侧；横幅进入内容滚动而非固定占屏。 */
@@ -309,7 +308,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone .heritage-banner .heritage-cover{grid-column:2;z-index:1}
 .phone .heritage-banner .heritage-preface{grid-template-columns:20px minmax(0,1fr);column-gap:10px}
 .phone .heritage-banner .heritage-section-head h2{font-size:calc(18px * var(--unit));line-height:1.333;letter-spacing:3px}
-.phone .heritage-banner .heritage-preface-copy{font-size:calc(14px * var(--unit));line-height:1.7143;-webkit-line-clamp:4}
+.phone .heritage-banner .heritage-preface-copy{font-size:calc(14px * var(--unit));line-height:1.7143}
 .phone .heritage-banner .heritage-motto{grid-template-columns:20px minmax(0,1fr);column-gap:8px;margin-top:24px;padding-top:24px;border-color:#B48B69}
 .phone .heritage-banner .heritage-motto-text{font-size:calc(20px * var(--unit));line-height:1.6;letter-spacing:0;text-align:left}
 .phone .heritage-banner .heritage-caption{line-height:1.5}
@@ -321,7 +320,6 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 .phone.large-type .heritage-banner .heritage-banner-copy{display:block;margin-bottom:32px}
 .phone.large-type .heritage-banner h1{font-size:calc(24px * var(--unit));line-height:1.333;letter-spacing:0}
 .phone.large-type .heritage-banner .heritage-preface{display:block}
-.phone.large-type .heritage-banner .heritage-preface-copy{display:block;-webkit-line-clamp:unset}
 .phone.large-type .heritage-banner:before,.phone.large-type .heritage-banner:after{display:none}
 
 /* 姓名使用朱红与字重强调，题签、致谢署名和家训确认人仍读取各自真实归属。 */

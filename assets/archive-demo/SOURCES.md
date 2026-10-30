@@ -10,7 +10,7 @@
 
 原图只读使用，没有覆盖：
 
-- `../family.png`、`../room.png`：本项目已有 AI 生成示例图，原始说明见 [生成说明](../生成说明.md)。
+- `../family.png`、`../room.png`：本项目已有 AI 生成示例图。
 - `../avatar/reference-person.png`：用户在当前会话提供的人物参考图，相关说明见 [人物来源](../avatar/SOURCES.md)。没有将用户提供的图片标为 CC0。
 
 本地生成工具为 [ffmpeg-static 5.2.0](https://www.npmjs.com/package/ffmpeg-static/v/5.2.0)，已通过 npm 元数据确认其官方仓库为 [eugeneware/ffmpeg-static](https://github.com/eugeneware/ffmpeg-static)。包配置使用 `b6.0` Windows x64 资产，实际执行版本为 `ffmpeg 6.0-essentials_build-www.gyan.dev`。工具与依赖仅安装在工作区临时目录 `tmp/archive-media/`，不属于 APP 运行依赖，FFmpeg 二进制与系统字体不放入原型交付包。

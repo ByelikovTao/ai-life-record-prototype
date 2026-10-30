@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" role="img" aria-labelledby="title desc">
-<title id="title">家和 · 虚构作品示意</title><desc id="desc">“家和”二字的书法作品归档示例。画面为标准字体排字示意，不是毛笔原迹或真实书法扫描。</desc>
-<!-- 代码绘制的作品展示示意，不是出版物封面或书画原作扫描。 -->
-<rect width="720" height="860" fill="#F0E9D9"/><rect x="35" y="35" width="650" height="790" rx="6" fill="#FBF8EF" stroke="#CEC4AD"/>
-<text x="360" y="124" text-anchor="middle" font-size="19" fill="#4D493E">个人作品 · 书法</text>
-<text x="360" y="400" text-anchor="middle" fill="#302F29" font-family="KaiTi,serif" font-size="148">家和</text><rect x="493" y="467" width="42" height="64" fill="#A05446"/><text x="514" y="493" fill="#fff" text-anchor="middle" font-size="16">示</text><text x="514" y="518" fill="#fff" text-anchor="middle" font-size="16">意</text>
-<text x="360" y="746" text-anchor="middle" font-size="20" fill="#4D493E">2024 · 虚构演示作品</text><text x="360" y="784" text-anchor="middle" font-size="17" fill="#7F786A">标准字体排字示意 · 非书法原迹</text>
-</svg>

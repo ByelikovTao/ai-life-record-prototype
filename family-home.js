@@ -9,7 +9,7 @@
     return {
       family:{name:'陈家',mottoOwner:'father',motto:{text:'诚实做人，认真做事。\n家人有难，彼此照应。',source:'从我这一代立下，留给家人一起践行。',kind:'new',date:'2026-10-29',confirmedBy:'father',revision:1},suggestions:[]},
       profiles:{
-        father:{surname:'陈',origin:{text:'父亲陈明德，1938年出生，是我认识这个家的起点。祖籍、支系和更早的迁徙，还想和家人一起翻翻旧资料，慢慢补齐。',source:'陈远山口述 · 虚构家庭示例',confirmedBy:'father',revision:1},preface:{text:'感谢父亲陈明德和家人的支持，让我来创建这份家庭电子族谱。\n愿把家族来处、家训和每个人的事迹记下来，让后辈知道我们从哪里来。',confirmedBy:'father',date:'2026-10-29',revision:1},featured:['school-days','wedding-day','first-order','spring']},
+        father:{surname:'陈',origin:{text:'父亲陈明德，1938年出生，是我认识这个家的起点。祖籍、支系和更早的迁徙，还想和家人一起翻翻旧资料，慢慢补齐。',source:'陈远山口述 · 虚构家庭示例',confirmedBy:'father',revision:1},preface:{text:'感谢父亲陈明德和家人的信任与支持，让我执笔留住家的故事。\n记下家族来处，珍藏家人往事，让后辈知根念亲，代代相传。',confirmedBy:'father',date:'2026-10-29',revision:1},featured:['school-days','wedding-day','first-order','spring']},
         mother:{surname:'林',origin:null,preface:null,featured:[]}
       },drafts:{},review:null
     };
