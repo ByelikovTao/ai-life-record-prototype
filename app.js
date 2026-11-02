@@ -102,10 +102,10 @@
   function captureInputs() {P.captureRecord();P.DigitalHuman?.captureDraft();P.QuestionInbox?.captureDrafts();captureFeatureInputs();}
   /** 首页、资料、纠正、关系章节及纪念书草稿在切页、换账号与字号变化前保存。 */
   function captureFeatureInputs() {P.FamilyHomeEditor.capture();P.MaterialLibrary.capture();P.AnswerFeedback.capture();P.RelationshipChapters.capture();P.KeepsakeBooks.capture();}
-  /** 导航离开录制页时保留输入并暂停录制演示；数字人始终使用无声动作。 */
+  /** 导航时关闭开屏并清理计时；离开录制页保留输入并暂停演示。 */
   function navigate(route) {
     if(!P.EntryFlow.authenticated()){P.EntryFlow.render();return;}
-    captureInputs();
+    P.LoginScroll.close(false);captureInputs();
     if(P.state.actor!=='father'&&route==='record'&&!P.state.record.subject&&!P.state.record.text.trim()){P.state.record.kind='common';P.state.record.subject=P.FamilyContext.current();}
     if(P.state.actor!=='father'&&route==='life')P.state.archivePerson=P.FamilyContext.current();
     if(route==='home')document.getElementById('app-content').scrollTop=0;
@@ -198,6 +198,7 @@
   function changeActor(id) {
     const s=P.state;
     if (!s.accounts[id]) return;
+    P.LoginScroll.close(false);
     captureInputs();
     P.PersonArchive?.stopPlayback();
     P.DigitalHuman?.stop();

@@ -1,0 +1,29 @@
+/* 绢纸上下展开，文字单独显露，避免随纸面缩放；木轴只使用位移动画。 */
+.login-scroll{position:absolute;inset:0;z-index:40;overflow:auto;background:#FBF7EF;color:#49372B;font-family:KaiTi,STKaiti,serif;isolation:isolate}
+.login-scroll:before{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/zhumen/home-ink-landscape.png') center top/100% 1600px repeat-y;opacity:.2;pointer-events:none}
+.login-scroll-top{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#FBF7EFF2;font-size:calc(14px * var(--unit));line-height:1.4286}
+.login-scroll-skip{min-height:44px;padding:8px 12px;border:1px solid #CCB898;border-radius:4px;background:#FBF7EF;color:#8D3428;font:inherit}
+.login-scroll-skip:hover{background:#F1E6D3}
+.login-scroll-skip:active{transform:translateY(1px)}
+.login-scroll-skip:focus-visible{outline:2px solid #A53425;outline-offset:4px}
+.login-scroll-main{max-width:420px;margin:auto;padding:24px 24px 40px;text-align:center}
+.login-scroll-eyebrow{margin:0 0 32px;font-size:calc(14px * var(--unit));line-height:1.4286;color:#8A745B;letter-spacing:4px}
+.login-scroll-wrap{position:relative;margin:0 8px}
+.login-scroll-paper{min-height:420px;padding:40px 24px 32px;border:1px solid #CBB493;background:#F4E7CD url('assets/zhumen/ivory-rice-paper.png') center/400px auto;transform-origin:center top;animation:login-scroll-unroll 1500ms cubic-bezier(.22,1,.36,1) both}
+.login-scroll-words{opacity:0;animation:login-scroll-ink 450ms cubic-bezier(.22,1,.36,1) 1050ms forwards}
+.login-scroll-words h1{margin:0 0 24px;font-size:calc(24px * var(--unit));line-height:1.3333;font-weight:400;letter-spacing:4px}
+.login-scroll-poem{display:flex;flex-direction:row-reverse;justify-content:center;gap:24px;margin:0 auto 24px}
+.login-scroll-poem p{writing-mode:vertical-rl;text-orientation:upright;margin:0;max-height:640px;font-size:calc(24px * var(--unit));line-height:1.3333;font-weight:400;letter-spacing:4px}
+.login-scroll-seal{display:inline-block;padding:4px;border:3px double #FFF0D6;outline:1px solid #A53425;background:#A53425;color:#FFF0D6;font-size:16px;line-height:1.5}
+.login-scroll-rod{position:absolute;top:0;left:-8px;right:-8px;height:16px;border:1px solid #84603E;border-radius:4px;background:#AC8358;box-shadow:inset 0 3px #D4B58B,inset 0 -3px #8B653F}
+.login-scroll-rod:before,.login-scroll-rod:after{content:'';position:absolute;top:-4px;width:12px;height:24px;border-radius:4px;background:#755336}
+.login-scroll-rod:before{left:-4px}.login-scroll-rod:after{right:-4px}
+.login-scroll-rod.is-bottom{animation:login-scroll-roll 1500ms cubic-bezier(.22,1,.36,1) both}
+.login-scroll-footer{margin:32px 0 0;font-size:calc(14px * var(--unit));line-height:1.4286;letter-spacing:2px;color:#8A745B}
+@keyframes login-scroll-unroll{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes login-scroll-roll{from{transform:translateY(0)}to{transform:translateY(calc(var(--scroll-drop) - 12px))}}
+@keyframes login-scroll-ink{to{opacity:1}}
+/* 双倍字号改为横排并自然增高，跳过操作保持粘顶可见。 */
+.large-type .login-scroll-poem{display:block}
+.large-type .login-scroll-poem p{writing-mode:horizontal-tb;max-height:none;overflow-wrap:anywhere;margin-bottom:16px}
+@media(prefers-reduced-motion:reduce){.login-scroll-paper,.login-scroll-rod.is-bottom{animation:none}.login-scroll-rod.is-bottom{transform:translateY(calc(var(--scroll-drop) - 12px))}.login-scroll-words{animation:none;opacity:1}}

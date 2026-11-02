@@ -57,9 +57,9 @@
     // 入口页独立标识布局，避免再次误用登录后首页的主题构图。
     phone.dataset.entryPage=session.page;
     document.getElementById('app-content').innerHTML=`<div class="entry-page ${session.page==='login'?'login-page':session.page==='detail'?'store-page':session.searched?'market-page market-results-page':'market-page'}">${session.page==='market'?market():session.page==='detail'?detail():login()}</div>`;
-    document.getElementById('studio-nav').innerHTML='<p class="entry-caption">体验顺序：<br>搜索应用 → 获取并打开<br>→ 登录 → 首页</p>';
+    document.getElementById('studio-nav').innerHTML='<p class="entry-caption">体验顺序：<br>搜索应用 → 获取并打开<br>→ 登录 → 家训卷轴 → 首页</p>';
     document.getElementById('review-title').textContent=session.page==='login'?'从登录开始，走进一家人的故事':'从应用市场认识传家记';
-    document.getElementById('review-description').textContent='完整体验搜索、详情预览、下载安装、验证码登录，再进入现有首页。所有账号、短信与安装均为本地演示。';
+    document.getElementById('review-description').textContent='完整体验搜索、详情预览、下载安装、验证码登录，展开家训卷轴后进入首页。所有账号、短信与安装均为本地演示。';
     document.getElementById('state-preview').textContent=JSON.stringify({体验步骤:session.page,已安装:session.installed,已登录:false},null,2);
   }
   /** 切换步骤重置滚动位置，输入验证失败重绘时保留当前阅读位置。 */
@@ -72,14 +72,14 @@
     session.installing=true;render();
     installTimer=setTimeout(()=>{session.installing=false;session.installed=true;if(session.page==='detail')render();},1500);
   }
-  /** 登录错误在原表单中反馈；只有正确验证码和主动同意才能进入首页。 */
+  /** 验证码与协议校验通过才展示家训卷轴；错误在原表单中反馈。 */
   function submitLogin(){
     capture();
     if(!/^1[3-9]\d{9}$/.test(session.phone))session.error='请填写11位手机号，可使用演示号码。';
     else if(session.sentPhone!==session.phone)session.error='请先为当前手机号获取演示验证码。';
     else if(session.code!==DEMO_CODE)session.error='验证码不正确，请输入演示验证码246810。';
     else if(!session.consent)session.error='请先阅读并同意用户协议与隐私政策。';
-    else {session.authenticated=true;P.state.history=[];P.changeActor(session.actor);P.navigate('home');return;}
+    else {session.authenticated=true;P.state.history=[];P.changeActor(session.actor);P.navigate('home');P.LoginScroll.show();return;}
     render();
   }
   /** 协议仅说明本地演示范围，不伪装成已发布服务的正式法律文本。 */
@@ -111,5 +111,5 @@
   /** 字号和角色预览引发重绘前，仍保留首次体验表单；刷新后重新从市场开始。 */
   document.addEventListener('input',event=>{if(event.target.closest('#entry-login'))capture();});
   document.addEventListener('change',event=>{if(event.target.closest('#entry-login'))capture();});
-  P.EntryFlow={authenticated:()=>session.authenticated,render,reset(){clearTimeout(installTimer);P.closeModal();session=initialSession();if(session.authenticated)P.render();else page('market');}};
+  P.EntryFlow={authenticated:()=>session.authenticated,render,reset(){P.LoginScroll.close(false);clearTimeout(installTimer);P.closeModal();session=initialSession();if(session.authenticated)P.render();else page('market');}};
 }
