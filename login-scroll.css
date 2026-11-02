@@ -1,25 +1,28 @@
-/* 绢纸上下展开，文字单独显露，避免随纸面缩放；木轴只使用位移动画。 */
-.login-scroll{position:absolute;inset:0;z-index:40;overflow:auto;background:#FBF7EF;color:#49372B;font-family:KaiTi,STKaiti,serif;isolation:isolate}
-.login-scroll:before{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/zhumen/home-ink-landscape.png') center top/100% 1600px repeat-y;opacity:.2;pointer-events:none}
-.login-scroll-top{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#FBF7EFF2;font-size:calc(14px * var(--unit));line-height:1.4286}
-.login-scroll-skip{min-height:44px;padding:8px 12px;border:1px solid #CCB898;border-radius:4px;background:#FBF7EF;color:#8D3428;font:inherit}
-.login-scroll-skip:hover{background:#F1E6D3}
+/* 绛红压纹衬底、金色轴头与回纹裱边增强仪式感；展开仍只使用位移和缩放。 */
+.login-scroll{position:absolute;inset:0;z-index:40;overflow:auto;background:#742D28;color:#49372B;font-family:KaiTi,STKaiti,serif;isolation:isolate}
+.login-scroll:before{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/zhumen/book-cover-texture.png') center/cover no-repeat;opacity:.38;pointer-events:none}
+.login-scroll:after{content:'';position:absolute;inset:12px;z-index:-1;background:url('assets/zhumen/family-meander-frame.svg') center/100% 100% no-repeat;filter:sepia(1) brightness(2);opacity:.65;pointer-events:none}
+.login-scroll-top{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#742D28F2;color:#F2D9A8;font-size:calc(14px * var(--unit));line-height:1.4286}
+.login-scroll-skip{min-height:44px;padding:8px 12px;border:1px solid #B99A65;border-radius:4px;background:#742D28;color:#F2D9A8;font:inherit}
+.login-scroll-skip:hover{background:#8C3C32}
 .login-scroll-skip:active{transform:translateY(1px)}
-.login-scroll-skip:focus-visible{outline:2px solid #A53425;outline-offset:4px}
+.login-scroll-skip:focus-visible{outline:2px solid #F2D9A8;outline-offset:4px}
 .login-scroll-main{max-width:420px;margin:auto;padding:24px 24px 40px;text-align:center}
-.login-scroll-eyebrow{margin:0 0 32px;font-size:calc(14px * var(--unit));line-height:1.4286;color:#8A745B;letter-spacing:4px}
+.login-scroll-eyebrow{margin:0 0 32px;font-size:calc(14px * var(--unit));line-height:1.4286;color:#E8CC95;letter-spacing:4px}
 .login-scroll-wrap{position:relative;margin:0 8px}
-.login-scroll-paper{min-height:420px;padding:40px 24px 32px;border:1px solid #CBB493;background:#F4E7CD url('assets/zhumen/ivory-rice-paper.png') center/400px auto;transform-origin:center top;animation:login-scroll-unroll 1500ms cubic-bezier(.22,1,.36,1) both}
-.login-scroll-words{opacity:0;animation:login-scroll-ink 450ms cubic-bezier(.22,1,.36,1) 1050ms forwards}
-.login-scroll-words h1{margin:0 0 24px;font-size:calc(24px * var(--unit));line-height:1.3333;font-weight:400;letter-spacing:4px}
+.login-scroll-paper{min-height:420px;padding:40px 24px 32px;position:relative;border:8px solid #B69A68;box-shadow:0 8px 24px #35100F40;background:#F4E7CD url('assets/zhumen/ivory-rice-paper.png') center/400px auto;transform-origin:center top;animation:login-scroll-unroll 1500ms cubic-bezier(.22,1,.36,1) both}
+.login-scroll-paper:before{content:'';position:absolute;inset:8px;background:url('assets/zhumen/family-meander-frame.svg') center/100% 100% no-repeat;opacity:.45;pointer-events:none}
+.login-scroll-words{position:relative;opacity:0;animation:login-scroll-ink 450ms cubic-bezier(.22,1,.36,1) 1050ms forwards}
+.login-scroll-words h1{margin:0 0 24px;font-size:calc(30px * var(--unit));line-height:1.2;font-weight:400;letter-spacing:4px;color:#8D3428}
 .login-scroll-poem{display:flex;flex-direction:row-reverse;justify-content:center;gap:24px;margin:0 auto 24px}
-.login-scroll-poem p{writing-mode:vertical-rl;text-orientation:upright;margin:0;max-height:640px;font-size:calc(24px * var(--unit));line-height:1.3333;font-weight:400;letter-spacing:4px}
+.login-scroll-poem p{writing-mode:vertical-rl;text-orientation:upright;margin:0;max-height:640px;font-size:calc(24px * var(--unit));line-height:1.3333;font-weight:400;letter-spacing:4px;color:#49372B}
 .login-scroll-seal{display:inline-block;padding:4px;border:3px double #FFF0D6;outline:1px solid #A53425;background:#A53425;color:#FFF0D6;font-size:16px;line-height:1.5}
-.login-scroll-rod{position:absolute;top:0;left:-8px;right:-8px;height:16px;border:1px solid #84603E;border-radius:4px;background:#AC8358;box-shadow:inset 0 3px #D4B58B,inset 0 -3px #8B653F}
-.login-scroll-rod:before,.login-scroll-rod:after{content:'';position:absolute;top:-4px;width:12px;height:24px;border-radius:4px;background:#755336}
+.login-scroll-rod{position:absolute;top:0;left:-8px;right:-8px;height:16px;border:1px solid #C4A16A;border-radius:4px;background:#754B32;box-shadow:inset 0 3px #C5A06A,inset 0 -3px #482E20}
+.login-scroll-rod:before,.login-scroll-rod:after{content:'';position:absolute;top:-4px;width:12px;height:24px;border-radius:4px;background:#C2A16A;box-shadow:inset 3px 0 #E6CF9E,inset -3px 0 #8E6B3E}
 .login-scroll-rod:before{left:-4px}.login-scroll-rod:after{right:-4px}
 .login-scroll-rod.is-bottom{animation:login-scroll-roll 1500ms cubic-bezier(.22,1,.36,1) both}
-.login-scroll-footer{margin:32px 0 0;font-size:calc(14px * var(--unit));line-height:1.4286;letter-spacing:2px;color:#8A745B}
+.login-scroll-footer{margin:32px 0 0;font-size:calc(14px * var(--unit));line-height:1.4286;letter-spacing:2px;color:#E8CC95}
+.login-scroll-footer:before,.login-scroll-footer:after{content:"◆";display:inline-block;margin:0 12px;font-size:12px;color:#C5A16A}
 @keyframes login-scroll-unroll{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @keyframes login-scroll-roll{from{transform:translateY(0)}to{transform:translateY(calc(var(--scroll-drop) - 12px))}}
 @keyframes login-scroll-ink{to{opacity:1}}
