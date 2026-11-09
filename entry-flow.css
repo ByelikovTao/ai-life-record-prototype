@@ -113,7 +113,7 @@
 .entry-login>.entry-primary{margin-top:24px;font-size:calc(18px * var(--unit));font-weight:400;background:#A53425;border-radius:4px}
 .entry-demo{margin-top:16px;color:var(--secondary);font-size:calc(12px * var(--unit));line-height:1.5;text-align:center}
 
-/* 窄屏与两倍字号以内容自然增高为主，不裁剪搜索、身份或协议操作。 */
+/* 大字号在窄屏优先换行，保持搜索、身份和协议操作可达。 */
 .large-type .market-page{padding-top:88px}
 .large-type .market-feature{padding:32px 16px}
 .large-type .market-feature h2{white-space:normal;font-size:calc(24px * var(--unit))}
@@ -127,8 +127,8 @@
 .large-type .entry-detail-header{flex-wrap:wrap}
 .large-type .login-brand h1,.large-type .login-brand p{max-width:100%}
 .large-type .login-brand:after{opacity:.2}
-.large-type .entry-code-row{flex-wrap:wrap}
-.large-type .entry-code-row input{flex-basis:100%}
+.phone.entry-mode.large-type .entry-code-row input[name=code]{flex:1 1 160px}
+.phone.entry-mode.large-type .entry-code-row{flex-wrap:wrap}
 .large-type .login-phone-heading{flex-wrap:wrap}
 .phone.large-type .entry-fill{white-space:normal}
 .large-type .entry-consent{align-items:flex-start}

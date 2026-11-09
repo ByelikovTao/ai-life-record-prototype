@@ -18,6 +18,37 @@
 .heritage-home button:focus-visible{outline:2px solid var(--home-tea);outline-offset:4px}
 .heritage-home button:active{transform:scale(.98)}
 .heritage-kinship{padding:12px;margin-top:12px;border:1px solid var(--home-line,#DED1BF);border-radius:8px;background:#F1E9DC}
+.heritage-origin-entry{
+  display:grid;
+  grid-template-columns:40px minmax(0,1fr) 16px;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:1px solid var(--home-line);
+  border-radius:8px;
+  background:var(--home-surface);
+  color:var(--home-tea);
+  text-align:left;
+}
+.heritage-origin-entry:hover,.heritage-origin-entry:active{background:var(--soft)}
+.heritage-origin-entry-mark{
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border-radius:4px;
+  background:var(--soft);
+}
+.heritage-origin-entry-mark .icon{width:20px;height:20px}
+.heritage-origin-entry-copy{display:grid;gap:2px;overflow-wrap:anywhere}
+.heritage-origin-entry-title{font-size:calc(16px * var(--unit));line-height:1.5;font-weight:600}
+.heritage-origin-entry-note{font-size:calc(14px * var(--unit));line-height:1.4286;color:var(--subtle);text-wrap:pretty}
+.heritage-origin-entry-arrow{width:16px;height:16px}
+@media (prefers-reduced-motion: reduce){
+  .heritage-origin-entry:active:not(:disabled){transform:none}
+}
 .heritage-caption{font-size:calc(12px * var(--unit));line-height:1.5;color:var(--home-muted,#796E62);overflow-wrap:anywhere}
 .heritage-preface{padding:16px;background:var(--home-surface);border:1px solid var(--home-line);border-radius:12px}
 /* 致谢直接展示全文，内容随字号和屏幕宽度自然延展。 */
@@ -35,18 +66,55 @@
 .heritage-event small{display:block;font-size:calc(12px * var(--unit));color:var(--home-muted);margin-top:8px}
 .heritage-event-button>img{display:block;width:64px;height:64px;flex-shrink:0;object-fit:cover;border-radius:4px}
 .heritage-complete{display:flex;width:100%;align-items:center;justify-content:center;gap:8px;padding:8px 12px;border:1px solid var(--home-line);border-radius:8px;background:var(--home-surface);color:var(--home-tea);font-size:calc(16px * var(--unit));font-weight:600}
-/* 整理入口统一在我的家庭；原生弹层仍负责焦点约束和私有草稿。 */
+/* 整理入口统一在我的家庭，整页编辑和核对弹层使用同一套表单样式。 */
 .heritage-manage .menu-row span{min-width:0;flex:1}
 .heritage-manage .menu-row strong{display:block;font-size:calc(16px * var(--unit));font-weight:600}
 .heritage-manage .menu-row small{display:block;font-size:calc(12px * var(--unit));line-height:1.5;color:var(--secondary);margin-top:4px}
 .heritage-editor{display:grid;gap:12px;margin-top:16px;font-size:calc(16px * var(--unit))}
 .heritage-editor :is(input:not([type=checkbox]),textarea,select){display:block;width:100%;min-width:0;padding:12px;border:1px solid #C8AE8F;border-radius:8px;background:#FFFCF5;color:#342B25;font:inherit}
 .heritage-editor textarea{resize:vertical;min-height:160px}
+.heritage-edit-page .heritage-editor{grid-template-columns:minmax(0,1fr)}
+.heritage-edit-page .heritage-editor label{font-weight:600;line-height:1.5}
+.heritage-edit-page .heritage-editor :is(select,input){min-height:48px}
+.heritage-edit-page .heritage-editor textarea{min-height:192px;line-height:1.5}
+.heritage-edit-page .heritage-editor :is(input,select,textarea):focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.heritage-edit-page .heritage-form-error:empty{display:none}
 .heritage-editor-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
 .heritage-editor-actions>*{flex:1;min-width:0;padding:8px 12px;font-size:calc(16px * var(--unit));font-weight:600}
-.heritage-reader{font-size:calc(16px * var(--unit));line-height:1.5;white-space:pre-line}
-.heritage-reader h3{margin:24px 0 12px}
-.heritage-reader p{margin:12px 0}
+.heritage-trace-fields{
+  display:grid;
+  gap:8px;
+  min-width:0;
+  margin:0;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.heritage-trace-fields legend{padding:0 4px;font-weight:600;color:var(--brand)}
+.heritage-reader{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;line-height:1.5}
+.heritage-reader > section > h2{margin:0 0 8px;font-size:calc(20px * var(--unit));line-height:1.4}
+.heritage-reader > section > p{margin:0}
+.heritage-reader > section > .heritage-reader-citation{margin-top:8px;color:var(--subtle)}
+.heritage-reader-text{white-space:pre-line}
+.heritage-reader > .heritage-kinship{margin-top:0}
+.heritage-reader-trace{
+  padding:16px;
+  border:1px solid #D4BEA4;
+  border-radius:8px;
+  background:var(--surface);
+}
+.heritage-reader > .heritage-reader-trace > h2{margin-bottom:12px;color:var(--brand)}
+.heritage-origin-trace{display:grid;gap:12px;margin:0;font-size:calc(14px * var(--unit));line-height:1.4286}
+.heritage-origin-trace > div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:8px}
+.heritage-origin-trace dt{color:var(--subtle)}
+.heritage-origin-trace dd{margin:0;overflow-wrap:anywhere}
+.heritage-origin-trace .heritage-origin-trace-source{
+  grid-template-columns:minmax(0,1fr);
+  gap:4px;
+  padding:8px;
+  border-radius:4px;
+  background:var(--muted);
+}
 .heritage-review-copy{padding:16px;background:#F7F3E9;border:1px solid #DED1BF;border-radius:8px;white-space:pre-line;overflow-wrap:anywhere;font-size:calc(16px * var(--unit));margin-bottom:16px}
 .heritage-form-error{color:#A13E3E;font-size:calc(14px * var(--unit))}
 .heritage-select-story{display:flex;gap:12px;align-items:flex-start;border:1px solid #DED1BF;border-radius:8px;padding:12px}
@@ -65,7 +133,7 @@
 
 /* 世系摘要按电子族谱纵向排布；宽家系在局部滚动，不撑开整页或弹层。 */
 .heritage-pedigree-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
-.heritage-pedigree-heading h3{font:600 calc(20px * var(--unit))/1.4 KaiTi,STKaiti,serif;color:#7E2D24}
+.heritage-pedigree-heading :is(h2,h3){font:600 calc(20px * var(--unit))/1.4 KaiTi,STKaiti,serif;color:#7E2D24}
 .heritage-pedigree-heading>span,.heritage-pedigree-legend{font-size:calc(12px * var(--unit));line-height:1.5;color:#94735A}
 .heritage-pedigree-viewport{max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
 .heritage-pedigree-canvas{position:relative;width:var(--pedigree-width);min-width:var(--pedigree-width);height:264px;margin:0 auto}
@@ -83,18 +151,10 @@
 .heritage-pedigree-node:hover{background:#FAEBDC}
 .heritage-pedigree-node:focus-visible{outline:2px solid #A0392D;outline-offset:2px}
 .heritage-pedigree-legend{margin:8px 0 12px}
-/* 大字号按原辈分顺序纵向展开人物卡，不压缩姓名或以错误连线维持双列。 */
-.large-type .heritage-pedigree-canvas{display:grid;gap:16px;width:100%;min-width:0;height:auto}
-.large-type .heritage-pedigree-canvas>svg,.large-type .heritage-pedigree-legend{display:none}
-.large-type .heritage-pedigree-node{position:static;transform:none;width:100%;height:auto;min-height:96px;padding:16px;gap:16px}
-.large-type .heritage-pedigree-node>.avatar{width:56px;height:64px}
-.large-type .heritage-pedigree-node strong{font-size:32px;line-height:48px;white-space:normal;overflow-wrap:anywhere}
-.large-type .heritage-pedigree-node small{font-size:24px;line-height:36px;white-space:normal}
-.large-type .heritage-pedigree-heading{align-items:flex-start;flex-direction:column}
 
 /* 以谱牒题签、朱印与回纹角框承载世系；纹样不占用人物交互区域。 */
 .heritage-pedigree-heading{justify-content:flex-start;align-items:center;gap:12px;padding:12px 16px;border:3px double #BD9A74;background:#F8F0E2}
-.heritage-pedigree-heading h3{font-size:calc(24px * var(--unit));line-height:1.3333;letter-spacing:4px;color:#65372B}
+.heritage-pedigree-heading :is(h2,h3){font-size:calc(24px * var(--unit));line-height:1.3333;letter-spacing:4px;color:#65372B}
 .heritage-pedigree-heading p{font-size:calc(12px * var(--unit));line-height:1.3333;color:#937255;margin-top:4px}
 .heritage-pedigree-heading>.heritage-pedigree-seal{display:block;flex-shrink:0;border:3px double #FFF3DE;outline:1px solid #A53425;padding:4px 8px;background:#A53425;color:#FFF3DE;font:600 20px/24px KaiTi,STKaiti,serif;text-align:center}
 .heritage-pedigree-heading>.heritage-pedigree-inscription{margin-left:auto;writing-mode:vertical-rl;font:14px/20px KaiTi,STKaiti,serif;letter-spacing:4px;color:#9B6045}
@@ -103,11 +163,24 @@
 .heritage-pedigree-node>.avatar{border-radius:0;outline:1px solid #C9AE8D;outline-offset:2px}
 .heritage-pedigree-node.is-focus{background:#FFF1DA;border-color:#A53425}
 .heritage-pedigree-node:active{transform:translateX(-50%) scale(.98)}
-.large-type .heritage-pedigree-heading{flex-direction:row;flex-wrap:wrap;align-items:center}
-.large-type .heritage-pedigree-heading>.heritage-pedigree-inscription{display:none}
-.large-type .heritage-pedigree-heading>div{flex:1;min-width:0}
-.large-type .heritage-pedigree-viewport{padding:16px}
-.large-type .heritage-pedigree-node:active{transform:scale(.98)}
+.large-text .heritage-pedigree-heading{flex-wrap:wrap;gap:8px}
+.large-text .heritage-pedigree-heading>.heritage-pedigree-inscription{display:none}
+.large-text .heritage-pedigree-heading>div{flex:1;min-width:0}
+.large-text .heritage-pedigree-legend{color:#795942}
+
+/* 大字号头像与姓名上下排列。各代共用列中线，成员较多时只横滑图谱。源流正文保留换行，图谱按普通流排版，连线直接接到卡片。 */
+.heritage-pedigree-readable{--pedigree-cell-padding:8px;width:100%;min-width:calc(112px * var(--pedigree-columns));max-width:calc(152px * var(--pedigree-columns));height:auto;white-space:normal}
+.heritage-pedigree-readable .heritage-pedigree-row{display:grid;grid-template-columns:repeat(var(--pedigree-columns),minmax(0,1fr))}
+.heritage-pedigree-readable>.heritage-pedigree-branches{position:static;display:block;height:24px}
+.heritage-pedigree-readable .heritage-pedigree-branches path{stroke:#946542;stroke-width:2}
+.heritage-pedigree-readable .heritage-pedigree-node{position:relative;transform:none;width:auto;min-width:0;height:auto;min-height:104px;margin:0 var(--pedigree-cell-padding);padding:8px;gap:4px;flex-direction:column;justify-content:center;text-align:center}
+.heritage-pedigree-readable .heritage-pedigree-node:active{transform:scale(.98)}
+.heritage-pedigree-readable .heritage-pedigree-node>.avatar{width:40px;height:44px}
+.heritage-pedigree-readable .heritage-pedigree-node strong{font-size:calc(16px * var(--unit));line-height:1.4;white-space:normal;overflow-wrap:anywhere}
+.heritage-pedigree-readable .heritage-pedigree-node small{font-size:calc(12px * var(--unit));line-height:1.5;white-space:normal}
+.heritage-pedigree-readable .heritage-pedigree-node:not(.is-focus) small{color:#795942}
+.heritage-pedigree-partners{display:grid;gap:8px}
+.heritage-pedigree-partners>.heritage-pedigree-node:before{content:'';position:absolute;right:calc(100% + 3px);top:50%;width:calc(2 * var(--pedigree-cell-padding));border-top:4px double #A63D31;transform:translateY(-50%);pointer-events:none}
 
 /* 人生阶段用朱红小题签提示，正文与原故事共享同一份年代资料。 */
 .heritage-event-stage{display:inline-block;font-size:calc(12px * var(--unit));line-height:1.3333;color:#9B3A2B;border:1px solid #D4B391;padding:4px 8px;margin-bottom:8px;background:#FAF0E0}

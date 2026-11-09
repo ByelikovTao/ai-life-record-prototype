@@ -16,6 +16,7 @@
 .avatar-about-button{display:flex;align-items:center;justify-content:center;flex:0 0 40px;height:40px;border:1px solid #E8D9C9;border-radius:50%;background:#FFFEFA;color:var(--brand)}
 .avatar-about-button .icon{width:17px;height:17px}
 .avatar-stage{position:relative;isolation:isolate;min-height:350px;flex:1 0 350px;border-radius:23px;overflow:hidden;background:#DDD7CA;box-shadow:0 7px 24px #45382410}
+.avatar-media{position:absolute;inset:0}
 .avatar-portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 31%;z-index:0}
 .avatar-image-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#2E281017,transparent 32%,transparent 48%,#7020233D 100%)}
 .avatar-preview-label{position:absolute;top:13px;left:13px;z-index:3;border:1px solid #FFFFFF70;background:#FFFDF2CE;backdrop-filter:blur(12px);border-radius:20px;padding:5px 9px;font-size:11px;line-height:1.5;color:#702023;pointer-events:none}
@@ -49,15 +50,19 @@
 .avatar-page .chat-form button{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;border-radius:50%;background:var(--brand);color:#FFFDF7;box-shadow:0 3px 8px #70202317}
 .avatar-page .chat-form button .icon{width:20px;height:20px}
 .avatar-service-note{font-size:10px;color:#92665D;line-height:1.5;text-align:center;margin:0;flex-shrink:0;letter-spacing:.5px}
-/* 两倍字号使用外层滚动，问候放到图像下方，避免文字盖住人物的脸。 */
+/* 大字号将标题、人像和问候分行，页面随对话内容自然向下滚动。 */
 .large-type .avatar-page{height:auto;min-height:100%;overflow:visible}
 .large-type .avatar-body{overflow:visible;flex:none}
-.large-type .avatar-stage{flex:none;min-height:0;padding-top:350px}
-.large-type .avatar-portrait,.large-type .avatar-image-shade{height:350px;bottom:auto}
-.large-type .avatar-dialogue{position:relative;inset:auto;margin:-35px 12px 14px}
+.phone.large-type .avatar-stage{flex:none;min-height:0}
+.phone.large-type .avatar-page-heading{position:static;padding:12px;background:var(--surface)}
+.phone.large-type .avatar-page-heading>div{min-width:0}
+.phone.large-type .avatar-page-heading h1{font-size:calc(20px * var(--unit));text-shadow:none}
+.phone.large-type .avatar-page-heading p{color:var(--secondary)}
+.phone.large-type .avatar-about-button{color:var(--brand)}
+.large-type .avatar-media{position:relative;aspect-ratio:4/3}
+.large-type .avatar-dialogue{position:relative;inset:auto;margin:12px}
 .large-type .avatar-conversation{max-height:420px}
-.large-type .avatar-preview-label{font-size:14px}
-.large-type .avatar-page-heading h1{font-size:32px}
+.large-type .avatar-preview-label{inset:auto 12px 12px auto;font-size:14px}
 .large-type .avatar-live-status p,.large-type .avatar-service-note{font-size:14px}
 .large-type .avatar-page .chat-form{border-radius:22px;align-items:center}
 /* 回应指示和气泡只负责反馈；人物动作由本地二维视频提供。 */
@@ -86,5 +91,4 @@
 .portrait-motion[data-mode="idle"] video[data-kind="idle"],.portrait-motion[data-mode="speaking"] video[data-kind="speaking"],.portrait-motion[data-mode="settling"] video[data-kind="settling"]{opacity:1}
 .portrait-motion-retry{position:absolute;left:50%;top:44%;transform:translateX(-50%);z-index:4;background:#FFFEFAED;color:var(--brand);padding:10px 15px;border:1px solid #E8D9C9;border-radius:20px;font-size:14px}
 .portrait-motion-retry[hidden]{display:none}
-.large-type .portrait-motion{height:350px;bottom:auto}
 @media(prefers-reduced-motion:reduce){.portrait-clips video{transition:none}}

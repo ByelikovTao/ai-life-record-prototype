@@ -62,9 +62,10 @@
     const period=P.Billing.period(P.state.chatTarget),quotaEnded=Boolean(period&&period.qaUsed>=P.Billing.RULES.qa);
     const quotaPanel=quotaEnded?`<div class="avatar-quota-panel"><div class="row">${P.avatar(P.state.chatTarget,'large')}<h2>${e(owner.name)} · ${e(hello.speaker)}</h2></div><section class="quota-warning"><h2>本年度有效答复额度已用完</h2><strong>0 / ${P.Billing.RULES.qa} 次</strong><p>可查看历史记录、留言问本人，基础参与继续可用。</p><div class="row">${P.link('查看共享权益','membership','btn')}${P.link('留言本人','questions','btn outline')}</div></section></div>`:'';
     return `<section class="page avatar-page ${quotaEnded?'quota-exhausted':''}">${quotaPanel}${P.ContentChat.contextView()}<div class="avatar-body">
-      <div class="avatar-stage" data-call-state="${s.callState}"><img class="avatar-portrait" src="assets/avatar/father-portrait-v4.png" alt="温暖客厅里的父亲，二维人物动画的静态封面">${P.PortraitMotion.view()}<div class="avatar-image-shade" aria-hidden="true"></div>
+      <div class="avatar-stage" data-call-state="${s.callState}">
       <div class="avatar-page-heading"><div><p class="avatar-eyebrow">视频对话演示 <span id="avatar-call-duration">${P.duration(s.elapsed)}</span></p><h1>${e(hello.viewer==='本人'?'和自己聊聊':'和'+hello.speaker+'坐一会儿')}</h1><p>${e(owner.name)} · ${e(hello.viewer==='本人'?'那些想留给家人的话':'你们的故事，慢慢聊')}</p></div>${b(i('source'),'avatar-about','avatar-about-button','aria-label="了解示例形象与对话"')}</div>
-      <span class="avatar-preview-label">二维人物演示</span>${context?'':conversation(hello,messages)}</div>${context?conversation(hello,messages):''}
+      <div class="avatar-media"><img class="avatar-portrait" src="assets/avatar/father-portrait-v4.png" alt="温暖客厅里的父亲，二维人物动画的静态封面">${P.PortraitMotion.view()}<div class="avatar-image-shade" aria-hidden="true"></div><span class="avatar-preview-label">二维人物演示</span></div>
+      ${context?'':conversation(hello,messages)}</div>${context?conversation(hello,messages):''}
       <div class="avatar-live-status" data-phase="${s.phase}"><span aria-hidden="true"></span><p id="avatar-status" role="status">${e(s.status)}</p></div>
       ${P.BillingViews.chatQuota(P.state.chatTarget)}
       </div><div class="avatar-footer"><div class="avatar-quick-actions" aria-label="可以从这些话题开始">${b(i('chat')+' '+(context?'继续聊这段内容':'聊聊过去'),'avatar-sample','avatar-topic')}${b(i('edit')+' '+(context?'还有哪些细节':'说说你的建议'),'avatar-prompt','avatar-topic',`data-question="${context?'还有哪些已经记录的细节？':'给我一些生活建议。'}"`)}</div>

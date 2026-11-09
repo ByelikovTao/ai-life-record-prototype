@@ -8,7 +8,7 @@
   /** 辅助页面归属对应主栏目，详情、会员与问题页也保留明确的底栏选中项。 */
   const TAB_PARENTS={story:'life','archive-item':'life',family:'profile',invitation:'profile',membership:'profile',settings:'profile',saved:'profile',questions:'chat','chat-messages':'chat',record:'profile',review:'profile',welcome:'home'};
   const ROUTE_NAMES={home:'归家',life:'往事',story:'人生故事',chat:'叙话',space:'故里',family:'家庭关系',record:'记录一刻',review:'内容确认',profile:'我的家',membership:'家庭共享服务',invitation:'邀请核对',settings:'分享与阅读',saved:'我的收藏'};
-  const NOTES={home:['看见这个家，读懂这一生','首页依次展示姓氏与家族来源、建谱致谢、家训、个人事迹；整理统一从我的家庭进入。'],life:['像一本继续写的书','同一事件关联影像、原声与物件。事件时间、记录时间与分享对象分别说明。'],story:['让回忆能被追问','内容来源和确认状态分开表达，仍然可以围绕当前故事继续交流。'],chat:['听得熟悉，也能核对','示例回答区分记录整理、AI 推演与资料不足。语音仅演示交互，不调用麦克风。'],space:['走进他生活过的地方','点击物件、切换年代、跟随讲述。所有历史场景和变化均为示意。'],family:['关系不等于权限','加入家庭、认领人物、确认关系分别核对。新成员不会自动获得指定的私人资料。'],record:['一句话也值得留下','支持真实文字输入与录制状态演示。先保存草稿，再决定是否分享。'],review:['确认之后，再留下','家人补充他人的经历进入待确认，本人确认后保留原讲述者。'],profile:['身份与权益分开','当前账号、家庭角色、个人额度与数字人服务各自表达。'],membership:['一位人物，全家共享','699元年度服务、免费基础参与；额度、保管与推荐服务金分别说明，模拟操作不扣款。'],invitation:['模拟受邀人视角','在这一步核对人物与关系，完成后切换到该家人的示例账号。'],settings:['分享，由本人决定','分享范围属于个人内容。与另一个人的亲属关系不会自动改变范围。'],saved:['留住想再听一次的话','收藏只展示当前仍然可以访问的故事。']};
+  const NOTES={home:['看见这个家，读懂这一生','首页依次展示姓氏与家族来源、建谱致谢、家训、个人事迹；整理统一从我的家庭进入。'],life:['像一本继续写的书','同一事件关联影像、原声与物件。事件时间、记录时间与分享对象分别说明。'],story:['让回忆能被追问','内容来源和确认状态分开表达，仍然可以围绕当前故事继续交流。'],chat:['听得熟悉，也能核对','示例回答区分记录整理、AI 推演与资料不足。语音仅演示交互，不调用麦克风。'],space:['走进他生活过的地方','点击物件、切换年代、跟随讲述。所有历史场景和变化均为示意。'],family:['关系不等于权限','加入家庭、认领人物、确认关系分别核对。新成员不会自动获得指定的私人资料。'],record:['一句话也值得留下','支持真实文字输入与录制状态演示。先保存草稿，再决定是否分享。'],review:['确认之后，再留下','家人补充他人的经历进入待确认，本人确认后保留原讲述者。'],profile:['身份与权益分开','当前账号、家庭角色、个人额度与数字人服务各自表达。'],membership:['按已建档人物开通','获授权家人共享该人物的额度和保管权益。'],invitation:['模拟受邀人视角','在这一步核对人物与关系，完成后切换到该家人的示例账号。'],settings:['分享，由本人决定','分享范围属于个人内容。与另一个人的亲属关系不会自动改变范围。'],saved:['留住想再听一次的话','收藏只展示当前仍然可以访问的故事。']};
   NOTES.welcome=['从一次交付，走进一家人的故事','视频服务客户开通家庭，家人通过邀请参与；不要求受邀家人各自购买视频。'];
   NOTES.space=['走进同一个家的不同年代','“看看老家”环顾熟悉的角落，可切换年代、缩放视角和查看物件故事。仅保留全景观察；场景均为示例素材。'];
   NOTES.chat=['和熟悉的人，慢慢聊','二维人像待机会眨眼点头，回应时身体前倾并出现演示口型，讲完缓缓回正。资料追问与纠正保留；没有三维、麦克风或实时语音驱动。'];
@@ -33,8 +33,8 @@
   for(const route of ['books','book-edit','book-preview','book-order'])NOTES[route]=['把人生留成一本书','选材授权、本人定稿、实物打样与分阶段收费；编辑和印厂进度仅由原型工具模拟，未生成真实 PDF、支付或物流。'];
   Object.assign(ROUTE_NAMES,{'family-permissions':'人生空间的授权','common-memories':'我们的共同回忆'});
   Object.assign(TAB_PARENTS,{'family-permissions':'profile','common-memories':'profile'});
-  Object.assign(ROUTE_NAMES,{'billing-plan':'收费方案',rewards:'推荐服务金','service-orders':'服务订单'});
-  Object.assign(TAB_PARENTS,{'billing-plan':'profile',rewards:'profile','service-orders':'profile'});
+  Object.assign(ROUTE_NAMES,{'billing-plan':'收费方案','service-orders':'服务订单'});
+  Object.assign(TAB_PARENTS,{'billing-plan':'profile','service-orders':'profile'});
   // 个人中心只保留分组入口，二级页与其返回路径统一归属我的。
   Object.assign(ROUTE_NAMES,{'profile-materials':'资料与核对','profile-family':'我的家庭','profile-keepsakes':'纪念与收藏','profile-services':'服务与订单'});
   for(const route of ['profile-materials','profile-family','profile-keepsakes','profile-services']){TAB_PARENTS[route]='profile';NOTES[route]=['按需展开，清楚好找','从我的分组进入原有功能；账号、资料、授权和服务规则保持原有机制。'];}
@@ -45,6 +45,14 @@
   Object.assign(TAB_PARENTS,{'reunion-album':'home','reunion-albums':'home'});
   ROUTE_NAMES['home-manage']='首页内容';TAB_PARENTS['home-manage']='profile';
   NOTES['home-manage']=['集中整理，安心阅读','本人管理来源、建谱致谢与个人事迹，家庭指定本人确认家训；家人保留协助建议入口。'];
+  Object.assign(ROUTE_NAMES,{'home-preface-edit':'编辑建谱致谢','home-motto-edit':'编辑家训'});
+  Object.assign(TAB_PARENTS,{'home-preface-edit':'profile','home-motto-edit':'profile'});
+  NOTES['home-preface-edit']=['整理给家人的致谢','正文可保存草稿，核对并确认后在归家展示。'];
+  NOTES['home-motto-edit']=['整理全家共用的家训','保留立训日期和传承来源，由家庭指定本人核对并确认。'];
+  ROUTE_NAMES['home-origin']='家族源流与族谱';TAB_PARENTS['home-origin']='home';
+  NOTES['home-origin']=['沿着家里的记载寻根','家族线索、家庭资料来源与姓氏文化出处分别展示。'];
+  ROUTE_NAMES['film-delivery']='我的纪录片';TAB_PARENTS['film-delivery']='home';
+  NOTES['film-delivery']=['验证后直达自己的纪录片','只显示当前账号已交付的正片，播放进度与归家和档案详情共用。'];
   let toastTimer;
   /** 更新当前页面的内存状态预览，不展示未获授权的记录内容。 */
   function updateStatePreview() {
@@ -91,7 +99,9 @@
     const [name,id]=hash.split('/');
     // 仅在进入空间路由时收起说明，同页重绘仍保留用户的展开选择。
     if(name==='space'&&P.state.route!=='space')P.MemorySpace.enter();
+    P.FamilyHomeEditor.enterPage(name,id);
     P.state.route=P.views[name]?name:'home';
+    if(name==='home-origin')P.state.homeOriginPerson=id||'';
     if (name==='story') P.state.storyId=id || 'first-order';
     if(name==='life'){const person=id || P.FamilyContext.current();if(id&&P.state.actor!=='father'&&id!==P.state.actor&&P.FamilyContext.invited(id)){if(P.state.chatTarget!==id){P.state.chatMessages=[];P.state.chatContext=null;}P.state.familyFocus[P.state.actor]=id;P.state.chatTarget=id;}if(P.state.archivePerson!==person){P.state.lifeTab='overview';P.state.videoFilter='all';P.state.biographyMode='read';P.state.archiveChapterId='';}P.state.archivePerson=person;}
     if(name==='archive-item')P.state.archiveItemId=id || '';
@@ -108,7 +118,7 @@
     P.LoginScroll.close(false);captureInputs();
     if(P.state.actor!=='father'&&route==='record'&&!P.state.record.subject&&!P.state.record.text.trim()){P.state.record.kind='common';P.state.record.subject=P.FamilyContext.current();}
     if(P.state.actor!=='father'&&route==='life')P.state.archivePerson=P.FamilyContext.current();
-    if(route==='home')document.getElementById('app-content').scrollTop=0;
+    if(route==='home'||route==='film-delivery')document.getElementById('app-content').scrollTop=0;
     const current=location.hash.slice(1) || 'home';
     if (P.state.record.recording && route!=='record') P.state.record.paused=true;
     closeModal();
@@ -119,7 +129,7 @@
   }
   /** 返回当前演示流程中的上一页，不跳出原型。 */
   function back() {
-    const fallback={'home-manage':'profile-family','profile-materials':'profile','profile-family':'profile','profile-keepsakes':'profile','profile-services':'profile','billing-plan':'profile',rewards:'profile','service-orders':'profile',story:'life',space:'life',review:'record',membership:'profile',settings:'profile',record:'home',family:'profile',invitation:'family',saved:'profile'};
+    const fallback={'home-manage':'profile-family','home-preface-edit':'home-manage','home-motto-edit':'home-manage','profile-materials':'profile','profile-family':'profile','profile-keepsakes':'profile','profile-services':'profile','billing-plan':'profile','service-orders':'profile',story:'life',space:'life',review:'record',membership:'profile',settings:'profile',record:'home',family:'profile',invitation:'family',saved:'profile'};
     Object.assign(fallback,{materials:'profile','material-inbox':'profile','material-edit':'materials','material-review':'material-edit','chat-messages':'chat',questions:'chat-messages',corrections:'chat-messages','correction-edit':'corrections','correction-review':'corrections','common-memories':'profile-family','chapter-edit':'common-memories',chapter:'common-memories'});
     Object.assign(fallback,{books:'profile','book-edit':'books','book-preview':'books','book-order':'books'});
     const previous=P.state.history?.pop() || fallback[P.state.route] || 'home';
@@ -149,6 +159,7 @@
   }
   /** 渲染当前页面，保持状态、预览说明与页面一致。 */
   function render() {
+    syncFontMode();
     if(!P.EntryFlow.authenticated()){P.EntryFlow.render();return;}
     document.getElementById('phone').classList.remove('entry-mode');
     const s=P.state;
@@ -163,14 +174,10 @@
     P.MemorySpace?.unmount();
     P.DigitalHuman?.prepare(s.route==='chat');
     document.getElementById('phone').classList.toggle('space-mode',s.route==='space');
-    document.getElementById('phone').classList.toggle('large-type',s.fontLarge);
-    document.body.classList.toggle('large-text',s.fontLarge);
-    document.documentElement.style.setProperty('--unit',s.fontLarge?'2':'1');
     let page=P.views[s.route]();
     if(s.route==='record'&&(s.actor!=='father'||s.record.archiveAddition))page=P.FamilyMemories.record(page);
     if(s.actor!=='father'&&s.route==='review')page=P.FamilyMemories.review(page);
     content.innerHTML=page;
-    const referralForm=content.querySelector('#referral-form');if(referralForm){referralForm.billingState=s;referralForm.dataset.actor=s.actor;}
     content.querySelectorAll('[data-feature-form],[data-feature-action]').forEach(element=>{element.featureState=s;});
     // 表单只属于这一份草稿；重置或提交后到达的 hashchange 不能把旧 DOM 写回新草稿。
     content.querySelectorAll('#record-form,#publish-form').forEach(form=>{form.recordDraft=s.record;});
@@ -183,16 +190,23 @@
     updateStatePreview();P.KeepsakeBooks.demo();
     if(s.route==='space')P.MemorySpace?.mount();
     if(s.route==='chat'&&P.ContentChat.available(s.chatTarget))P.DigitalHuman?.mount();
-    // 首页视频复用档案播放器的字幕、进度与错误提示，离页仍由统一逻辑暂停。
-    if(['home','archive-item','life'].includes(s.route))P.PersonArchive?.mount();
+    // 首页和交片页复用档案播放器的字幕、进度与错误提示，离页统一暂停。
+    if(['home','archive-item','life','film-delivery'].includes(s.route))P.PersonArchive?.mount();
   }
   /** 预览角色包含已接受邀请的人物，各账号草稿与收藏互相隔离。 */
   function refreshControls() {
     const actorSelect=document.getElementById('actor-select');
     actorSelect.innerHTML=Object.keys(P.state.accounts).map(id=>`<option value="${id}">${id==='father'?'本人':P.relation(id,'father')} · ${P.escape(P.PEOPLE[id].name)}</option>`).join('');
     actorSelect.value=P.state.actor;
-    document.getElementById('font-toggle').setAttribute('aria-pressed',String(P.state.fontLarge));
-    document.getElementById('font-toggle').textContent=P.state.fontLarge?'标准字号':'大字号';
+  }
+  /** 登录前后和重置共用字号状态，弹层与工具按钮一并同步。 */
+  function syncFontMode() {
+    const large=P.state.fontLarge;
+    document.getElementById('phone').classList.toggle('large-type',large);
+    document.body.classList.toggle('large-text',large);
+    const toggle=document.getElementById('font-toggle');
+    toggle.setAttribute('aria-pressed',String(large));
+    toggle.textContent=large?'标准字号':'大字号';
   }
   /** 切换模拟账号时不把上一个人的私聊、草稿或收藏带给新角色。 */
   function changeActor(id) {
@@ -217,7 +231,7 @@
     if(r.recording && !r.paused) {r.seconds++;const label=document.getElementById('record-time');if(label)label.textContent=P.duration(r.seconds);}
     if (r.recording) updateStatePreview();
   }
-  Object.assign(P,{modal,closeModal,toast,navigate,render,changeActor,toggleFont,updatePreview:updateStatePreview});
+  Object.assign(P,{modal,closeModal,toast,navigate,back,render,changeActor,toggleFont,syncFontMode,updatePreview:updateStatePreview});
   window.addEventListener('resize',positionModal);
   /** 所有交互集中注册，反复渲染页面不会叠加监听器。 */
   document.addEventListener('click',event=>{
@@ -249,7 +263,18 @@
   document.getElementById('modal').addEventListener('cancel',()=>{P.FamilyHomeEditor.capture();P.state.modal=null;if('speechSynthesis' in window)speechSynthesis.cancel();});
   /** 刷新或历史恢复进入首页时回到顶部，保持家庭开篇处可见。 */
   window.addEventListener('pageshow',()=>{if(P.state.route==='home')document.getElementById('app-content').scrollTop=0;});
-  window.addEventListener('hashchange',()=>{captureInputs();if(P.state.record.recording && location.hash!=='#record')P.state.record.paused=true;readRoute();document.getElementById('app-content').scrollTop=0;render();});
+  window.addEventListener('hashchange',()=>{
+    captureInputs();
+    if(P.state.record.recording&&location.hash!=='#record')P.state.record.paused=true;
+    const previous=P.state.route,content=document.getElementById('app-content');
+    readRoute();
+    // 从归家进入源流时记住阅读位置，返回后接着浏览原来的段落。
+    if(previous==='home'&&P.state.route==='home-origin')P.state.homeOriginScrollTop=content.scrollTop;
+    const returning=previous==='home-origin'&&P.state.route==='home';
+    content.scrollTop=0;
+    render();
+    if(returning)content.scrollTop=P.state.homeOriginScrollTop||0;
+  });
   if(new URLSearchParams(location.search).get('embedded')==='1')document.body.classList.add('embedded');
   readRoute();render();setInterval(tick,1000);
 }

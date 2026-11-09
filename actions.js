@@ -299,7 +299,7 @@
     if (action==='person') return person(el.dataset.id);
     if (action==='enter-owner') {P.changeActor('father');return P.navigate('home');}
     if (action==='enter-family') {P.changeActor('xia');return P.navigate('home');}
-    if (action==='video-service') return P.modal('视频服务与开通条件','<p>当前方案以约 ¥15,000 的视频服务作为 APP 开通入口；这是视频服务收费，不是制作成本。</p><p>完成交付后可开通家庭空间，家人受邀加入。APP 会员与定制增购另行报价，已在订单中包含的权益不重复购买。</p><p class="caption">本页为产品规则示例，具体报价与交付范围由实际订单确认。</p>');
+    if (action==='video-service') return P.modal('人生故事片与家庭空间',`<p>试点价 ¥15,000／位。顾问上门采集口述和老照片，再用 AI 制作人生故事片。</p><p>完成交付后开通家庭空间，含 5 年、10 GB 基础保管，受邀家人免费参与。</p>${l('查看收费详情','billing-plan','btn full section')}<p class="caption section">试点报价和交付范围以确认的订单为准。</p>`);
     if (action==='share-owned') return share(el.dataset.id);
     if (action==='share-story') return share(s.storyId);
     if (action==='save-story') {if(!P.visibleStories().some(item=>item.id===s.storyId))return P.toast('这段故事暂未开放，不能收藏。');s.saved=s.saved.includes(s.storyId)?s.saved.filter(x=>x!==s.storyId):[...s.saved,s.storyId];P.render();return P.toast(s.saved.includes(s.storyId)?'已收藏这段故事。':'已取消收藏。');}

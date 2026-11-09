@@ -26,7 +26,7 @@
 @keyframes login-scroll-unroll{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @keyframes login-scroll-roll{from{transform:translateY(0)}to{transform:translateY(calc(var(--scroll-drop) - 12px))}}
 @keyframes login-scroll-ink{to{opacity:1}}
-/* 双倍字号改为横排并自然增高，跳过操作保持粘顶可见。 */
+/* 大字号改为横排并自然增高，跳过操作保持粘顶可见。 */
 .large-type .login-scroll-poem{display:block}
 .large-type .login-scroll-poem p{writing-mode:horizontal-tb;max-height:none;overflow-wrap:anywhere;margin-bottom:16px}
 @media(prefers-reduced-motion:reduce){.login-scroll-paper,.login-scroll-rod.is-bottom{animation:none}.login-scroll-rod.is-bottom{transform:translateY(calc(var(--scroll-drop) - 12px))}.login-scroll-words{animation:none;opacity:1}}

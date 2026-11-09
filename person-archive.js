@@ -27,6 +27,20 @@
   function videoType(item,person) {return item.kind==='film'?'film':item.author===person?'self':'family';}
   /** 筛选只改变同一资料集合的查看方式，数量与列表采用相同授权及分类规则。 */
   function videos(person,filter='all') {return Object.hasOwn(VIDEO_FILTERS,filter)?assets(person,'video').filter(item=>filter==='all' || videoType(item,person)===filter):[];}
+  /** 交片只取已完成拍摄且仍可在线查看的本人正片。家人档案和生活片段不作为交片替代。 */
+  function deliveredFilm() {
+    const actor=P.state.actor;
+    return P.FamilyContext.allowed(actor)?videos(actor,'film')[0]:null;
+  }
+  function videoPlayer(item) {
+    return `<video data-archive-video="${e(item.id)}" controls playsinline preload="metadata" poster="${e(item.poster)}" src="${e(item.src)}" aria-label="${e(item.title)}">当前浏览器不支持视频播放。</video>`;
+  }
+  /** 独立交片页保留示例说明，播放由本人主动发起，返回后可继续浏览家庭内容。 */
+  function delivery() {
+    const film=deliveredFilm();
+    if(!film)return `<div class="page empty"><h2>当前账号暂无可查看的交付影片</h2><p>请核对登录身份，或联系交片顾问。</p>${l('回到归家','home','btn')}</div>`;
+    return `<div class="page archive-detail film-delivery-page"><h2 class="page-title">${e(film.title)}</h2><p class="page-subtitle">纪录片已交付，可以开始观看。</p>${b('播放纪录片','play-delivered-film','btn full section')}<div class="archive-player section">${videoPlayer(film)}<p id="archive-video-status" class="caption" role="status">${e(film.sourceLabel)} · ${P.duration(film.duration)}</p></div>${P.FamilyMemories?.filmContribution?.(film)||''}${b(P.state.fontLarge?'使用标准字号':'使用大字号','toggle-font','text-link section')}${captionsView(film)}</div>`;
+  }
   /** 一个视频入口内呈现全部及三个互斥类型，包含当前可见数量和准确的空态。 */
   function videoView(person) {
     const filter=P.state.videoFilter,items=videos(person,filter);
@@ -165,7 +179,7 @@
     if(!assetReadable(item))return `<div class="page empty">${i('lock')}<h2>这份资料暂未向你开放</h2><p>查看人物档案不代表可以读取其全部私密资料。</p>${l('返回人物档案','life/'+item.subject,'btn')}</div>`;
     const context=origin(item),video=['film','clip'].includes(item.kind),label=video?VIDEO_FILTERS[videoType(item,context.person)]:TYPES[item.kind],photos=photoSequence(context.person,context.storyId),index=photos.findIndex(asset=>asset.id===item.id);
     const media=video?`<video data-archive-video="${item.id}" controls playsinline preload="metadata" poster="${item.poster}" src="${item.src}">当前浏览器不支持视频播放。</video><p id="archive-video-status" class="caption" role="status">${P.duration(item.duration)} · 无声演示片段，可播放、暂停或拖动进度。</p>`:item.kind==='photo'?`<figure class="archive-photo-detail"><img src="${item.src || item.poster}" alt="${e(item.title)}"><figcaption>${e(item.description)}</figcaption></figure>${photoControls(photos,index,context.storyId)}${P.MemoryShare&&item.subject===s.actor?`<div class="memory-actions"><button type="button" class="btn secondary" data-memory="restore" data-id="${e(item.id)}">修复这张老照片</button><button type="button" class="text-link" data-memory="open" data-id="${e(item.id)}">讲讲背后的故事</button></div>`:''}`:`${item.kind==='work'&&item.poster?`<figure class="archive-photo-detail"><img src="${e(item.poster)}" alt="${e(item.title)}，作品展示示意"><figcaption>作品封面或展示图 · 原型示意</figcaption></figure>`:''}<article>${(item.body || []).map(text=>`<p class="story-paragraph">${e(text)}</p>`).join('')}</article>`;
-    return `<div class="page archive-detail">${b(i('back')+' '+e(returnLabel(context)),'archive-return','text-link',`data-id="${item.id}"`)}<p class="eyebrow section">${label} · 示例档案</p><h1 class="page-title">${e(item.title)}</h1><p class="caption">${e(item.date)}</p><div class="archive-player section">${media}</div>${video?captionsView(item):''}${P.ContentChat.entry({kind:'asset',assetId:item.id})}<dl class="archive-meta"><div><dt>归档人物</dt><dd>${e(P.PEOPLE[item.subject].name)}</dd></div><div><dt>${item.kind==='clip'?'拍摄者（分类示例）':'提供者'}</dt><dd>${e(P.PEOPLE[item.author].name)}</dd></div><div><dt>分享范围</dt><dd>${item.scope==='private'?'仅自己':item.scope==='selected'?'指定家人':'已授权家庭成员'}</dd></div></dl>${item.kind==='photo'?'':`<p class="story-paragraph">${e(item.description)}</p>`}<div class="note"><strong>资料来源</strong><p>${e(item.sourceLabel)}</p></div>${item.relatedStoryId && item.relatedStoryId!==context.storyId && P.visibleStories().some(story=>story.id===item.relatedStoryId)?l('查看关联人生事件','story/'+item.relatedStoryId,'btn secondary full section'):''}</div>`;
+    return `<div class="page archive-detail">${b(i('back')+' '+e(returnLabel(context)),'archive-return','text-link',`data-id="${item.id}"`)}<p class="eyebrow section">${label} · 示例档案</p><h1 class="page-title">${e(item.title)}</h1><p class="caption">${e(item.date)}</p><div class="archive-player section">${media}</div>${video?captionsView(item):''}${item.kind==='film'?P.FamilyMemories?.filmContribution?.(item)||'':''}${P.ContentChat.entry({kind:'asset',assetId:item.id})}<dl class="archive-meta"><div><dt>归档人物</dt><dd>${e(P.PEOPLE[item.subject].name)}</dd></div><div><dt>${item.kind==='clip'?'拍摄者（分类示例）':'提供者'}</dt><dd>${e(P.PEOPLE[item.author].name)}</dd></div><div><dt>分享范围</dt><dd>${item.scope==='private'?'仅自己':item.scope==='selected'?'指定家人':'已授权家庭成员'}</dd></div></dl>${item.kind==='photo'?'':`<p class="story-paragraph">${e(item.description)}</p>`}<div class="note"><strong>资料来源</strong><p>${e(item.sourceLabel)}</p></div>${item.relatedStoryId && item.relatedStoryId!==context.storyId && P.visibleStories().some(story=>story.id===item.relatedStoryId)?l('查看关联人生事件','story/'+item.relatedStoryId,'btn secondary full section'):''}</div>`;
   }
   /** 进入详情固定原人物、分区及已核验的父事件，回看仍回到实际打开资料的位置。 */
   function open(id,person=P.state.archivePerson,tab=P.state.lifeTab,storyId='',filter=P.state.videoFilter) {
@@ -178,7 +192,12 @@
   /** 离开页面暂停原生视频，进度按账号保留；重置前的旧元素不能写回新状态。 */
   function stopPlayback() {
     document.querySelectorAll('[data-archive-video]').forEach(video=>{
-      if(video.playbackState===P.state && video.playbackActor===P.state.actor){const progress=P.state.archivePlayback[P.state.actor] ||= {};progress[video.dataset.archiveVideo]=Number.isFinite(video.currentTime)?video.currentTime:0;}
+      const time=video.currentTime;
+      // 快速离开还未读取元数据的页面时，播放器默认的零进度不能覆盖上一次观看位置。
+      if(video.playbackState===P.state&&video.playbackActor===P.state.actor&&Number.isFinite(time)&&(video.readyState>0||time>0)){
+        const progress=P.state.archivePlayback[P.state.actor] ||= {};
+        progress[video.dataset.archiveVideo]=time;
+      }
       video.pause();
     });
   }
@@ -189,11 +208,28 @@
     video.playbackState=P.state;video.playbackActor=P.state.actor;
     const item=ensure().archiveAssets.find(asset=>asset.id===video.dataset.archiveVideo),cues=P.ARCHIVE_DATA.captions[item?.src] || [];
     if(cues.length && typeof window.VTTCue==='function' && !video.textTracks.length){const track=video.addTextTrack('subtitles','示例字幕','zh');cues.forEach(cue=>track.addCue(new window.VTTCue(cue.start,cue.end,cue.text)));track.mode='showing';}
-    video.addEventListener('loadedmetadata',()=>{if(!video.isConnected || video.playbackState!==P.state || video.playbackActor!==P.state.actor)return;const time=P.state.archivePlayback[P.state.actor]?.[video.dataset.archiveVideo] || 0;if(item?.materialManaged&&Number.isFinite(video.duration))item.duration=video.duration;if(time>0&&Number.isFinite(video.duration)&&time<=video.duration)video.currentTime=time;},{once:true});
+    const restorePlayback=()=>{
+      if(!video.isConnected||video.playbackState!==P.state||video.playbackActor!==P.state.actor||!Number.isFinite(video.duration))return;
+      const time=P.state.archivePlayback[P.state.actor]?.[video.dataset.archiveVideo] || 0;
+      if(item?.materialManaged)item.duration=video.duration;
+      if(time>0&&time<=video.duration)video.currentTime=time;
+    };
+    if(video.readyState>0)restorePlayback();
+    else video.addEventListener('loadedmetadata',restorePlayback,{once:true});
     video.addEventListener('error',()=>{const status=document.getElementById('archive-video-status');if(video.isConnected && status)status.textContent='这段视频暂时无法播放，请确认已保留完整的本地素材文件。';});
   }
   /** 新档案页只接受明确分类与人物，不保留旧的泛作品分类查找路径。 */
   function handleAction(action,element) {
+    if(action==='play-delivered-film'){
+      const video=element.closest('.film-delivery-page')?.querySelector('video');
+      video?.play().then(()=>{
+        if(video.isConnected)video.scrollIntoView?.({block:'nearest'});
+      }).catch(()=>{
+        const status=document.getElementById('archive-video-status');
+        if(video.isConnected&&status)status.textContent='暂时无法开始播放，请点击播放器内的播放按钮重试。';
+      });
+      return true;
+    }
     if(action==='video-filter'){if(Object.hasOwn(VIDEO_FILTERS,element.dataset.value)){P.state.videoFilter=element.dataset.value;P.render();}return true;}
     if(action==='biography-mode'){if(['read','events'].includes(element.dataset.value)){P.state.biographyMode=element.dataset.value;P.state.archiveChapterId='';P.render();}return true;}
     if(action==='archive-events'){const person=element.dataset.person;if(P.state.members.includes(person)){P.state.archivePerson=person;P.state.lifeTab='biography';P.state.biographyMode='events';P.state.archiveChapterId='';P.navigate('life/'+person);}return true;}
@@ -205,6 +241,7 @@
     if(action==='archive-photo-step'){const item=ensure().archiveAssets.find(asset=>asset.id===P.state.archiveItemId);if(item){const context=origin(item),photos=photoSequence(context.person,context.storyId),index=photos.findIndex(asset=>asset.id===item.id),next=photos[index+Number(element.dataset.step)];if(next)open(next.id,context.person,context.tab,context.storyId || '',context.videoFilter);}return true;}
     return false;
   }
-  P.PersonArchive={view,detail,filmCard,assets,videos,videoType,getItem,biography,chapter,events,storyMaterials,open,handleAction,mount,stopPlayback};P.views['archive-item']=detail;
+  P.PersonArchive={view,detail,filmCard,assets,videos,deliveredFilm,videoPlayer,videoType,getItem,biography,chapter,events,storyMaterials,open,handleAction,mount,stopPlayback};
+  Object.assign(P.views,{'archive-item':detail,'film-delivery':delivery});
 }
 

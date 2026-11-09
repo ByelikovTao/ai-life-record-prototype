@@ -23,7 +23,7 @@
   function viewers(r) {return r.scope==='family'?[...P.state.members]:r.scope==='selected'?[...r.viewers]:[];}
   /** 归档字段与现有照片、视频、作品和事件资料共用同一契约。 */
   function asset(r,author,id=P.nextId('material')) {
-    return {id,subject:r.subject,author,kind:r.kind,title:r.title.trim(),date:r.date.trim()||'时间待补充',year:'',description:r.description.trim(),body:r.body.trim()?[r.body.trim()]:[],scope:r.scope,viewers:viewers(r),relatedStoryId:r.storyId||'',poster:r.kind==='photo'?r.file?.data:'assets/family.png',src:r.file?.data||'',duration:Number(r.duration)||0,sourceLabel:P.PEOPLE[author].name+'提供 · 本地补充资料',materialManaged:true,storageBytes:r.file?.size||new TextEncoder().encode(r.body||'').length,confirmedBy:null};
+    return {id,subject:r.subject,author,kind:r.kind,title:r.title.trim(),date:r.date.trim()||'时间待补充',year:'',description:r.description.trim(),body:r.body.trim()?[r.body.trim()]:[],scope:r.scope,viewers:viewers(r),relatedStoryId:r.storyId||'',relatedFilmId:r.relatedFilmId||'',poster:r.kind==='photo'?r.file?.data:'assets/family.png',src:r.file?.data||'',duration:Number(r.duration)||0,sourceLabel:P.PEOPLE[author].name+'提供 · 本地补充资料',materialManaged:true,storageBytes:r.file?.size||new TextEncoder().encode(r.body||'').length,confirmedBy:null};
   }
   /** 任何实际发布都重新校验当前人物、关联事件与文件，草稿允许保留不完整信息。 */
   function validate(r) {
@@ -61,7 +61,8 @@
   }
   /** 已归档资料只读取档案唯一实例，已完成的提交快照不再重复列出。 */
   function archivedCard(item) {
-    return `<article class="card">${item.kind==='photo'&&item.poster?`<img class="material-card-photo" src="${e(item.poster)}" alt="${e(item.title)}资料缩略图">`:''}<h3>${e(item.title)}</h3><p class="caption">${e(P.PEOPLE[item.subject].name)} · ${item.inArchive===false?'原稿保留，已移出档案':'已归档'}</p>${b('查看资料','archive-open','text-link',`data-id="${item.id}" data-person="${item.subject}"`)} ${b('更正资料','material-edit-existing','text-link',`data-id="${item.id}"`)} ${b('撤回分享','material-withdraw','text-link',`data-id="${item.id}"`)}</article>`;
+    const editButton=item.relatedFilmId?'':b('更正资料','material-edit-existing','text-link',`data-id="${item.id}"`);
+    return `<article class="card">${item.kind==='photo'&&item.poster?`<img class="material-card-photo" src="${e(item.poster)}" alt="${e(item.title)}资料缩略图">`:''}<h3>${e(item.title)}</h3><p class="caption">${e(P.PEOPLE[item.subject].name)} · ${item.inArchive===false?'原稿保留，已移出档案':'已归档'}</p>${b('查看资料','archive-open','text-link',`data-id="${item.id}" data-person="${item.subject}"`)} ${editButton} ${b('撤回分享','material-withdraw','text-link',`data-id="${item.id}"`)}</article>`;
   }
   /** 三组互斥分类，退回任务正在编辑时只展示当前草稿，已归档快照不与资料重复。 */
   function collections() {
@@ -144,18 +145,53 @@
     else items.push(saved);
     item.status='accepted';return true;
   }
+  /** 影片是补充资料的授权来源，当前家人必须同时拥有档案和影片的查看权限。 */
+  function filmForContribution(id) {
+    const film=P.PersonArchive.getItem(id),{actor,members}=P.state;
+    if(film?.kind!=='film'||film.subject===actor||!members.includes(actor)||!members.includes(film.subject))return null;
+    return P.FamilyContext.allowed(film.subject)?film:null;
+  }
+  /** 通用资料和影片照片写入同一个本人核对队列，退回重提沿用原任务。 */
+  function stageSubmission(r,returned) {
+    const author=P.state.actor;
+    const item={id:returned?.id||P.nextId('submission'),assetId:r.id,title:r.title,subject:r.subject,author,status:'pending',draft:structuredClone(r),asset:asset(r,author,r.id||P.nextId('material'))};
+    if(item.subject===item.author)store(item);
+    if(returned)return Object.assign(returned,item);
+    P.state.materialSubmissions.push(item);
+    return item;
+  }
+  /** 人物、影片和可见范围固定，照片在本人确认后才进入档案。 */
+  function queueFilmPhoto(filmId,file,description,submissionId) {
+    const film=filmForContribution(filmId),s=P.state;
+    if(!film)return '这部影片目前无法补充照片，请联系顾问。';
+    const returned=s.materialSubmissions.find(item=>item.id===submissionId&&item.author===s.actor&&item.subject===film.subject&&item.status==='returned'&&item.draft.relatedFilmId===film.id);
+    if(submissionId&&!returned)return '这份补充已处理，请返回影片查看。';
+    const r={id:'',title:`《${film.title}》的一张老照片`,kind:'photo',subject:film.subject,date:'',description,body:'',storyId:'',relatedFilmId:film.id,scope:'selected',viewers:[film.subject],file};
+    const error=validate(r);
+    if(!error){
+      const item=stageSubmission(r,returned);
+      if(returned)item.feedback='';
+    }
+    return error;
+  }
   /** 提供者可以立即撤回原分享；正文更正交由本人重新核对，保留旧已核对版本。 */
   function handleAction(action,el) {
     const s=P.state;
     if(action==='material-stage'){if(Object.hasOwn(STAGES,el.dataset.stage)){s.materialTabs[s.actor]=el.dataset.stage;P.render();}return true;}
     if(action==='material-new'||action==='material-discard-draft'){begin(el,action==='material-discard-draft');return true;}
     if(action==='material-edit-existing'){
-      const item=archiveItems().find(value=>value.id===el.dataset.id&&value.author===s.actor&&value.materialManaged);if(!item)return true;
+      const item=archiveItems().find(value=>value.id===el.dataset.id&&value.author===s.actor&&value.materialManaged&&!value.relatedFilmId);if(!item)return true;
       const current=s.materialDrafts[s.actor];if(current&&(current.title||current.body||current.file)){if(current.id===item.id)P.navigate('material-edit');else P.toast('请先完成或放弃当前资料草稿，再更正另一份资料。');return true;}
       s.materialDrafts[s.actor]={id:item.id,title:item.title,kind:item.kind,subject:item.subject,date:item.date,description:item.description,body:item.body.join('\n\n'),storyId:item.relatedStoryId,scope:item.scope,viewers:[...item.viewers],duration:item.duration,loading:false,error:'',file:item.src?{data:item.src,name:'原已归档文件',type:item.kind==='photo'?'image/*':'video/*'}:null};P.navigate('material-edit');return true;
     }
     if(action==='material-withdraw'){const item=archiveItems().find(value=>value.id===el.dataset.id&&value.author===s.actor);if(item){item.scope='private';item.viewers=[];for(const pending of s.materialSubmissions.filter(value=>value.assetId===item.id&&value.author===s.actor&&value.status==='pending')){pending.asset.scope='private';pending.asset.viewers=[];pending.draft.scope='private';pending.draft.viewers=[];}P.render();P.toast('已撤回分享，待核对的更正也不会恢复旧分享名单。');}return true;}
-    if(action==='material-revise'){const item=s.materialSubmissions.find(value=>value.id===el.dataset.id&&value.author===s.actor&&value.status==='returned');if(item){s.materialDrafts[s.actor]={...structuredClone(item.draft),submissionId:item.id};P.navigate('material-edit');}return true;}
+    if(action==='material-revise'){
+      const item=s.materialSubmissions.find(value=>value.id===el.dataset.id&&value.author===s.actor&&value.status==='returned');
+      if(!item)return true;
+      if(item.draft.relatedFilmId)P.FamilyMemories.openFilmPhoto(item.draft.relatedFilmId,item);
+      else {s.materialDrafts[s.actor]={...structuredClone(item.draft),submissionId:item.id};P.navigate('material-edit');}
+      return true;
+    }
     if(action==='material-inspect'){
       const item=s.materialSubmissions.find(value=>value.id===el.dataset.id&&value.subject===s.actor&&value.status==='pending');if(!item)return true;
       P.modal('核对家人提供的资料',`<h3>${e(item.title)}</h3><p>${e(item.draft.date||'时间待补充')} · ${e(P.PEOPLE[item.author].name)}提供</p>${preview(item.draft)}<p>${e(item.draft.description)}</p><p class="caption">确认后分享给：${item.asset.scope==='private'?'仅提供者自己':item.asset.viewers.map(id=>e(P.PEOPLE[id].name)).join('、')}。</p>${b('确认并归档','material-approve','btn full',`data-id="${item.id}"`)}<form id="material-return-form" data-id="${item.id}" class="section"><label>需要更正什么？<textarea name="feedback" maxlength="1000" required></textarea></label><button type="submit" class="btn secondary full">退回更正</button></form>`);const form=document.getElementById('material-return-form');form.featureState=s;form.dataset.actor=s.actor;return true;
@@ -173,10 +209,8 @@
     const error=validate(r);if(error){P.toast(error);return true;}
     if(form.id==='material-form'){P.navigate('material-review');return true;}
     if(!new FormData(form).get('confirmed'))return true;
-    const item={id:P.nextId('submission'),assetId:r.id,title:r.title,subject:r.subject,author:P.state.actor,status:'pending',draft:structuredClone(r),asset:asset(r,P.state.actor,r.id||P.nextId('material'))};
-    if(item.subject===item.author)store(item);
     const returned=P.state.materialSubmissions.find(value=>value.id===r.submissionId&&value.author===P.state.actor&&value.status==='returned');
-    if(returned)Object.assign(returned,item,{id:returned.id});else P.state.materialSubmissions.push(item);
+    const item=stageSubmission(r,returned);
     form.featureState=null;P.state.materialDrafts[P.state.actor]=null;open(item.status==='accepted'?'archived':'pending');P.toast(item.status==='accepted'?'资料已进入对应人物档案。':'已提交本人核对，尚未向其他家人开放。');return true;
   }
   /** 文件读取结果绑定原状态、账号和草稿；切换或重置后不写入另一份资料。 */
@@ -197,6 +231,6 @@
   function pendingCount() {return P.state.materialSubmissions.filter(item=>item.subject===P.state.actor&&item.status==='pending').length;}
   /** 个人中心的核对数量与核对页使用同一组本人资料和经历。 */
   function reviewCount(){return pendingCount()+P.state.pending.filter(item=>item.subject===P.state.actor&&item.status==='pending').length;}
-  P.MaterialLibrary={view,edit,review,capture,handleAction,submit,pendingCount,reviewCount,open};
+  P.MaterialLibrary={view,edit,review,capture,handleAction,submit,pendingCount,reviewCount,open,filmForContribution,queueFilmPhoto};
   Object.assign(P.views,{materials:view,'material-inbox':inbox,'material-edit':edit,'material-review':review});
 }

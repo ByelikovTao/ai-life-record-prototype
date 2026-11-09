@@ -7,26 +7,50 @@
   /** 四项内容保留各自语义标题，不因共用封面而合并资料归属。 */
   function heading(title) {return `<div class="heritage-section-head"><h2>${title}</h2></div>`;}
   /** 家谱节点复用人物详情动作，姓名与称呼均以当前档案人为参照。 */
-  function kinNode(id,person,x,y,width) {
+  function kinNode(id,person,position='') {
     const focus=id===person,label=focus?'档案人':P.relation(id,person);
-    return b(`${P.avatar(id)}<span><strong>${e(P.PEOPLE[id].name)}</strong><small>${e(label)}</small></span>`,'person',`heritage-pedigree-node ${focus?'is-focus':''}`,`data-id="${e(id)}" data-pedigree-person="${e(id)}" style="left:${x/width*100}%;top:${y}px" aria-label="${e(P.PEOPLE[id].name)}，${e(label)}"`);
+    return b(`${P.avatar(id)}<span><strong>${e(P.PEOPLE[id].name)}</strong><small>${e(label)}</small></span>`,'person',`heritage-pedigree-node ${focus?'is-focus':''}`,`data-id="${e(id)}" data-pedigree-person="${e(id)}" aria-label="${e(P.PEOPLE[id].name)}，${e(label)}" ${position}`);
+  }
+  /** 标准字号沿用原坐标，线段连接已有的人物卡边缘。 */
+  function compactPedigree(person,groups,partners) {
+    const width=Math.max(280,Math.max(groups.parents.length,groups.children.length)*120,(partners.length+1)*160),focusX=partners.length?width*.3:width/2;
+    const positions=ids=>ids.length===1?[focusX]:ids.map((id,index)=>56+index*(width-112)/(ids.length-1));
+    const parentX=positions(groups.parents),childX=positions(groups.children),mateX=partners.map((id,index)=>focusX+(index+1)*(width-focusX-56)/partners.length);
+    const node=(id,x,y)=>kinNode(id,person,`style="left:${x/width*100}%;top:${y}px"`);
+    const nodes=groups.parents.map((id,index)=>node(id,parentX[index],4)).join('')+node(person,focusX,100)+partners.map((id,index)=>node(id,mateX[index],100)).join('')+groups.children.map((id,index)=>node(id,childX[index],196)).join('');
+    const parentLines=parentX.map(x=>`<path d="M${x} 68V84H${focusX}V100"/>`).join('');
+    const childLines=childX.map(x=>`<path d="M${focusX} 164V180H${x}V196"/>`).join('');
+    const coupleLines=mateX.map(x=>`<path class="is-couple" d="M${focusX+56} 130H${x-56}M${focusX+56} 134H${x-56}"/>`).join('');
+    return `<div class="heritage-pedigree-canvas" style="--pedigree-width:${width}px"><svg viewBox="0 0 ${width} 264" preserveAspectRatio="none" aria-hidden="true"><g>${parentLines}${childLines}${coupleLines}</g></svg>${nodes}</div>`;
+  }
+  /** 每列用两单位标注中点。支线只连到首列的档案人，避免把子女连到未确认的另一位家长。 */
+  function pedigreeBranches(members,columns,kind) {
+    const fromParents=kind==='parents',rootEdge=fromParents?24:0,branchEdge=fromParents?0:24;
+    const branches=members.map((_,index)=>`M${index*2+1} 12V${branchEdge}`).join('');
+    return `<svg class="heritage-pedigree-branches" data-pedigree-links="${kind}" viewBox="0 0 ${columns*2} 24" preserveAspectRatio="none" aria-hidden="true"><path d="M1 ${rootEdge}V12H${members.length*2-1}${branches}"/></svg>`;
+  }
+  /** 大字号人物卡随姓名自然增高。每位配偶单独与档案人相连。 */
+  function readablePedigree(person,{parents,children},partners) {
+    const columns=Math.max(parents.length,children.length,partners.length?2:1);
+    const renderNodes=members=>members.map(id=>kinNode(id,person)).join('');
+    const row=(members,label)=>`<div class="heritage-pedigree-row" role="group" aria-label="${label}">${renderNodes(members)}</div>`;
+    return `<div class="heritage-pedigree-canvas heritage-pedigree-readable" style="--pedigree-columns:${columns}">
+      ${parents.length?row(parents,'父母')+pedigreeBranches(parents,columns,'parents'):''}
+      <div class="heritage-pedigree-row" role="group" aria-label="${partners.length?'档案人与配偶':'档案人'}">${kinNode(person,person)}${partners.length?`<div class="heritage-pedigree-partners" role="group" aria-label="配偶">${renderNodes(partners)}</div>`:''}</div>
+      ${children.length?pedigreeBranches(children,columns,'children')+row(children,'子女'):''}
+    </div>`;
   }
   /** 谱牒题签与姓氏印章只作装饰；仅展示已知直系与配偶，其他支系留在完整族谱。 */
   function kinship(person,withLink=false) {
     const groups=P.FamilyHome.relatives(person),partners=groups.couple.filter(id=>id!==person);
-    const width=Math.max(280,Math.max(groups.parents.length,groups.children.length)*120,(partners.length+1)*160),focusX=partners.length?width*.3:width/2;
-    const positions=ids=>ids.length===1?[focusX]:ids.map((id,index)=>56+index*(width-112)/(ids.length-1));
-    const parentX=positions(groups.parents),childX=positions(groups.children),mateX=partners.map((id,index)=>focusX+(index+1)*(width-focusX-56)/partners.length);
-    const nodes=groups.parents.map((id,index)=>kinNode(id,person,parentX[index],4,width)).join('')+kinNode(person,person,focusX,100,width)+partners.map((id,index)=>kinNode(id,person,mateX[index],100,width)).join('')+groups.children.map((id,index)=>kinNode(id,person,childX[index],196,width)).join('');
-    const parentLines=parentX.map(x=>`<path d="M${x} 68V84H${focusX}V100"/>`).join('');
-    const childLines=childX.map(x=>`<path d="M${focusX} 164V180H${x}V196"/>`).join('');
-    const coupleLines=mateX.map(x=>`<path class="is-couple" d="M${focusX+56} 130H${x-56}M${focusX+56} 134H${x-56}"/>`).join('');
-    return `<div class="heritage-kinship"><div class="heritage-pedigree-heading"><span class="heritage-pedigree-seal" aria-hidden="true">${e(P.FamilyHome.profile(person).surname||'家')}<br>氏</span><div><h3>家族世系</h3><p>以${e(P.PEOPLE[person]?.name||'家人')}为中心</p></div><span class="heritage-pedigree-inscription" aria-hidden="true">一脉相承</span></div><div class="heritage-pedigree-viewport" role="group" aria-label="${e(P.PEOPLE[person]?.name||'家人')}的已知亲缘关系"><div class="heritage-pedigree-canvas" style="--pedigree-width:${width}px"><svg viewBox="0 0 ${width} 264" preserveAspectRatio="none" aria-hidden="true"><g>${parentLines}${childLines}${coupleLines}</g></svg>${nodes}</div></div><p class="heritage-pedigree-legend">单线为亲子，双线为配偶 · 点击人物查看</p>${withLink?b('查看完整族谱 '+i('arrow'),'home-family-tree','heritage-text-button'):''}</div>`;
+    const name=e(P.PEOPLE[person]?.name||'家人');
+    const diagram=P.state.fontLarge?readablePedigree(person,groups,partners):compactPedigree(person,groups,partners);
+    const title=withLink?'<h2>家族世系</h2>':'<h3>家族世系</h3>';
+    return `<div class="heritage-kinship"><div class="heritage-pedigree-heading"><span class="heritage-pedigree-seal" aria-hidden="true">${e(P.FamilyHome.profile(person).surname||'家')}<br>氏</span><div>${title}<p>以${name}为中心</p></div><span class="heritage-pedigree-inscription" aria-hidden="true">一脉相承</span></div><div class="heritage-pedigree-viewport" role="group" aria-label="${name}的已知亲缘关系">${diagram}</div><p class="heritage-pedigree-legend">单线为亲子，双线为配偶 · 点击人物查看</p>${withLink?b('查看完整族谱 '+i('arrow'),'home-family-tree','heritage-text-button'):''}</div>`;
   }
-  /** 顶部背景单独淡出以衔接下方山水，竖排题签、致谢、家训及姓名保留独立实色文字。 */
+  /** 顶部背景单独淡出以衔接下方山水，竖排题签、致谢与家训保留独立实色文字。 */
   function banner(person) {
-    const name=P.PEOPLE[person]?.name||'家人';
-    return `<header class="heritage-banner"><span class="heritage-banner-backdrop" aria-hidden="true"></span><div class="heritage-banner-copy"><h1>${e(P.HOME_NAME)}</h1><p><strong class="heritage-owner-name">${e(name)}</strong> · 家庭记事</p><span class="heritage-banner-seal" aria-hidden="true">家<br>谱</span></div>${cover(person)}</header>`;
+    return `<header class="heritage-banner"><span class="heritage-banner-backdrop" aria-hidden="true"></span><div class="heritage-banner-copy"><h1>${e(P.HOME_NAME)}</h1><span class="heritage-banner-seal" aria-hidden="true">家<br>谱</span></div>${cover(person)}</header>`;
   }
   /** 致谢与家训嵌入顶部图片，不再重复生成下方笺框或拱门插画。 */
   function cover(person) {
@@ -38,11 +62,24 @@
     if(!P.FamilyHome.readable(person))return '<p class="heritage-empty">家庭视频暂未向你开放。</p>';
     const videos=P.PersonArchive.videos(person),item=videos.find(value=>value.kind==='film'&&value.subject===person)||videos.find(value=>value.subject===person);
     if(!item)return '<p class="heritage-empty">暂无向你开放的家庭视频。</p>';
-    return `<figure class="heritage-family-photo heritage-family-video" data-home-video="${e(item.id)}"><video data-archive-video="${e(item.id)}" controls playsinline preload="metadata" poster="${e(item.poster)}" src="${e(item.src)}" aria-label="${e(item.title)}">当前浏览器不支持视频播放。</video><figcaption><strong>${e(item.title)}</strong>${b('查看影片详情 '+i('arrow'),'archive-open','heritage-text-button',`data-id="${e(item.id)}" data-person="${e(person)}" data-tab="video" data-video-filter="${item.kind==='film'?'film':'all'}"`)}</figcaption><span id="archive-video-status" class="caption" role="status"></span></figure>`;
+    return `<figure class="heritage-family-photo heritage-family-video" data-home-video="${e(item.id)}">
+      ${P.PersonArchive.videoPlayer(item)}
+      <figcaption>
+        <strong>${e(item.title)}</strong>
+        ${b('查看影片详情 '+i('arrow'),'archive-open','heritage-text-button',`data-id="${e(item.id)}" data-person="${e(person)}" data-tab="video" data-video-filter="${item.kind==='film'?'film':'all'}"`)}
+      </figcaption>
+      <span id="archive-video-status" class="caption" role="status"></span>
+    </figure>`;
   }
   /** 家庭影像后直接展示族谱；姓氏资料仅在完整源流阅读中提供，仍复用原授权。 */
   function origin(person) {
-    return `<section class="heritage-origin" data-home-section="origin"><div class="heritage-origin-opening"><p class="heritage-chapter-note">留影 · 慢慢回看</p>${heading('家中影像')}${familyVideo(person)}</div>${kinship(person)}${b('阅读源流与族谱 '+i('arrow'),'heritage-origin','heritage-text-button',`data-person="${e(person)}"`)}</section>`;
+    const readerLabel=`<span class="heritage-origin-entry-mark">${i('book')}</span>
+      <span class="heritage-origin-entry-copy">
+        <span class="heritage-origin-entry-title" id="heritage-origin-entry-title">阅读源流与族谱</span>
+        <span class="heritage-origin-entry-note" id="heritage-origin-entry-note">了解姓氏来历与家族记载</span>
+      </span>${i('arrow','heritage-origin-entry-arrow')}`;
+    const reader=b(readerLabel,'heritage-origin','heritage-origin-entry',`data-person="${e(person)}" aria-labelledby="heritage-origin-entry-title" aria-describedby="heritage-origin-entry-note"`);
+    return `<section class="heritage-origin" data-home-section="origin"><div class="heritage-origin-opening"><p class="heritage-chapter-note">留影 · 慢慢回看</p>${heading('家中影像')}${familyVideo(person)}</div>${kinship(person)}${reader}</section>`;
   }
   /** 建谱致谢仅呈现感谢与传承的全文，不另列建档人署名或折叠入口。 */
   function preface(person) {

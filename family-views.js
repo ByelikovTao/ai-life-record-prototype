@@ -73,7 +73,7 @@
   }
   /** 会员、奖励和订单是低频服务操作；开通自己的空间仍遵循原拍摄条件。 */
   function profileServices() {
-    return `<div class="page"><h1 class="page-title">服务与订单</h1><p class="page-subtitle">查看共享服务、收到的心意和付款记录。</p><div class="profile-menu">${profileMenu('book','共享额度与到期权益','membership')}${profileMenu('share','收到的心意','share-gifts')}${profileMenu('book','服务订单与抵扣','service-orders')}${profileMenu('book','收费方案','billing-plan')}${!P.account().videoDelivered?b(i('person')+' 开通我的完整人生空间','video-service','menu-row'):''}</div>${l('返回我的','profile','text-link full section')}</div>`;
+    return `<div class="page"><h1 class="page-title">服务与订单</h1><p class="page-subtitle">查看共享服务、收到的心意和付款记录。</p><div class="profile-menu">${profileMenu('book','共享额度与到期权益','membership')}${profileMenu('share','收到的心意','share-gifts')}${profileMenu('book','服务订单','service-orders')}${profileMenu('book','收费方案','billing-plan')}${!P.account().videoDelivered?b(i('person')+' 开通我的完整人生空间','video-service','menu-row'):''}</div>${l('返回我的','profile','text-link full section')}</div>`;
   }
   Object.assign(P.views,{'profile-materials':profileMaterials,'profile-family':profileFamily,'profile-keepsakes':profileKeepsakes,'profile-services':profileServices});
   /** 主菜单以图标、标题、说明还原参考卡片；次级菜单保持同一导航与点击区域。 */
